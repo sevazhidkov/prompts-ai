@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from "lodash";
-import { RootState } from '../store';
 import {TestInput} from "../../components/testInput/TestInput";
 
 interface TestInput {
@@ -35,7 +34,7 @@ export const editorSlice = createSlice({
     reducers: {
         editInput: (state, action: PayloadAction<TestInputEditActionPayload>) => {
             state.testInputs = state.testInputs.map(value => {
-                if (value.id == action.payload.id) {
+                if (value.id === action.payload.id) {
                     value.text = action.payload.text;
                 }
                 return value;
@@ -43,7 +42,7 @@ export const editorSlice = createSlice({
         },
         loadOutput: (state, action: PayloadAction<TestInputLoadOutputActionPayload>) => {
             state.testInputs = state.testInputs.map(value => {
-                if (value.id == action.payload.id) {
+                if (value.id === action.payload.id) {
                     value.output = action.payload.output;
                 }
                 return value;

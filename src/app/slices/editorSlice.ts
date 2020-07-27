@@ -101,7 +101,7 @@ export const editorSlice = createSlice({
             });
         },
         deleteExample: (state, action: PayloadAction<string>) => {
-            state.examples = state.examples.filter(example => example.id != action.payload);
+            state.examples = state.examples.filter(example => example.id !== action.payload);
         },
 
         loadTemplate: (state, action: PayloadAction<LoadTemplateActionPayload>) => {

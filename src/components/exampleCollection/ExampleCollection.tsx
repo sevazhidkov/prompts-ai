@@ -26,7 +26,7 @@ export default function ExampleCollection() {
             >
                 {examples.map((example, ind) => (
                     <Grid item key={example.id} xs={12} className={styles.gridCard}>
-                        <Example ind={ind} isLast={ind == examples.length - 1} {...example}/>
+                        <Example ind={ind} isLast={ind === examples.length - 1} {...example}/>
                     </Grid>
                 ))}
             </Grid>

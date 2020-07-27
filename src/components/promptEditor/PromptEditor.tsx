@@ -1,14 +1,23 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import TemplatesForm from '../templateForm/TemplatesForm';
-import {selectPrompt, editPrompt} from "../../app/slices/editorSlice";
+import {selectPrompt, editPrompt, selectTemperature, editTemperature,
+    selectMaxTokens, editMaxTokens} from "../../app/slices/editorSlice";
 import {Typography, Slider, TextField, Grid} from "@material-ui/core";
 
 export function PromptEditor() {
     const dispatch = useDispatch();
     const prompt = useSelector(selectPrompt);
+    const temperature = useSelector(selectTemperature);
+    const maxTokens = useSelector(selectMaxTokens);
     const handlePromptChange = (event: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         dispatch(editPrompt(event.currentTarget.value));
+    }
+    const handleTemperatureChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        dispatch(editTemperature(value as number));
+    }
+    const handleMaxTokensChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        dispatch(editMaxTokens(value as number));
     }
 
     return (
@@ -39,6 +48,8 @@ export function PromptEditor() {
                     </Typography>
                     <Slider
                         defaultValue={0.5}
+                        value={temperature}
+                        onChange={handleTemperatureChange}
                         aria-labelledby="temperature-slider"
                         valueLabelDisplay="auto"
                         step={0.05}
@@ -59,6 +70,8 @@ export function PromptEditor() {
                         defaultValue={10}
                         aria-labelledby="max-tokens-slider"
                         valueLabelDisplay="auto"
+                        value={maxTokens}
+                        onChange={handleMaxTokensChange}
                         step={1}
                         marks={[{
                             value: 1,

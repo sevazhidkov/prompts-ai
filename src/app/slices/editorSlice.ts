@@ -29,6 +29,8 @@ export interface LoadTemplateActionPayload {
 interface EditorState {
     prompt: string;
     apiKey?: string;
+    temperature: number;
+    maxTokens: number;
     examples: Array<Example>;
 }
 ///
@@ -47,6 +49,8 @@ const initialState: EditorState = {
         "Output: I walked to the store and I bought milk.\n" +
         "Input: {example}\n" +
         "Output:",
+    temperature: 0.5,
+    maxTokens: 10,
     apiKey: undefined,
     examples: [
         {id: uniqueId("input_"), text: "We all eat the fish and then made dessert.", output: "We all ate the fish and then made dessert.", isLoading: false},
@@ -96,6 +100,9 @@ export const editorSlice = createSlice({
                 return value;
             });
         },
+        deleteExample: (state, action: PayloadAction<string>) => {
+            state.examples = state.examples.filter(example => example.id != action.payload);
+        },
 
         loadTemplate: (state, action: PayloadAction<LoadTemplateActionPayload>) => {
             state.prompt = action.payload.prompt;
@@ -108,16 +115,24 @@ export const editorSlice = createSlice({
         },
         editApiKey: (state, action: PayloadAction<string>) => {
             state.apiKey = action.payload;
+        },
+        editTemperature: (state, action: PayloadAction<number>) => {
+            state.temperature = action.payload;
+        },
+        editMaxTokens: (state, action: PayloadAction<number>) => {
+            state.maxTokens = action.payload;
         }
     },
 });
 
-export const { editExample, loadOutputForExample, cleanExampleList, markExampleAsLoading, loadTemplate, editPrompt, editApiKey } = editorSlice.actions;
+export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading,
+    loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens } = editorSlice.actions;
 
 export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     if (state.editor.apiKey === undefined) {
         alert('Enter an API key before running requests.');
+        return;
     }
 
     const text = state.editor.prompt;
@@ -135,7 +150,8 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
         },
         data: {
             "prompt": examplePrompts,
-            "max_tokens": 100,
+            "max_tokens": state.editor.maxTokens,
+            "temperature": state.editor.temperature,
             "stop": "\n"
         }
     }).then(response => {
@@ -157,5 +173,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
 export const selectPrompt = (state: RootState) => state.editor.prompt;
 export const selectExamples = (state: RootState) => state.editor.examples;
 export const selectApiKey = (state: RootState) => state.editor.apiKey;
+export const selectTemperature = (state: RootState) => state.editor.temperature;
+export const selectMaxTokens = (state: RootState) => state.editor.maxTokens;
 
 export default editorSlice.reducer;

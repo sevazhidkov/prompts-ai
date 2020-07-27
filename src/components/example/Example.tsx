@@ -1,11 +1,13 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {editExample, cleanExampleList} from "../../app/slices/editorSlice";
+import {editExample, deleteExample, cleanExampleList} from "../../app/slices/editorSlice";
 import {RootState} from "../../app/store";
-import {TextField, Card, CardContent, Box, CircularProgress, Grid} from "@material-ui/core";
+import {TextField, Card, CardContent, Box, CircularProgress, Grid, IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 interface Props {
     ind: number;
+    isLast: boolean;
     id: string;
     text: string;
     isLoading: boolean;
@@ -71,6 +73,13 @@ function Example (props: Props) {
                     <Grid item xs={1}>
                         <Box>
                             {props.isLoading && <CircularProgress/>}
+
+                            {!props.isLoading && !props.isLast && <IconButton onClick={() => {
+                                dispatch(deleteExample(props.id));
+                                dispatch(cleanExampleList());
+                            }}>
+                                <Delete />
+                            </IconButton>}
                         </Box>
                     </Grid>
                 </Grid>

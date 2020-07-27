@@ -21,9 +21,14 @@ interface LoadExampleOutputActionPayload {
     output: string;
 }
 
+export interface LoadTemplateActionExample {
+    text: string;
+    output: string;
+}
+
 export interface LoadTemplateActionPayload {
     prompt: string;
-    exampleTexts: Array<string>;
+    examples: Array<LoadTemplateActionExample>;
 }
 
 interface EditorState {
@@ -50,7 +55,7 @@ const initialState: EditorState = {
         "Input: {example}\n" +
         "Output:",
     temperature: 0.5,
-    maxTokens: 10,
+    maxTokens: 30,
     apiKey: undefined,
     examples: [
         {id: uniqueId("input_"), text: "We all eat the fish and then made dessert.", output: "We all ate the fish and then made dessert.", isLoading: false},
@@ -106,8 +111,8 @@ export const editorSlice = createSlice({
 
         loadTemplate: (state, action: PayloadAction<LoadTemplateActionPayload>) => {
             state.prompt = action.payload.prompt;
-            state.examples = action.payload.exampleTexts.map((exampleText) => {
-                return {id: uniqueId('example_'), text: exampleText, output: undefined, isLoading: false}
+            state.examples = action.payload.examples.map((example) => {
+                return {id: uniqueId('example_'), text: example.text, output: example.output, isLoading: false}
             });
         },
         editPrompt: (state, action: PayloadAction<string>) => {

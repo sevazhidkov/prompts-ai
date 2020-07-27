@@ -25,11 +25,11 @@ const templateGroups = [
                         'A: send-msg `find ski store` Would it be possible to get my skis fixed before I leave on Thursday?\n' +
                         'Q: {example}\n' +
                         'A:',
-                    exampleTexts: [
-                        "Q: Thank Nicolas for lunch\n",
-                        "Q: Tell Constance that I won't be home before 19:30 tonight — unmovable meeting.\n"
-                    ]}
-            },
+                    examples: [
+                        {text: 'Thank Nicolas for lunch', output: 'send-msg `find nicolas` Thank you for lunch.'},
+                        {text: 'Tell Constance that I won\'t be home before 19:30 tonight — unmovable meeting.', output: 'send-msg `find constance` I won\'t be home before 19:30 tonight — unmovable meeting.'}
+                        ]
+            }},
             {id: uniqueId('template_'), name: 'Company Classification', actionPayload: {
                     prompt: 'The following is a list of companies and the categories they fall into\n' +
                         '\n' +
@@ -37,7 +37,7 @@ const templateGroups = [
                         'Uber: Transportation, Technology, Marketplace\n' +
                         'Mcdonalds: Food, Fast Food, Logistics, Restaurants\n' +
                         '{example}:',
-                    exampleTexts: ['Unilever:', 'LinkedIn:', 'FedEx:']
+                    examples: [{text: 'Unilever', output: 'Consumer Goods, Food, Personal Care, Retail'}, {text: 'LinkedIn', output: 'Social Media, Technology, Business'}, {text: 'FedEx', output: 'Logistics, Transportation'}]
                 }},
         ]
     }

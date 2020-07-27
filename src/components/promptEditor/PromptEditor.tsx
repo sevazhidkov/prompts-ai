@@ -29,7 +29,7 @@ export function PromptEditor() {
                 alignItems="flex-start"
                 spacing={5}
             >
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} sm={6} md={6}>
                     <TextField
                         id="prompt-text"
                         label="A prompt"
@@ -42,7 +42,7 @@ export function PromptEditor() {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} sm={3} md={3}>
                     <Typography id="temperature-slider" gutterBottom>
                         Temperature:
                     </Typography>
@@ -84,7 +84,7 @@ export function PromptEditor() {
                         max={512}
                     />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} sm={3} md={3}>
                     <TemplatesForm/>
                 </Grid>
             </Grid>

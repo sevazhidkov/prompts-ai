@@ -80,7 +80,7 @@ function App() {
                     <ExampleModeTab/>
                 </Box>
                 <Box mt={2}>
-                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com ❤️</Typography>
+                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com <span role={"img"} aria-label={"heart"}>❤️</span></Typography>
                 </Box>
             </Container>
         </ThemeProvider>

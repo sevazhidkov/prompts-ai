@@ -103,7 +103,7 @@ export function PromptEditor() {
                             <Tooltip title={'"Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive."'}
                                      placement="left">
                                 <Typography id="temperature-slider" gutterBottom>
-                                    Temperature:
+                                    Temperature: <strong>{temperature}</strong>
                                 </Typography>
                             </Tooltip>
                             <Slider
@@ -124,7 +124,7 @@ export function PromptEditor() {
                                 max={1}
                             />
                             <Typography id="max-tokens-slider" gutterBottom>
-                                Response length (in words):
+                                Response length (in words): <strong>{maxTokens}</strong>
                             </Typography>
                             <Slider
                                 defaultValue={10}
@@ -178,7 +178,7 @@ export function PromptEditor() {
                                 </Typography>
                                 <Tooltip title={'"Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered."'} placement="left">
                                     <Typography id="top-p-slider" gutterBottom>
-                                        Top P
+                                        Top P: <strong>{topP}</strong>
                                     </Typography>
                                 </Tooltip>
                                 <Slider
@@ -200,7 +200,7 @@ export function PromptEditor() {
                                 />
                                 <Tooltip title={'"How much to penalize new tokens based on their existing frequency in the text so far. Decreases the model\'s likelihood to repeat the same line verbatim."'} placement="left">
                                     <Typography id="frequency-penalty-slider" gutterBottom>
-                                        Frequency Penalty
+                                        Frequency Penalty: <strong>{frequencyPenalty}</strong>
                                     </Typography>
                                 </Tooltip>
                                 <Slider
@@ -222,7 +222,7 @@ export function PromptEditor() {
                                 />
                                 <Tooltip title={'"How much to penalize new tokens based on whether they appear in the text so far. Increases the model\'s likelihood to talk about new topics."'} placement="left">
                                     <Typography id="presence-penalty-slider" gutterBottom>
-                                        Presence Penalty
+                                        Presence Penalty: <strong>{presencePenalty}</strong>
                                     </Typography>
                                 </Tooltip>
                                 <Slider

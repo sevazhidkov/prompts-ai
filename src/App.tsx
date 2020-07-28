@@ -80,7 +80,7 @@ function App() {
                     <ModeTabs/>
                 </Box>
                 <Box mt={2}>
-                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com §</Typography>
+                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com.</Typography>
                 </Box>
             </Container>
         </ThemeProvider>

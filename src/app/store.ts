@@ -34,14 +34,26 @@ const migrations = {
     2: (state: any) => {
         return {
             ...state,
-            tabIndex: 0
+            editor: {
+                ...state.editor,
+                tabIndex: 0
+            }
+        };
+    },
+    3: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                stopSymbols: []
+            }
         };
     }
 };
 
 const persistConfig = {
     key: 'root',
-    version: 2,
+    version: 3,
     migrate: createMigrate(migrations),
     storage,
 }

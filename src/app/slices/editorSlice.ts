@@ -50,6 +50,7 @@ interface EditorState {
     prompt: string;
     apiKey?: string;
     temperature: number;
+    stopSymbols: Array<string>;
     maxTokens: number;
     tabIndex: number;
 
@@ -77,6 +78,7 @@ const initialState: EditorState = {
         "Input: {example}\n" +
         "Output:",
     temperature: 0.5,
+    stopSymbols: ["\\n"],
     maxTokens: 30,
     apiKey: undefined,
     tabIndex: 0,
@@ -175,6 +177,12 @@ export const editorSlice = createSlice({
         editTemperature: (state, action: PayloadAction<number>) => {
             state.temperature = action.payload;
         },
+        addStopSymbol: (state, action: PayloadAction<string>) => {
+            state.stopSymbols.push(action.payload);
+        },
+        deleteStopSymbol: (state, action: PayloadAction<string>) => {
+            state.stopSymbols = state.stopSymbols.filter((symbol) => symbol !== action.payload);
+        },
         editMaxTokens: (state, action: PayloadAction<number>) => {
             state.maxTokens = action.payload;
         },
@@ -187,6 +195,7 @@ export const editorSlice = createSlice({
 export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading,
     addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
     updateCreativeCompletionsLoadingStatus,
+    addStopSymbol, deleteStopSymbol,
     loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
 
 export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
@@ -208,6 +217,12 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
     const examples = state.editor.examples.filter(example => example.text.length > 0);
     const examplePrompts = examples.map(example => text.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
+    const stopSymbols = state.editor.stopSymbols.map(symbol => {
+        if (symbol === '\\n') {
+            return '\n';
+        }
+        return symbol;
+    });
 
     exampleIds.map((exampleId) => dispatch(markExampleAsLoading(exampleId)));
 
@@ -222,7 +237,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
             "prompt": examplePrompts,
             "max_tokens": state.editor.maxTokens,
             "temperature": state.editor.temperature,
-            "stop": "\n"
+            "stop": stopSymbols
         }
     }).then(response => {
         console.log(response.data);
@@ -255,7 +270,13 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
 
     const text = state.editor.prompt;
     const temperature = state.editor.temperature;
-    const maxTokens = state.editor.maxTokens
+    const maxTokens = state.editor.maxTokens;
+    const stopSymbols = state.editor.stopSymbols.map(symbol => {
+        if (symbol === '\\n') {
+            return '\n';
+        }
+        return symbol;
+    });
 
     axios({
         method: "POST",
@@ -268,7 +289,7 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
             "prompt": Array(state.editor.maxCreativeCompletions).fill(text),
             "temperature": temperature,
             "max_tokens": maxTokens,
-            "stop": ""
+            "stop": stopSymbols,
         }
     }).then(response => {
         console.log(response.data);
@@ -289,6 +310,7 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
 
 export const selectTabIndex = (state: RootState) => state.editor.tabIndex;
 export const selectPrompt = (state: RootState) => state.editor.prompt;
+export const selectStopSymbols = (state: RootState) => state.editor.stopSymbols;
 export const selectExamples = (state: RootState) => state.editor.examples;
 export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.loadingCreativeCompletions;
 export const selectCreativeCompletions = (state: RootState) => state.editor.creativeCompletions;

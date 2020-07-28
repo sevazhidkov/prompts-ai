@@ -2,7 +2,7 @@ import React from "react";
 import {useDispatch} from "react-redux";
 import getTemplateGroups, {getFlattenedTemplates} from "../../libs/templatesLibrary";
 import { loadTemplate, cleanExampleList } from "../../app/slices/editorSlice";
-import {Button, FormControl, InputLabel, Select, Box} from "@material-ui/core";
+import {Button, FormControl, Select, Box} from "@material-ui/core";
 
 interface FormElements extends HTMLCollection {
     templateId: HTMLSelectElement;
@@ -26,7 +26,6 @@ export default function TemplatesForm() {
             dispatch(cleanExampleList());
         }}>
             <FormControl>
-                <InputLabel htmlFor="template-select">Templates</InputLabel>
                 <Select native defaultValue="" id="template-select" name="templateId">
                     {templateGroups.map((templateGroup, ind) => (
                         <optgroup key={ind} label={templateGroup.name}>

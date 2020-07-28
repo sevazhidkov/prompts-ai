@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import {fetchExamplesOutputsAsync} from "../../app/slices/editorSlice";
 import { Button } from '@material-ui/core';
 
-export default function RunButton() {
+export default function RunExamplesButton() {
     const dispatch = useDispatch();
     const fetchOutputs = () => {
         dispatch(fetchExamplesOutputsAsync());

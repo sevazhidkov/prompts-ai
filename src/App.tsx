@@ -1,6 +1,5 @@
 import React from 'react';
 import { PromptEditor } from './components/promptEditor/PromptEditor';
-import ExampleModeTab from './components/exampleModeTab/ExampleModeTab';
 import './App.css';
 import {
     createMuiTheme,
@@ -16,6 +15,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import {editApiKey, selectApiKey} from "./app/slices/editorSlice";
 import {useDispatch, useSelector} from "react-redux";
+import ModeTabs from "./components/modeTabs/ModeTabs";
 
 const useStyles = makeStyles({
     description: {
@@ -42,13 +42,13 @@ function App() {
             <CssBaseline/>
             <AppBar position="static">
                 <Container maxWidth={"lg"}>
-                    <Toolbar variant="dense">
+                    <Toolbar variant="regular">
                         <Typography variant="h6" color="inherit">
                             Prompts.ai
                         </Typography>
 
                         <Typography className={styles.description}>
-                            Advanced playground for GPT-3
+                            Advanced playground tools for GPT-3
                         </Typography>
 
                         <div className={styles.apiKey}>
@@ -77,10 +77,10 @@ function App() {
                     <PromptEditor/>
                 </Box>
                 <Box mt={2}>
-                    <ExampleModeTab/>
+                    <ModeTabs/>
                 </Box>
                 <Box mt={2}>
-                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com <span role={"img"} aria-label={"heart"}>❤️</span></Typography>
+                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com §</Typography>
                 </Box>
             </Container>
         </ThemeProvider>

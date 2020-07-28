@@ -4,6 +4,7 @@ import {editExample, deleteExample, cleanExampleList} from "../../app/slices/edi
 import {RootState} from "../../app/store";
 import {TextField, Card, CardContent, Box, CircularProgress, Grid, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 
 interface Props {
     ind: number;
@@ -14,8 +15,15 @@ interface Props {
     output?: string;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+    card: {
+        backgroundColor: theme.palette.background.default,
+    }
+}));
+
 function Example (props: Props) {
     const dispatch = useDispatch();
+    const styles = useStyles();
     const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         dispatch(editExample({id: props.id, text: event.currentTarget.value}));
         dispatch(cleanExampleList());
@@ -36,7 +44,7 @@ function Example (props: Props) {
     });
 
     return (
-        <Card>
+        <Card className={styles.card}>
             <CardContent>
                 <Grid
                     container

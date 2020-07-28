@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { uniqueId } from "lodash";
+import uniqid from "uniqid";
 import axios from "axios";
 import {AppThunk, RootState} from "../store";
 import {ChoiceResult} from "../../libs/gptClient";
@@ -21,6 +21,21 @@ interface LoadExampleOutputActionPayload {
     output: string;
 }
 
+interface CreativeCompletion {
+    id: string;
+    prompt: string;
+    output: string;
+    temperature: number;
+    maxTokens: number;
+}
+
+interface AddCreativeCompletionActionPayload {
+    output: string;
+    prompt: string;
+    temperature: number;
+    maxTokens: number;
+}
+
 export interface LoadTemplateActionExample {
     text: string;
     output: string;
@@ -36,7 +51,14 @@ interface EditorState {
     apiKey?: string;
     temperature: number;
     maxTokens: number;
+    tabIndex: number;
+
     examples: Array<Example>;
+
+    loadingCreativeCompletions: boolean;
+    creativeCompletions: Array<CreativeCompletion>;
+    maxCreativeCompletions: number;
+    showPromptForCreativeCompletions: boolean;
 }
 ///
 // Output: Anna and Mike are going skiing.
@@ -57,10 +79,17 @@ const initialState: EditorState = {
     temperature: 0.5,
     maxTokens: 30,
     apiKey: undefined,
+    tabIndex: 0,
+
     examples: [
-        {id: uniqueId("input_"), text: "We all eat the fish and then made dessert.", output: "We all ate the fish and then made dessert.", isLoading: false},
-        {id: uniqueId("input_"), text: "I like ski every day.", output: "I like skiing every day.", isLoading: false},
-        ]
+        {id: uniqid("input_"), text: "We all eat the fish and then made dessert.", output: "We all ate the fish and then made dessert.", isLoading: false},
+        {id: uniqid("input_"), text: "I like ski every day.", output: "I like skiing every day.", isLoading: false},
+        ],
+
+    loadingCreativeCompletions: false,
+    creativeCompletions: [],
+    maxCreativeCompletions: 10,
+    showPromptForCreativeCompletions: true,
 };
 
 export const editorSlice = createSlice({
@@ -78,7 +107,7 @@ export const editorSlice = createSlice({
         cleanExampleList: (state) => {
             // Always add an empty example for user to fill out
             if (state.examples.length < 1 || state.examples[state.examples.length - 1].text.length) {
-                state.examples.push({id: uniqueId("input_"), text: "", output: undefined, isLoading: false});
+                state.examples.push({id: uniqid("input_"), text: "", output: undefined, isLoading: false});
             }
             // Delete all empty inputs except for the last one
             state.examples = state.examples.filter((value, index) => {
@@ -109,10 +138,32 @@ export const editorSlice = createSlice({
             state.examples = state.examples.filter(example => example.id !== action.payload);
         },
 
+        updateCreativeCompletionsLoadingStatus: (state, action: PayloadAction<boolean>) => {
+            state.loadingCreativeCompletions = action.payload;
+        },
+        addCreativeCompletion: (state, action: PayloadAction<AddCreativeCompletionActionPayload>) => {
+            state.creativeCompletions.push({
+                id: uniqid('completion_'),
+                output: action.payload.output,
+                prompt: action.payload.prompt,
+                temperature: action.payload.temperature,
+                maxTokens: action.payload.maxTokens,
+            });
+        },
+        editMaxCreativeCompletions: (state, action: PayloadAction<number>) => {
+            state.maxCreativeCompletions = action.payload;
+        },
+        cleanCreativeCompletions: (state) => {
+            state.creativeCompletions = [];
+        },
+        updateShowPromptForCreativeCompletions: (state, action: PayloadAction<boolean>) => {
+            state.showPromptForCreativeCompletions = action.payload;
+        },
+
         loadTemplate: (state, action: PayloadAction<LoadTemplateActionPayload>) => {
             state.prompt = action.payload.prompt;
             state.examples = action.payload.examples.map((example) => {
-                return {id: uniqueId('example_'), text: example.text, output: example.output, isLoading: false}
+                return {id: uniqid('example_'), text: example.text, output: example.output, isLoading: false}
             });
         },
         editPrompt: (state, action: PayloadAction<string>) => {
@@ -126,12 +177,17 @@ export const editorSlice = createSlice({
         },
         editMaxTokens: (state, action: PayloadAction<number>) => {
             state.maxTokens = action.payload;
+        },
+        updateTabIndex: (state, action: PayloadAction<number>) => {
+            state.tabIndex = action.payload;
         }
     },
 });
 
 export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading,
-    loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens } = editorSlice.actions;
+    addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
+    updateCreativeCompletionsLoadingStatus,
+    loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
 
 export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
@@ -139,11 +195,20 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
         alert('Enter an API key before running requests.');
         return;
     }
+    if (state.editor.prompt.length === 0) {
+        alert("Prompts can't be empty");
+        return;
+    }
+    if (state.editor.prompt.indexOf('{example}') === -1) {
+        alert('Use "{example"} in your prompt to use the Multiple Examples mode');
+        return;
+    }
 
     const text = state.editor.prompt;
     const examples = state.editor.examples.filter(example => example.text.length > 0);
     const examplePrompts = examples.map(example => text.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
+
     exampleIds.map((exampleId) => dispatch(markExampleAsLoading(exampleId)));
 
     axios({
@@ -175,8 +240,60 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
     //}, 1000);
 };
 
+export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState) => {
+    const state = getState();
+    if (state.editor.apiKey === undefined) {
+        alert('Enter an API key before running requests.');
+        return;
+    }
+    if (state.editor.prompt.length === 0) {
+        alert("Prompts can't be empty");
+        return;
+    }
+
+    dispatch(updateCreativeCompletionsLoadingStatus(true));
+
+    const text = state.editor.prompt;
+    const temperature = state.editor.temperature;
+    const maxTokens = state.editor.maxTokens
+
+    axios({
+        method: "POST",
+        url: `https://api.openai.com/v1/engines/davinci/completions`,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${state.editor.apiKey}`,
+        },
+        data: {
+            "prompt": Array(state.editor.maxCreativeCompletions).fill(text),
+            "temperature": temperature,
+            "max_tokens": maxTokens,
+            "stop": ""
+        }
+    }).then(response => {
+        console.log(response.data);
+        return { ...response.data };
+    }).then(response => {
+        dispatch(updateCreativeCompletionsLoadingStatus(false));
+        response.choices.map((creativeCompletionResult: ChoiceResult) => (
+            dispatch(addCreativeCompletion({
+                output: creativeCompletionResult.text,
+                prompt: text,
+                temperature: temperature,
+                maxTokens: maxTokens
+            }))
+        ));
+    });
+}
+
+
+export const selectTabIndex = (state: RootState) => state.editor.tabIndex;
 export const selectPrompt = (state: RootState) => state.editor.prompt;
 export const selectExamples = (state: RootState) => state.editor.examples;
+export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.loadingCreativeCompletions;
+export const selectCreativeCompletions = (state: RootState) => state.editor.creativeCompletions;
+export const selectMaxCreativeCompletions = (state: RootState) => state.editor.maxCreativeCompletions;
+export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.showPromptForCreativeCompletions;
 export const selectApiKey = (state: RootState) => state.editor.apiKey;
 export const selectTemperature = (state: RootState) => state.editor.temperature;
 export const selectMaxTokens = (state: RootState) => state.editor.maxTokens;

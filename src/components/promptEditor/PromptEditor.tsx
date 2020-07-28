@@ -17,12 +17,13 @@ import {
     editFrequencyPenalty,
     editPresencePenalty,
     selectTopP,
-    selectFrequencyPenalty, selectPresencePenalty
+    selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey
 } from "../../app/slices/editorSlice";
 
 export function PromptEditor() {
     const dispatch = useDispatch();
     const prompt = useSelector(selectPrompt);
+    const apiKey = useSelector(selectApiKey);
     const temperature = useSelector(selectTemperature);
     const topP = useSelector(selectTopP);
     const frequencyPenalty = useSelector(selectFrequencyPenalty);
@@ -71,9 +72,32 @@ export function PromptEditor() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={3} md={3}>
+                    <Box mb={1}>
+                        <Card>
+                            <CardContent>
+                                <Typography gutterBottom>
+                                    <strong>API Key</strong>
+                                </Typography>
+                                <TextField type="password"
+                                           variant="outlined"
+                                           size={'small'}
+                                           value={apiKey}
+                                           onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                               dispatch(editApiKey(event.currentTarget.value));
+                                           }}
+                                           inputProps={{
+                                               autoComplete: 'new-password',
+                                               form: {
+                                                   autoComplete: 'off',
+                                               },
+                                           }}
+                                />
+                            </CardContent>
+                        </Card>
+                    </Box>
                     <Card>
                         <CardContent>
-                            <Typography id="max-tokens-slider" gutterBottom>
+                            <Typography gutterBottom>
                                 <strong>Parameters</strong>
                             </Typography>
                             <Tooltip title={'"Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive."'}
@@ -139,7 +163,7 @@ export function PromptEditor() {
                     <Box mt={0}>
                         <Card>
                             <CardContent>
-                                <Typography id="max-tokens-slider" gutterBottom>
+                                <Typography gutterBottom>
                                     <strong>Templates</strong>
                                 </Typography>
                                 <TemplatesForm/>
@@ -149,7 +173,7 @@ export function PromptEditor() {
                     <Box mt={1}>
                         <Card>
                             <CardContent>
-                                <Typography id="max-tokens-slider" gutterBottom>
+                                <Typography gutterBottom>
                                     <strong>Advanced parameters</strong>
                                 </Typography>
                                 <Tooltip title={'"Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered."'} placement="left">

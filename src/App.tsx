@@ -7,39 +7,22 @@ import {
     Typography,
     ThemeProvider,
     Container,
-    AppBar,
-    Toolbar,
     Box,
-    TextField
 } from "@material-ui/core";
-import { makeStyles } from '@material-ui/styles';
-import {editApiKey, selectApiKey} from "./app/slices/editorSlice";
-import {useDispatch, useSelector} from "react-redux";
 import ModeTabs from "./components/modeTabs/ModeTabs";
-
-const useStyles = makeStyles({
-    description: {
-        padding: '0 0 0 25px',
-    },
-    apiKey: {
-        marginLeft: "25%"
-    }
-});
 
 
 function App() {
-    const styles = useStyles();
     const theme = createMuiTheme({
         palette: {
             type: "dark"
         }
     });
-    const dispatch = useDispatch();
-    const apiKey = useSelector(selectApiKey);
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
+            {/*
             <AppBar position="static">
                 <Container maxWidth={"lg"}>
                     <Toolbar variant="regular">
@@ -70,8 +53,8 @@ function App() {
                         </div>
                     </Toolbar>
                 </Container>
-
             </AppBar>
+            */}
             <Container maxWidth={"lg"}>
                 <Box mt={2}>
                     <PromptEditor/>

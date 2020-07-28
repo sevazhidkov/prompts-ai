@@ -1,7 +1,11 @@
 import React, {useEffect} from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import ExampleCollection from '../exampleCollection/ExampleCollection';
-import {cleanExampleList} from "../../app/slices/editorSlice";
+import {
+    cleanExampleList,
+    selectExamplePreviousOutputsStatus,
+    updateExamplePreviousOutputsStatus
+} from "../../app/slices/editorSlice";
 import {Box, Typography, Card, CardContent, Grid, FormControlLabel, Switch} from "@material-ui/core";
 import RunExamplesButton from "../runExamplesButton/RunExamplesButton";
 import { useStyles } from '../modeTabs/ModeTabs';
@@ -10,6 +14,12 @@ import { useStyles } from '../modeTabs/ModeTabs';
 
 export default function ExampleModeTab() {
     const dispatch = useDispatch();
+
+    const showPreviousOutputs = useSelector(selectExamplePreviousOutputsStatus);
+    const handlePreviousOutputsSwitchChange = (event: React.ChangeEvent<{}>, value: boolean) => {
+        dispatch(updateExamplePreviousOutputsStatus(value));
+    }
+
     const styles = useStyles();
     useEffect(() => {
         dispatch(cleanExampleList());
@@ -32,7 +42,9 @@ export default function ExampleModeTab() {
                         <Box mt={1}>
                             <Grid container spacing={1} alignItems="center">
                                 <Grid item><FormControlLabel
-                                    control={<Switch name="creative-completions-prompt-switch" color="primary"/>}
+                                    control={<Switch value={showPreviousOutputs}
+                                                     onChange={handlePreviousOutputsSwitchChange}
+                                                     name="previous-outputs-switch" color="primary"/>}
                                     label="Show previous outputs"
                                 /></Grid>
                             </Grid>

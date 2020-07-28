@@ -9,6 +9,7 @@ interface Example {
     text: string;
     isLoading: boolean;
     output?: string;
+    previousOutput?: string;
 }
 
 interface EditExampleActionPayload {
@@ -63,6 +64,7 @@ interface EditorState {
     maxTokens: number;
     tabIndex: number;
 
+    showExamplePreviousOutputs: boolean;
     examples: Array<Example>;
 
     loadingCreativeCompletions: boolean;
@@ -95,6 +97,7 @@ const initialState: EditorState = {
     apiKey: undefined,
     tabIndex: 0,
 
+    showExamplePreviousOutputs: false,
     examples: [
         {id: uniqid("input_"), text: "We all eat the fish and then made dessert.", output: "We all ate the fish and then made dessert.", isLoading: false},
         {id: uniqid("input_"), text: "I like ski every day.", output: "I like skiing every day.", isLoading: false},
@@ -142,6 +145,7 @@ export const editorSlice = createSlice({
         loadOutputForExample: (state, action: PayloadAction<LoadExampleOutputActionPayload>) => {
             state.examples = state.examples.map(value => {
                 if (value.id === action.payload.id) {
+                    value.previousOutput = value.output;
                     value.output = action.payload.output;
                     value.isLoading = false;
                 }
@@ -150,6 +154,9 @@ export const editorSlice = createSlice({
         },
         deleteExample: (state, action: PayloadAction<string>) => {
             state.examples = state.examples.filter(example => example.id !== action.payload);
+        },
+        updateExamplePreviousOutputsStatus: (state, action: PayloadAction<boolean>) => {
+            state.showExamplePreviousOutputs = action.payload;
         },
 
         updateCreativeCompletionsLoadingStatus: (state, action: PayloadAction<boolean>) => {
@@ -216,7 +223,7 @@ export const editorSlice = createSlice({
     },
 });
 
-export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading,
+export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
     addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
     updateCreativeCompletionsLoadingStatus,
     addStopSymbol, deleteStopSymbol,
@@ -353,6 +360,7 @@ export const selectTabIndex = (state: RootState) => state.editor.tabIndex;
 export const selectPrompt = (state: RootState) => state.editor.prompt;
 export const selectStopSymbols = (state: RootState) => state.editor.stopSymbols;
 export const selectExamples = (state: RootState) => state.editor.examples;
+export const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.showExamplePreviousOutputs;
 export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.loadingCreativeCompletions;
 export const selectCreativeCompletions = (state: RootState) => state.editor.creativeCompletions;
 export const selectMaxCreativeCompletions = (state: RootState) => state.editor.maxCreativeCompletions;

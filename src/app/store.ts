@@ -74,11 +74,20 @@ const migrations = {
             }
         };
     },
+    6: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                showExamplePreviousOutputs: false
+            }
+        };
+    },
 };
 
 const persistConfig = {
     key: 'root',
-    version: 5,
+    version: 6,
     migrate: createMigrate(migrations),
     storage,
 }

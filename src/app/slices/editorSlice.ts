@@ -27,6 +27,9 @@ interface CreativeCompletion {
     output: string;
     temperature: number;
     maxTokens: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
 }
 
 interface AddCreativeCompletionActionPayload {
@@ -34,6 +37,9 @@ interface AddCreativeCompletionActionPayload {
     prompt: string;
     temperature: number;
     maxTokens: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
 }
 
 export interface LoadTemplateActionExample {
@@ -50,6 +56,9 @@ interface EditorState {
     prompt: string;
     apiKey?: string;
     temperature: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
     stopSymbols: Array<string>;
     maxTokens: number;
     tabIndex: number;
@@ -78,6 +87,9 @@ const initialState: EditorState = {
         "Input: {example}\n" +
         "Output:",
     temperature: 0.5,
+    topP: 1,
+    frequencyPenalty: 0,
+    presencePenalty: 0,
     stopSymbols: ["\\n"],
     maxTokens: 30,
     apiKey: undefined,
@@ -150,6 +162,9 @@ export const editorSlice = createSlice({
                 prompt: action.payload.prompt,
                 temperature: action.payload.temperature,
                 maxTokens: action.payload.maxTokens,
+                topP: action.payload.topP,
+                frequencyPenalty: action.payload.frequencyPenalty,
+                presencePenalty: action.payload.presencePenalty,
             });
         },
         editMaxCreativeCompletions: (state, action: PayloadAction<number>) => {
@@ -177,6 +192,15 @@ export const editorSlice = createSlice({
         editTemperature: (state, action: PayloadAction<number>) => {
             state.temperature = action.payload;
         },
+        editTopP: (state, action: PayloadAction<number>) => {
+            state.topP = action.payload;
+        },
+        editFrequencyPenalty: (state, action: PayloadAction<number>) => {
+            state.frequencyPenalty = action.payload;
+        },
+        editPresencePenalty: (state, action: PayloadAction<number>) => {
+            state.presencePenalty = action.payload;
+        },
         addStopSymbol: (state, action: PayloadAction<string>) => {
             state.stopSymbols.push(action.payload);
         },
@@ -196,6 +220,7 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
     updateCreativeCompletionsLoadingStatus,
     addStopSymbol, deleteStopSymbol,
+    editTopP, editFrequencyPenalty, editPresencePenalty,
     loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
 
 export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
@@ -217,6 +242,9 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
     const examples = state.editor.examples.filter(example => example.text.length > 0);
     const examplePrompts = examples.map(example => text.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
+    const topP = state.editor.topP;
+    const presencePenalty = state.editor.presencePenalty;
+    const frequencyPenalty = state.editor.frequencyPenalty;
     const stopSymbols = state.editor.stopSymbols.map(symbol => {
         if (symbol === '\\n') {
             return '\n';
@@ -237,7 +265,10 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
             "prompt": examplePrompts,
             "max_tokens": state.editor.maxTokens,
             "temperature": state.editor.temperature,
-            "stop": stopSymbols
+            "stop": stopSymbols,
+            "top_p": topP,
+            "presence_penalty": presencePenalty,
+            "frequency_penalty": frequencyPenalty
         }
     }).then(response => {
         console.log(response.data);
@@ -271,6 +302,9 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
     const text = state.editor.prompt;
     const temperature = state.editor.temperature;
     const maxTokens = state.editor.maxTokens;
+    const topP = state.editor.topP;
+    const presencePenalty = state.editor.presencePenalty;
+    const frequencyPenalty = state.editor.frequencyPenalty;
     const stopSymbols = state.editor.stopSymbols.map(symbol => {
         if (symbol === '\\n') {
             return '\n';
@@ -286,10 +320,14 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
             "Authorization": `Bearer ${state.editor.apiKey}`,
         },
         data: {
-            "prompt": Array(state.editor.maxCreativeCompletions).fill(text),
+            "prompt": text,
+            "n": state.editor.maxCreativeCompletions,
             "temperature": temperature,
             "max_tokens": maxTokens,
             "stop": stopSymbols,
+            "top_p": topP,
+            "presence_penalty": presencePenalty,
+            "frequency_penalty": frequencyPenalty
         }
     }).then(response => {
         console.log(response.data);
@@ -301,7 +339,10 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
                 output: creativeCompletionResult.text,
                 prompt: text,
                 temperature: temperature,
-                maxTokens: maxTokens
+                maxTokens: maxTokens,
+                topP: topP,
+                presencePenalty: presencePenalty,
+                frequencyPenalty: frequencyPenalty,
             }))
         ));
     });
@@ -318,6 +359,9 @@ export const selectMaxCreativeCompletions = (state: RootState) => state.editor.m
 export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.showPromptForCreativeCompletions;
 export const selectApiKey = (state: RootState) => state.editor.apiKey;
 export const selectTemperature = (state: RootState) => state.editor.temperature;
+export const selectTopP = (state: RootState) => state.editor.topP;
+export const selectFrequencyPenalty = (state: RootState) => state.editor.frequencyPenalty;
+export const selectPresencePenalty = (state: RootState) => state.editor.presencePenalty;
 export const selectMaxTokens = (state: RootState) => state.editor.maxTokens;
 
 export default editorSlice.reducer;

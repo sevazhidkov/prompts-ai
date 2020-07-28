@@ -3,14 +3,30 @@ import {useDispatch, useSelector} from "react-redux";
 import {Typography, Slider, TextField, Grid, Tooltip, Box, Card, CardContent} from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
 import TemplatesForm from '../templateForm/TemplatesForm';
-import {selectPrompt, editPrompt, selectTemperature, editTemperature,
-    selectMaxTokens, editMaxTokens, selectStopSymbols,
-    addStopSymbol, deleteStopSymbol} from "../../app/slices/editorSlice";
+import {
+    selectPrompt,
+    editPrompt,
+    selectTemperature,
+    editTemperature,
+    selectMaxTokens,
+    editMaxTokens,
+    selectStopSymbols,
+    addStopSymbol,
+    deleteStopSymbol,
+    editTopP,
+    editFrequencyPenalty,
+    editPresencePenalty,
+    selectTopP,
+    selectFrequencyPenalty, selectPresencePenalty
+} from "../../app/slices/editorSlice";
 
 export function PromptEditor() {
     const dispatch = useDispatch();
     const prompt = useSelector(selectPrompt);
     const temperature = useSelector(selectTemperature);
+    const topP = useSelector(selectTopP);
+    const frequencyPenalty = useSelector(selectFrequencyPenalty);
+    const presencePenalty = useSelector(selectPresencePenalty);
     const maxTokens = useSelector(selectMaxTokens);
     const stopSymbols = useSelector(selectStopSymbols);
     const handlePromptChange = (event: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -18,6 +34,15 @@ export function PromptEditor() {
     }
     const handleTemperatureChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         dispatch(editTemperature(value as number));
+    }
+    const handleTopPChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        dispatch(editTopP(value as number));
+    }
+    const handleFrequencyPenaltyChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        dispatch(editFrequencyPenalty(value as number));
+    }
+    const handlePresencePenaltyChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        dispatch(editPresencePenalty(value as number));
     }
     const handleMaxTokensChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         dispatch(editMaxTokens(value as number));
@@ -134,8 +159,8 @@ export function PromptEditor() {
                                 </Tooltip>
                                 <Slider
                                     defaultValue={0.5}
-                                    value={temperature}
-                                    onChange={handleTemperatureChange}
+                                    value={topP}
+                                    onChange={handleTopPChange}
                                     aria-labelledby="top-p-slider"
                                     valueLabelDisplay="auto"
                                     step={0.05}
@@ -156,8 +181,8 @@ export function PromptEditor() {
                                 </Tooltip>
                                 <Slider
                                     defaultValue={0.5}
-                                    value={temperature}
-                                    onChange={handleTemperatureChange}
+                                    value={frequencyPenalty}
+                                    onChange={handleFrequencyPenaltyChange}
                                     aria-labelledby="frequency-penalty-slider"
                                     valueLabelDisplay="auto"
                                     step={0.05}
@@ -178,8 +203,8 @@ export function PromptEditor() {
                                 </Tooltip>
                                 <Slider
                                     defaultValue={0.5}
-                                    value={temperature}
-                                    onChange={handleTemperatureChange}
+                                    value={presencePenalty}
+                                    onChange={handlePresencePenaltyChange}
                                     aria-labelledby="presence-penalty-slider"
                                     valueLabelDisplay="auto"
                                     step={0.05}

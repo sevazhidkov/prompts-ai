@@ -10,6 +10,9 @@ interface Props {
     output: string;
     temperature: number;
     maxTokens: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,6 +52,9 @@ export default function CreativeCompletion(props: Props) {
             <CardActions>
                 <Typography variant="caption">Temperature: {props.temperature}</Typography>
                 <Typography variant="caption">Max tokens: {props.maxTokens}</Typography>
+                <Typography variant="caption">Top P: {props.topP}</Typography>
+                <Typography variant="caption">Frequency penalty: {props.frequencyPenalty}</Typography>
+                <Typography variant="caption">Presence penalty: {props.presencePenalty}</Typography>
             </CardActions>
         )
         }

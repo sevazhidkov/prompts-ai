@@ -48,12 +48,37 @@ const migrations = {
                 stopSymbols: []
             }
         };
-    }
+    },
+    4: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                topP: 1,
+                frequencyPenalty: 0,
+                presencePenalty: 0,
+            }
+        };
+    },
+    5: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                creativeCompletions: state.creativeCompletions.map((completion: any) => ({
+                    ...completion,
+                    topP: 1,
+                    frequencyPenalty: 0,
+                    presencePenalty: 0,
+                }))
+            }
+        };
+    },
 };
 
 const persistConfig = {
     key: 'root',
-    version: 3,
+    version: 5,
     migrate: createMigrate(migrations),
     storage,
 }

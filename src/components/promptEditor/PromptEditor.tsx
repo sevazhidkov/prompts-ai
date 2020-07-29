@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Typography, Slider, TextField, Grid, Tooltip, Box, Card, CardContent, Button} from "@material-ui/core";
+import {Typography, Slider, TextField, Grid, Tooltip, Box, Card, CardContent, Button, Hidden} from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
 import { ActionCreators } from "redux-undo";
 import TemplatesForm from '../templateForm/TemplatesForm';
@@ -20,9 +20,18 @@ import {
     selectTopP,
     selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey
 } from "../../app/slices/editorSlice";
+import {makeStyles} from "@material-ui/styles";
+
+const useStyles = makeStyles({
+    fullWidth: {
+        width: '100%',
+    },
+});
 
 export function PromptEditor() {
     const dispatch = useDispatch();
+    const styles = useStyles();
+
     const prompt = useSelector(selectPrompt);
     const apiKey = useSelector(selectApiKey);
     const temperature = useSelector(selectTemperature);
@@ -96,7 +105,8 @@ export function PromptEditor() {
                                 <hr/>
                                 <Box mt={2}>
                                     <Grid container>
-                                        <Grid item>
+                                        <Grid item
+                                              className={styles.fullWidth}>
                                             <TextField type="password"
                                                        variant="outlined"
                                                        label="API Key"
@@ -111,6 +121,7 @@ export function PromptEditor() {
                                                                autoComplete: 'off',
                                                            },
                                                        }}
+                                                       className={styles.fullWidth}
                                             />
                                         </Grid>
                                     </Grid>
@@ -178,6 +189,7 @@ export function PromptEditor() {
                                 onDelete={(deletedChip) => dispatch(deleteStopSymbol(deletedChip))}
                                 onBeforeAdd={() => stopSymbols.length !== 4}
                                 newChipKeys={['Tab']}
+                                className={styles.fullWidth}
                             />
                         </CardContent>
                     </Card>
@@ -193,7 +205,7 @@ export function PromptEditor() {
                             </CardContent>
                         </Card>
                     </Box>
-                    <Box mt={1}>
+                    <Hidden smDown><Box mt={1}>
                         <Card>
                             <CardContent>
                                 <Typography gutterBottom>
@@ -267,7 +279,7 @@ export function PromptEditor() {
                                 />
                             </CardContent>
                         </Card>
-                    </Box>
+                    </Box></Hidden>
                 </Grid>
             </Grid>
         </div>

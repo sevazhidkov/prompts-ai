@@ -64,6 +64,8 @@ export interface LoadTemplateActionExample {
 export interface LoadTemplateActionPayload {
     prompt: string;
     examples: Array<LoadTemplateActionExample>;
+    stopSymbols?: Array<string>;
+    tabIndex: number;
 }
 
 interface EditorState {
@@ -211,6 +213,11 @@ export const editorSlice = createSlice({
             state.examples = action.payload.examples.map((example) => {
                 return {id: uniqid('example_'), text: example.text, output: example.output, isLoading: false}
             });
+
+            if (action.payload.stopSymbols !== undefined) {
+                state.stopSymbols = action.payload.stopSymbols;
+            }
+            state.tabIndex = action.payload.tabIndex;
         },
         loadTemplateFromFileData: (state, action: PayloadAction<LoadTemplateFromFileDataActionPayload>) => {
             state.prompt = action.payload.prompt;

@@ -45,6 +45,17 @@ interface AddCreativeCompletionActionPayload {
     modelName: string;
 }
 
+export interface LoadTemplateFromFileDataActionPayload {
+    prompt: string;
+    temperature: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
+    maxTokens: number;
+    stopSymbols: Array<string>;
+    modelName: string;
+}
+
 export interface LoadTemplateActionExample {
     text: string;
     output: string;
@@ -201,6 +212,16 @@ export const editorSlice = createSlice({
                 return {id: uniqid('example_'), text: example.text, output: example.output, isLoading: false}
             });
         },
+        loadTemplateFromFileData: (state, action: PayloadAction<LoadTemplateFromFileDataActionPayload>) => {
+            state.prompt = action.payload.prompt;
+            state.temperature = action.payload.temperature;
+            state.topP = action.payload.topP;
+            state.frequencyPenalty = action.payload.frequencyPenalty;
+            state.presencePenalty = action.payload.presencePenalty;
+            state.maxTokens = action.payload.maxTokens;
+            state.stopSymbols = action.payload.stopSymbols;
+            state.modelName = action.payload.modelName;
+        },
         editPrompt: (state, action: PayloadAction<string>) => {
             state.prompt = action.payload;
         },
@@ -243,7 +264,8 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     updateCreativeCompletionsLoadingStatus,
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
-    loadTemplate, editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
+    loadTemplate, loadTemplateFromFileData,
+    editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
 
 export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();

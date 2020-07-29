@@ -8,7 +8,7 @@ import editorReducer from './slices/editorSlice';
 const filteredActions = ['editor/addStopSymbol', 'editor/deleteStopSymbol',
     'editor/editTopP', 'editor/editFrequencyPenalty', 'editor/editPresencePenalty',
     'editor/loadTemplate', 'editor/editPrompt', 'editor/editApiKey', 'editor/editTemperature', 'editor/editModelName',
-    'editor/editMaxTokens'
+    'editor/editMaxTokens', 'editor/loadTemplateFromFileData'
 ];
 
 const reducers = combineReducers(

@@ -78,6 +78,23 @@ export function PromptEditor() {
         dispatch(editModelName(event.target.value));
     }
 
+    const handleSaveAndDownload = () => {
+        const element = document.createElement("a");
+        const savedStopSymbols = stopSymbols.map(symbol => {
+            return symbol.split('\\n').join('\n');
+        });
+        const file = new Blob([
+            JSON.stringify({prompt: prompt, temperature: temperature, topP: topP,
+                frequencyPenalty: frequencyPenalty, presencePenalty: presencePenalty,
+                maxTokens: maxTokens, stopSymbols: savedStopSymbols, modelName: modelName
+            })
+        ], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = `prompt_${Math.trunc(Date.now() / 1000)}.json`;
+        document.body.appendChild(element);
+        element.click();
+    }
+
     return (
         <div>
             <Grid
@@ -117,6 +134,14 @@ export function PromptEditor() {
                                                 onClick={() => dispatch(ActionCreators.redo())}
                                             >
                                                 Redo
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                aria-label="Save as a file"
+                                                onClick={handleSaveAndDownload}
+                                            >
+                                                Save
                                             </Button>
                                         </Grid>
                                     </Grid>

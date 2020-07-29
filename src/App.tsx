@@ -25,13 +25,13 @@ function App() {
 
     useHotkeys('ctrl+enter', () => {
         dispatch(fetchForCurrentTab());
-    }, {enableOnTags: ['INPUT', 'TEXTAREA']});
+    }, {filter: () => true});
     useHotkeys('ctrl+1', () => {
         dispatch(updateTabIndex(0));
-    }, {enableOnTags: ['INPUT', 'TEXTAREA']});
+    }, {filter: () => true});
     useHotkeys('ctrl+2', () => {
         dispatch(updateTabIndex(1));
-    }, {enableOnTags: ['INPUT', 'TEXTAREA']});
+    }, {filter: () => true});
 
 
     return (

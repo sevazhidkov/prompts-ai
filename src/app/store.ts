@@ -7,7 +7,7 @@ import editorReducer from './slices/editorSlice';
 
 const filteredActions = ['editor/addStopSymbol', 'editor/deleteStopSymbol',
     'editor/editTopP', 'editor/editFrequencyPenalty', 'editor/editPresencePenalty',
-    'editor/loadTemplate', 'editor/editPrompt', 'editor/editApiKey', 'editor/editTemperature',
+    'editor/loadTemplate', 'editor/editPrompt', 'editor/editApiKey', 'editor/editTemperature', 'editor/editModelName',
     'editor/editMaxTokens'
 ];
 
@@ -106,11 +106,23 @@ const migrations = {
             }
         };
     },
+    8: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                present: {
+                    ...state.editor.present,
+                    modelName: 'davinci'
+                }
+            }
+        }
+    }
 };
 
 const persistConfig = {
     key: 'root',
-    version: 7,
+    version: 8,
     migrate: createMigrate(migrations),
     storage,
 }

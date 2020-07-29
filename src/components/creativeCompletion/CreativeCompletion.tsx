@@ -13,6 +13,7 @@ interface Props {
     topP: number;
     frequencyPenalty: number;
     presencePenalty: number;
+    modelName: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -55,6 +56,7 @@ export default function CreativeCompletion(props: Props) {
                 <Typography variant="caption">Top P: {props.topP}</Typography>
                 <Typography variant="caption">Frequency penalty: {props.frequencyPenalty}</Typography>
                 <Typography variant="caption">Presence penalty: {props.presencePenalty}</Typography>
+                <Typography variant="caption">Model: {props.modelName}</Typography>
             </CardActions>
         )
         }

@@ -1,6 +1,18 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Typography, Slider, TextField, Grid, Tooltip, Box, Card, CardContent, Button, Hidden} from "@material-ui/core";
+import {
+    Typography,
+    Slider,
+    TextField,
+    Grid,
+    Tooltip,
+    Box,
+    Card,
+    CardContent,
+    Button,
+    Hidden,
+    Select
+} from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
 import { ActionCreators } from "redux-undo";
 import TemplatesForm from '../templateForm/TemplatesForm';
@@ -18,7 +30,7 @@ import {
     editFrequencyPenalty,
     editPresencePenalty,
     selectTopP,
-    selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey
+    selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey, selectModelName, editModelName
 } from "../../app/slices/editorSlice";
 import {makeStyles} from "@material-ui/styles";
 
@@ -40,6 +52,10 @@ export function PromptEditor() {
     const presencePenalty = useSelector(selectPresencePenalty);
     const maxTokens = useSelector(selectMaxTokens);
     const stopSymbols = useSelector(selectStopSymbols);
+
+    const availableModelNames = ['davinci', 'curie', 'babbage', 'ada'];
+    const modelName = useSelector(selectModelName);
+
     const handlePromptChange = (event: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         dispatch(editPrompt(event.currentTarget.value));
     }
@@ -57,6 +73,9 @@ export function PromptEditor() {
     }
     const handleMaxTokensChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         dispatch(editMaxTokens(value as number));
+    }
+    const handleModelNameChange = (event: any) => {
+        dispatch(editModelName(event.target.value));
     }
 
     return (
@@ -277,6 +296,14 @@ export function PromptEditor() {
                                     min={0}
                                     max={1}
                                 />
+                                <Typography id="model-name-typography" gutterBottom>
+                                    Model name:
+                                </Typography>
+                                <Select native id="model-name-select" name="modelName" value={modelName} onChange={handleModelNameChange} className={styles.fullWidth}>
+                                    {availableModelNames.map((modelName, ind) => (
+                                        <option key={ind} value={modelName}>{modelName}</option>
+                                    ))}
+                                </Select>
                             </CardContent>
                         </Card>
                     </Box></Hidden>

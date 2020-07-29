@@ -31,6 +31,7 @@ interface CreativeCompletion {
     topP: number;
     frequencyPenalty: number;
     presencePenalty: number;
+    modelName: string;
 }
 
 interface AddCreativeCompletionActionPayload {
@@ -41,6 +42,7 @@ interface AddCreativeCompletionActionPayload {
     topP: number;
     frequencyPenalty: number;
     presencePenalty: number;
+    modelName: string;
 }
 
 export interface LoadTemplateActionExample {
@@ -56,6 +58,7 @@ export interface LoadTemplateActionPayload {
 interface EditorState {
     prompt: string;
     apiKey?: string;
+    modelName: string;
     temperature: number;
     topP: number;
     frequencyPenalty: number;
@@ -88,6 +91,7 @@ const initialState: EditorState = {
         "Output: I walked to the store and I bought milk.\n" +
         "Input: {example}\n" +
         "Output:",
+    modelName: 'davinci',
     temperature: 0.5,
     topP: 1,
     frequencyPenalty: 0,
@@ -178,6 +182,7 @@ export const editorSlice = createSlice({
                 topP: action.payload.topP,
                 frequencyPenalty: action.payload.frequencyPenalty,
                 presencePenalty: action.payload.presencePenalty,
+                modelName: action.payload.modelName,
             });
         },
         editMaxCreativeCompletions: (state, action: PayloadAction<number>) => {
@@ -201,6 +206,9 @@ export const editorSlice = createSlice({
         },
         editApiKey: (state, action: PayloadAction<string>) => {
             state.apiKey = action.payload;
+        },
+        editModelName: (state, action: PayloadAction<string>) => {
+            state.modelName = action.payload;
         },
         editTemperature: (state, action: PayloadAction<number>) => {
             state.temperature = action.payload;
@@ -235,7 +243,7 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     updateCreativeCompletionsLoadingStatus,
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
-    loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
+    loadTemplate, editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
 
 export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();
@@ -276,6 +284,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
 
     const examplePrompts = examples.map(example => text.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
+    const modelName = state.editor.present.modelName;
     const topP = state.editor.present.topP;
     const presencePenalty = state.editor.present.presencePenalty;
     const frequencyPenalty = state.editor.present.frequencyPenalty;
@@ -292,7 +301,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
 
     axios({
         method: "POST",
-        url: `https://api.openai.com/v1/engines/davinci/completions`,
+        url: `https://api.openai.com/v1/engines/${modelName}/completions`,
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${state.editor.present.apiKey}`,
@@ -341,6 +350,7 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
 
     const text = state.editor.present.prompt;
     const temperature = state.editor.present.temperature;
+    const modelName = state.editor.present.modelName;
     const maxTokens = state.editor.present.maxTokens;
     const topP = state.editor.present.topP;
     const presencePenalty = state.editor.present.presencePenalty;
@@ -356,7 +366,7 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
 
     axios({
         method: "POST",
-        url: `https://api.openai.com/v1/engines/davinci/completions`,
+        url: `https://api.openai.com/v1/engines/${modelName}/completions`,
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${state.editor.present.apiKey}`,
@@ -385,6 +395,7 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
                 topP: topP,
                 presencePenalty: presencePenalty,
                 frequencyPenalty: frequencyPenalty,
+                modelName: modelName
             }))
         ));
     }).catch(error => {
@@ -405,6 +416,7 @@ export const selectCreativeCompletions = (state: RootState) => state.editor.pres
 export const selectMaxCreativeCompletions = (state: RootState) => state.editor.present.maxCreativeCompletions;
 export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.present.showPromptForCreativeCompletions;
 export const selectApiKey = (state: RootState) => state.editor.present.apiKey;
+export const selectModelName = (state: RootState) => state.editor.present.modelName;
 export const selectTemperature = (state: RootState) => state.editor.present.temperature;
 export const selectTopP = (state: RootState) => state.editor.present.topP;
 export const selectFrequencyPenalty = (state: RootState) => state.editor.present.frequencyPenalty;

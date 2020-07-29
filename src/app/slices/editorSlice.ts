@@ -142,6 +142,12 @@ export const editorSlice = createSlice({
                 return value;
             });
         },
+        markAllExamplesAsNotLoading: (state) => {
+            state.examples = state.examples.map(value => {
+                value.isLoading = false;
+                return value;
+            });
+        },
         loadOutputForExample: (state, action: PayloadAction<LoadExampleOutputActionPayload>) => {
             state.examples = state.examples.map(value => {
                 if (value.id === action.payload.id) {
@@ -224,11 +230,26 @@ export const editorSlice = createSlice({
 });
 
 export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
+    markAllExamplesAsNotLoading,
     addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
     updateCreativeCompletionsLoadingStatus,
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
     loadTemplate, editPrompt, editApiKey, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
+
+export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
+    const state = getState();
+    switch (state.editor.tabIndex) {
+        case 0: {
+            dispatch(fetchExamplesOutputsAsync());
+            break;
+        }
+        case 1: {
+            dispatch(fetchCreativeCompletionsAsync());
+            break;
+        }
+    }
+}
 
 export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
@@ -247,17 +268,25 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
 
     const text = state.editor.prompt;
     const examples = state.editor.examples.filter(example => example.text.length > 0);
+
+    if (examples.length === 0) {
+        alert('Enter at least one example');
+        return;
+    }
+
     const examplePrompts = examples.map(example => text.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
     const topP = state.editor.topP;
     const presencePenalty = state.editor.presencePenalty;
     const frequencyPenalty = state.editor.frequencyPenalty;
-    const stopSymbols = state.editor.stopSymbols.map(symbol => {
-        if (symbol === '\\n') {
-            return '\n';
-        }
-        return symbol;
-    });
+    let stopSymbols;
+    if (state.editor.stopSymbols.length > 0) {
+        stopSymbols = state.editor.stopSymbols.map(symbol => {
+            return symbol.split('\\n').join('\n');
+        });
+    } else {
+        stopSymbols = '';
+    }
 
     exampleIds.map((exampleId) => dispatch(markExampleAsLoading(exampleId)));
 
@@ -286,6 +315,10 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
              dispatch(loadOutputForExample({id: exampleId, output: exampleResult.text}));
              return undefined;
         });
+    }).catch(error => {
+        alert('API returned an error. Refer to the console to inspect it.')
+        console.log(error.response);
+        dispatch(markAllExamplesAsNotLoading());
     });
 
     //setTimeout(() => {
@@ -312,12 +345,14 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
     const topP = state.editor.topP;
     const presencePenalty = state.editor.presencePenalty;
     const frequencyPenalty = state.editor.frequencyPenalty;
-    const stopSymbols = state.editor.stopSymbols.map(symbol => {
-        if (symbol === '\\n') {
-            return '\n';
-        }
-        return symbol;
-    });
+    let stopSymbols;
+    if (state.editor.stopSymbols.length > 0) {
+        stopSymbols = state.editor.stopSymbols.map(symbol => {
+            return symbol.split('\\n').join('\n');
+        });
+    } else {
+        stopSymbols = '';
+    }
 
     axios({
         method: "POST",
@@ -352,6 +387,10 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
                 frequencyPenalty: frequencyPenalty,
             }))
         ));
+    }).catch(error => {
+        alert('API returned an error. Refer to the console to inspect it.')
+        console.log(error.response);
+        dispatch(updateCreativeCompletionsLoadingStatus(false));
     });
 }
 

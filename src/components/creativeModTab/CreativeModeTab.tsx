@@ -51,11 +51,11 @@ export default function CreativeModeTab() {
                                 value: 1,
                                 label: '0',
                             }, {
-                                value: 50,
-                                label: '50',
+                                value: 15,
+                                label: '15',
                             }]}
                             min={1}
-                            max={50}
+                            max={15}
                         />
                     </Box>
 

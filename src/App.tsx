@@ -7,17 +7,32 @@ import {
     Typography,
     ThemeProvider,
     Container,
-    Box,
+    Box, Link,
 } from "@material-ui/core";
+import {useHotkeys} from "react-hotkeys-hook";
+import {useDispatch} from "react-redux";
 import ModeTabs from "./components/modeTabs/ModeTabs";
+import {updateTabIndex, fetchForCurrentTab} from "./app/slices/editorSlice";
 
 
 function App() {
+    const dispatch = useDispatch();
     const theme = createMuiTheme({
         palette: {
             type: "dark"
         }
     });
+
+    useHotkeys('ctrl+enter', () => {
+        dispatch(fetchForCurrentTab());
+    }, {enableOnTags: ['INPUT', 'TEXTAREA']});
+    useHotkeys('ctrl+1', () => {
+        dispatch(updateTabIndex(0));
+    }, {enableOnTags: ['INPUT', 'TEXTAREA']});
+    useHotkeys('ctrl+2', () => {
+        dispatch(updateTabIndex(1));
+    }, {enableOnTags: ['INPUT', 'TEXTAREA']});
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -63,7 +78,9 @@ function App() {
                     <ModeTabs/>
                 </Box>
                 <Box mt={2}>
-                    <Typography>Questions or suggestions? Please reach out at seva@zhidkoff.com.</Typography>
+                    <Typography>
+                        <Link href={'https://www.notion.so/zhidkoffs/Prompts-ai-3efa7261cdc647f596cb11af06695d24'}>Help and shortcuts</Link>.
+                        Feedback: seva@zhidkoff.com.</Typography>
                 </Box>
             </Container>
         </ThemeProvider>

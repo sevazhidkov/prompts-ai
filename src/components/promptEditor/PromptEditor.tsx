@@ -1,7 +1,8 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Typography, Slider, TextField, Grid, Tooltip, Box, Card, CardContent} from "@material-ui/core";
+import {Typography, Slider, TextField, Grid, Tooltip, Box, Card, CardContent, Button} from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
+import { ActionCreators } from "redux-undo";
 import TemplatesForm from '../templateForm/TemplatesForm';
 import {
     selectPrompt,
@@ -75,23 +76,45 @@ export function PromptEditor() {
                     <Box mb={1}>
                         <Card>
                             <CardContent>
-                                <Typography gutterBottom>
-                                    <strong>API Key</strong>
-                                </Typography>
-                                <TextField type="password"
-                                           variant="outlined"
-                                           size={'small'}
-                                           value={apiKey}
-                                           onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                               dispatch(editApiKey(event.currentTarget.value));
-                                           }}
-                                           inputProps={{
-                                               autoComplete: 'new-password',
-                                               form: {
-                                                   autoComplete: 'off',
-                                               },
-                                           }}
-                                />
+                                <Box>
+                                    <Grid container>
+                                        <Grid item><Button
+                                            onClick={() => dispatch(ActionCreators.undo())}
+                                        >
+                                            Undo
+                                        </Button></Grid>
+                                        <Grid item>
+                                            <Button
+                                                aria-label="Undo last change"
+                                                onClick={() => dispatch(ActionCreators.redo())}
+                                            >
+                                                Redo
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                                <hr/>
+                                <Box mt={2}>
+                                    <Grid container>
+                                        <Grid item>
+                                            <TextField type="password"
+                                                       variant="outlined"
+                                                       label="API Key"
+                                                       size={'small'}
+                                                       value={apiKey}
+                                                       onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                           dispatch(editApiKey(event.currentTarget.value));
+                                                       }}
+                                                       inputProps={{
+                                                           autoComplete: 'new-password',
+                                                           form: {
+                                                               autoComplete: 'off',
+                                                           },
+                                                       }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Box>
                             </CardContent>
                         </Card>
                     </Box>

@@ -239,7 +239,7 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
 
 export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();
-    switch (state.editor.tabIndex) {
+    switch (state.editor.present.tabIndex) {
         case 0: {
             dispatch(fetchExamplesOutputsAsync());
             break;
@@ -253,21 +253,21 @@ export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
 
 export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
-    if (state.editor.apiKey === undefined) {
+    if (state.editor.present.apiKey === undefined) {
         alert('Enter an API key before running requests.');
         return;
     }
-    if (state.editor.prompt.length === 0) {
+    if (state.editor.present.prompt.length === 0) {
         alert("Prompts can't be empty");
         return;
     }
-    if (state.editor.prompt.indexOf('{example}') === -1) {
+    if (state.editor.present.prompt.indexOf('{example}') === -1) {
         alert('Use "{example"} in your prompt to use the Multiple Examples mode');
         return;
     }
 
-    const text = state.editor.prompt;
-    const examples = state.editor.examples.filter(example => example.text.length > 0);
+    const text = state.editor.present.prompt;
+    const examples = state.editor.present.examples.filter(example => example.text.length > 0);
 
     if (examples.length === 0) {
         alert('Enter at least one example');
@@ -276,12 +276,12 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
 
     const examplePrompts = examples.map(example => text.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
-    const topP = state.editor.topP;
-    const presencePenalty = state.editor.presencePenalty;
-    const frequencyPenalty = state.editor.frequencyPenalty;
+    const topP = state.editor.present.topP;
+    const presencePenalty = state.editor.present.presencePenalty;
+    const frequencyPenalty = state.editor.present.frequencyPenalty;
     let stopSymbols;
-    if (state.editor.stopSymbols.length > 0) {
-        stopSymbols = state.editor.stopSymbols.map(symbol => {
+    if (state.editor.present.stopSymbols.length > 0) {
+        stopSymbols = state.editor.present.stopSymbols.map(symbol => {
             return symbol.split('\\n').join('\n');
         });
     } else {
@@ -295,12 +295,12 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
         url: `https://api.openai.com/v1/engines/davinci/completions`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${state.editor.apiKey}`,
+            "Authorization": `Bearer ${state.editor.present.apiKey}`,
         },
         data: {
             "prompt": examplePrompts,
-            "max_tokens": state.editor.maxTokens,
-            "temperature": state.editor.temperature,
+            "max_tokens": state.editor.present.maxTokens,
+            "temperature": state.editor.present.temperature,
             "stop": stopSymbols,
             "top_p": topP,
             "presence_penalty": presencePenalty,
@@ -328,26 +328,26 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
 
 export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
-    if (state.editor.apiKey === undefined) {
+    if (state.editor.present.apiKey === undefined) {
         alert('Enter an API key before running requests.');
         return;
     }
-    if (state.editor.prompt.length === 0) {
+    if (state.editor.present.prompt.length === 0) {
         alert("Prompts can't be empty");
         return;
     }
 
     dispatch(updateCreativeCompletionsLoadingStatus(true));
 
-    const text = state.editor.prompt;
-    const temperature = state.editor.temperature;
-    const maxTokens = state.editor.maxTokens;
-    const topP = state.editor.topP;
-    const presencePenalty = state.editor.presencePenalty;
-    const frequencyPenalty = state.editor.frequencyPenalty;
+    const text = state.editor.present.prompt;
+    const temperature = state.editor.present.temperature;
+    const maxTokens = state.editor.present.maxTokens;
+    const topP = state.editor.present.topP;
+    const presencePenalty = state.editor.present.presencePenalty;
+    const frequencyPenalty = state.editor.present.frequencyPenalty;
     let stopSymbols;
-    if (state.editor.stopSymbols.length > 0) {
-        stopSymbols = state.editor.stopSymbols.map(symbol => {
+    if (state.editor.present.stopSymbols.length > 0) {
+        stopSymbols = state.editor.present.stopSymbols.map(symbol => {
             return symbol.split('\\n').join('\n');
         });
     } else {
@@ -359,11 +359,11 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
         url: `https://api.openai.com/v1/engines/davinci/completions`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${state.editor.apiKey}`,
+            "Authorization": `Bearer ${state.editor.present.apiKey}`,
         },
         data: {
             "prompt": text,
-            "n": state.editor.maxCreativeCompletions,
+            "n": state.editor.present.maxCreativeCompletions,
             "temperature": temperature,
             "max_tokens": maxTokens,
             "stop": stopSymbols,
@@ -395,20 +395,20 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
 }
 
 
-export const selectTabIndex = (state: RootState) => state.editor.tabIndex;
-export const selectPrompt = (state: RootState) => state.editor.prompt;
-export const selectStopSymbols = (state: RootState) => state.editor.stopSymbols;
-export const selectExamples = (state: RootState) => state.editor.examples;
-export const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.showExamplePreviousOutputs;
-export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.loadingCreativeCompletions;
-export const selectCreativeCompletions = (state: RootState) => state.editor.creativeCompletions;
-export const selectMaxCreativeCompletions = (state: RootState) => state.editor.maxCreativeCompletions;
-export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.showPromptForCreativeCompletions;
-export const selectApiKey = (state: RootState) => state.editor.apiKey;
-export const selectTemperature = (state: RootState) => state.editor.temperature;
-export const selectTopP = (state: RootState) => state.editor.topP;
-export const selectFrequencyPenalty = (state: RootState) => state.editor.frequencyPenalty;
-export const selectPresencePenalty = (state: RootState) => state.editor.presencePenalty;
-export const selectMaxTokens = (state: RootState) => state.editor.maxTokens;
+export const selectTabIndex = (state: RootState) => state.editor.present.tabIndex;
+export const selectPrompt = (state: RootState) => state.editor.present.prompt;
+export const selectStopSymbols = (state: RootState) => state.editor.present.stopSymbols;
+export const selectExamples = (state: RootState) => state.editor.present.examples;
+export const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.present.showExamplePreviousOutputs;
+export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.present.loadingCreativeCompletions;
+export const selectCreativeCompletions = (state: RootState) => state.editor.present.creativeCompletions;
+export const selectMaxCreativeCompletions = (state: RootState) => state.editor.present.maxCreativeCompletions;
+export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.present.showPromptForCreativeCompletions;
+export const selectApiKey = (state: RootState) => state.editor.present.apiKey;
+export const selectTemperature = (state: RootState) => state.editor.present.temperature;
+export const selectTopP = (state: RootState) => state.editor.present.topP;
+export const selectFrequencyPenalty = (state: RootState) => state.editor.present.frequencyPenalty;
+export const selectPresencePenalty = (state: RootState) => state.editor.present.presencePenalty;
+export const selectMaxTokens = (state: RootState) => state.editor.present.maxTokens;
 
 export default editorSlice.reducer;

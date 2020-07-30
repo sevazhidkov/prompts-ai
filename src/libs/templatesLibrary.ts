@@ -230,8 +230,7 @@ const templateGroups = [
                     tabIndex: 0
                 }},
             {id: uniqueId('template_'), name: 'Rhyming', actionPayload: {
-                    prompt: '```\n' +
-                        'A homophone is defined as a word that is pronounced the same as another word but \n' +
+                    prompt: 'A homophone is defined as a word that is pronounced the same as another word but \n' +
                         'differs in meaning.\n' +
                         '\n' +
                         'Here is a list of homophones:\n' +
@@ -247,8 +246,131 @@ const templateGroups = [
                     ],
                     stopSymbols: [],
                     tabIndex: 0
-                }}
+                }},
+            {id: uniqueId('template_'), name: 'Q&A', actionPayload: {
+                    prompt: "Q: What is the definition of a linearly independent list?\n" +
+                        "A: A linearly independent list is a list of vectors that cannot be\n" +
+                        " expressed as a linear combination of other vectors in the list.\n" +
+                        " \n" +
+                        "Q: What is a basis of a vector space?\n" +
+                        "A: A basis of a vector space is a linearly independent list of vectors\n" +
+                        " that spans the vector space.\n" +
+                        "\n" +
+                        "Q: What is a spanning list of vectors in a vector space?\n" +
+                        "A: A spanning list of vectors in a vector space is list of vectors in\n" +
+                        " the vector space such that every vector in the vector space can be\n" +
+                        " written as a linear combination of the vectors in the spanning list.\n" +
+                        " \n" +
+                        "Q: {example}\n" +
+                        "A:",
+                    examples: [
+                        {text: "What is an eigenvector of a linear transformation f?", output: ""},
+                        {text: "What is the definition of a linear transformation?", output: ""},
+                        {text: "Is the vector space of univariate polynomials over a finite field a finite-dimensional vector space?",
+                            output: ""},
+                        {text: "What is the maximum number of eigenvalues of an operator on a 5-dimensional vector space?", output: ""},
+                        {text: "Can the length of a spanning list for a vector space be longer than any linearly independent list of vectors in that space?",
+                            output: ""},
 
+                    ],
+                    stopSymbols: ["\\n"],
+                    tabIndex: 0
+                }},
+            {id: uniqueId('template_'), name: 'Summarization', actionPayload: {
+                    prompt: '```\n' +
+                        'My second grader asked me what this passage means:\n' +
+                        '\n' +
+                        '"""\n' +
+                        '\n' +
+                        '{example}\n' +
+                        '\n' +
+                        '"""\n' +
+                        '\n' +
+                        'I rephrased it for him, in plain language a second grader can understand:\n' +
+                        '\n' +
+                        '"""\n',
+                    examples: [
+                        {text: "Overnight trading for the NYSE Index futures was a bit volatile, " +
+                                "dropping by about 3% to the downside before moving sharply back to the upside. " +
+                                "Gold futures were unchanged and the E-mini NASDAQ 100 futures remained near " +
+                                "unchanged. The yield on the 10-year Treasury bond finished unchanged from its " +
+                                "close of 2.45% earlier today.",
+                            output: ""},
+                        {text: "This Nondisclosure Agreement (the \"Agreement\") is entered into by and between _______________ with its principal offices at _______________, (\"Disclosing Party\") and _______________, located at _______________ (\"Receiving Party\") for the purpose of preventing the unauthorized disclosure of Confidential Information as defined below. The parties agree to enter into a confidential relationship concerning the disclosure of certain proprietary and confidential information (\"Confidential Information\"). 1. Definition of Confidential Information. For purposes of this Agreement, \"Confidential Information\" shall include all information or material that has or could have commercial value or other utility in the business in which Disclosing Party is engaged. If Confidential Information is in written form, the Disclosing Party shall label or stamp the materials with the word \"Confidential\" or some similar warning. If Confidential Information is transmitted orally, the Disclosing Party shall promptly provide writing indicating that such oral communication constituted Confidential Information. 2. Exclusions from Confidential Information. Receiving Party's obligations under this Agreement do not extend to information that is: (a) publicly known at the time of disclosure or subsequently becomes publicly known through no fault of the Receiving Party; (b) discovered or created by the Receiving Party before disclosure by Disclosing Party; (c) learned by the Receiving Party through legitimate means other than from the Disclosing Party or Disclosing Party's representatives; or (d) is disclosed by Receiving Party with Disclosing Party's prior written approval.",
+                            output: ""},
+                    ],
+                    stopSymbols: ['"""'],
+                    tabIndex: 0
+                }},
+            {id: uniqueId('template_'), name: 'Code Translation', actionPayload: {
+                    prompt: 'Python:\n' +
+                        'list[::-1]\n' +
+                        'Ruby:\n' +
+                        'list.reverse\n' +
+                        '\n' +
+                        'Python:\n' +
+                        'list[1:4]\n' +
+                        'Ruby:\n' +
+                        'list[1..4]\n' +
+                        '\n' +
+                        'Python:\n' +
+                        'print("Hello World")\n' +
+                        'Ruby:\n' +
+                        'puts "Hello World"\n' +
+                        '\n' +
+                        'Python:\n' +
+                        'fruits = ["apple","banana","cherry"]\n' +
+                        'for x in fruits:\n' +
+                        'print(x)\n' +
+                        'Ruby:\n' +
+                        'fruit = ["apple", "banana", "cherry"]\n' +
+                        'each {|x| print x } \n' +
+                        '\n' +
+                        'Python:\n' +
+                        '{example}\n' +
+                        'Ruby:\n',
+                    examples: [
+                        {text: 'fruits = ["apple","banana","cherry"]\n' +
+                                'a = list(fruits)\n' +
+                                'print(a)\n' +
+                                'a.reverse()\n' +
+                                'print(a)', output: ""}
+                    ],
+                    stopSymbols: ["Python:"],
+                    tabIndex: 0
+                }},
+            {id: uniqueId('template_'), name: 'Translation', actionPayload: {
+                    prompt: 'English: I do not speak French.\n' +
+                        'French: Je ne parle pas français.\n' +
+                        '\n' +
+                        'English: See you later!\n' +
+                        'French: À tout à l\'heure!\n' +
+                        '\n' +
+                        'English: Where is a good restaurant?\n' +
+                        'French: Où est un bon restaurant?\n' +
+                        '\n' +
+                        'English: {example}\n' +
+                        'French:',
+                    examples: [
+                        {text: "What rooms do you have available?", output: ""}
+                    ],
+                    stopSymbols: ['\\n'],
+                    tabIndex: 0
+                }},
+            {id: uniqueId('template_'), name: 'Estimation', actionPayload: {
+                    prompt: 'Lower and upper bound for each quantity:\n' +
+                        '\tNumber of cars in New York: 1500000 to 2500000\n' +
+                        '\tNumber of cars in San Francicso: 300000 to 600000\n' +
+                        '\tHeight of Empire State building: 1400 to 1500 feet\n' +
+                        '\tLength of average car: 4 to 4.5 meters\n' +
+                        '\tPopulation of Germany: 80 to 85 million\n' +
+                        '\t{example}:',
+                    examples: [
+                        {text: "How much does the iPhone XI cost?", output: ""}
+                    ],
+                    stopSymbols: ['\\n'],
+                    tabIndex: 0
+                }},
         ]
     },
     {name: 'Creative', templates: [
@@ -294,8 +416,20 @@ const templateGroups = [
                     'After 17 years as a professional developer, it seems that the answer to every programming question is "it depends"\n' +
                     '-------\n',
                     stopSymbols: ['\\n-'], examples: [], tabIndex: 1
-                }}
-        ]}
+                }},
+            {id: uniqueId('template_'), name: 'Poem Generator', actionPayload: {
+                    prompt: 'Who trusted God was love indeed\n' +
+                        'And love Creation’s final law\n' +
+                        'Tho’ Nature, red in tooth and claw\n' +
+                        'With ravine, shriek’d against his creed.\n' +
+                        'The hills are shadows, and they flow\n' +
+                        'From form to form, and nothing stands;T\n' +
+                        'hey melt like mist, the solid lands,\n' +
+                        'Like clouds they shape themselves and go.\n' +
+                        '----\n',
+                    stopSymbols: ['--'], examples: [], tabIndex: 1
+                }},
+        ]},
 ];
 
 export default function getTemplateGroups() : Array<TemplateGroup> {

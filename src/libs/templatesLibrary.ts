@@ -154,55 +154,79 @@ const templateGroups = [
                     ],
                     tabIndex: 0
                 }},
-            {id: uniqueId('template_'), name: 'Alliteration Generator', actionPayload: {
-                    prompt: 'Find synonyms for words that can create alliterations.\n' +
+            {id: uniqueId('template_'), name: 'Book Review', actionPayload: {
+                    prompt: 'Title: Lovely War\n' +
+                        'Rating: 3/5\n' +
+                        'Quotes:\n' +
+                        '- "It was time for James and Hazel to get properly acquainted. Time to see if the magic of music and moonlight and graceful movement were all that they had shared, or if a grimy gray London dawn and a cheap cup of coffee could make them feel the same way."\n' +
+                        '- "Annihilation has its own je ne sais quoi. We’re all guilty of it. So spare me the sermons."\n' +
+                        '- "His mother’s letters are full of urgent warning. She grew up in Mississippi. \n' +
+                        'She knows about lynching. Aubrey wonders if he’ll die in his country before he \n' +
+                        'ever gets the chance to die for his country. Either way, he’d rather not."\n' +
+                        '- "Whatever boost sixty captured miles might have brought to German morale was \n' +
+                        'erased by the chocolate in the BEF’s packs. War is morale. War is supply. War is \n' +
+                        'chocolate."\n' +
+                        'Thoughts:\n' +
+                        '- Pacing felt awkward\n' +
+                        '- WW1 history felt accurate\n' +
+                        '- Didn\'t care too much for the story of the Gods\n' +
+                        'Review: A good book with well rounded characters, but the pacing felt super \n' +
+                        'awkward. The titles of the chapters showed which Greek God was speaking, but I was more interested in the WW1 tales than their relationships.\n' +
                         '\n' +
-                        'Sentence: The dog went to the store.\n' +
-                        'Alliteration: The dog drove to the department.\n' +
+                        '\'\'\'\n' +
+                        '{example}\n' +
+                        'Review:',
+                    examples: [
+                        {text: 'Title: Goodbye, Things\n' +
+                                'Rating: 4/5\n' +
+                                'Thoughts:\n' +
+                                '- very cleanly written\n' +
+                                '- read easily\n' +
+                                '- author did good research', output: ''},
+                        {text: 'Title: Deep Work: Rules for Focused Success in a Distracted World\n' +
+                                'Rating: 5/5\n' +
+                                'Thoughts:\n' +
+                                '- Great read, got me to refocus my goals around my schedule.\n' +
+                                '- Got me to delete a social media I used too much\n' +
+                                '- I like that Cal Newport is a computer scientist as well', output: ''}
+                    ],
+                    tabIndex: 0,
+                    stopSymbols: ['\\n\\n']
+                }},
+            {id: uniqueId('template_'), name: 'Headline Generation', actionPayload: {
+                    prompt: 'Topic: Britain, coronavirus, beaches\n' +
+                        'Headline: Videos show crowded beaches in Britain\n' +
                         '\n' +
-                        'Sentence: David wears a hat everyday.\n' +
-                        'Alliteration: David dons a derby daily.\n' +
+                        'Topic: Apple, Big Sur, software\n' +
+                        'Headline: Apple promises faster software update installation with macOS Big Sur\n' +
                         '\n' +
-                        'Sentence: The soap dries over night.\n' +
-                        'Alliteration: The soap shrivels succeeding sunset.\n' +
+                        'Topic: Artic, climate change, satellite\n' +
+                        'Headline: A Satellite Lets Scientists See Antarctica’s Melting Like Never Before\n' +
                         '\n' +
-                        'Sentence: {example}\n' +
-                        'Alliteration:',
-                    examples: [],
+                        'Topic: {example}\n' +
+                        'Headline:',
+                    examples: [
+                        {text: 'Chicago, restaurants, summer', output: ''}
+                    ],
                     tabIndex: 0
                 }},
-            {id: uniqueId('template_'), name: 'Alliteration Generator', actionPayload: {
-                    prompt: 'Find synonyms for words that can create alliterations.\n' +
+            {id: uniqueId('template_'), name: 'Product Name Generator', actionPayload: {
+                    prompt: 'This is a product name generator. It takes a product\'s description and seed words, then outputs a list of potential product names.\n' +
                         '\n' +
-                        'Sentence: The dog went to the store.\n' +
-                        'Alliteration: The dog drove to the department.\n' +
+                        'Product description: A complete home gym that can fit in any apartment.\n' +
+                        'Seed words: intelligent, aspirational, luxury, futuristic\n' +
+                        'Product names: InfinityHome, Quantum, FlexFit, Flight, FutureFit\n' +
                         '\n' +
-                        'Sentence: David wears a hat everyday.\n' +
-                        'Alliteration: David dons a derby daily.\n' +
+                        'Product description: An affordable electric bike.\n' +
+                        'Seed words: Easy, eco-friendly, practical, dependable\n' +
+                        'Product names: Pegasus, Swifty, SunRunner, Wave, Amp\n' +
                         '\n' +
-                        'Sentence: The soap dries over night.\n' +
-                        'Alliteration: The soap shrivels succeeding sunset.\n' +
-                        '\n' +
-                        'Sentence: {example}\n' +
-                        'Alliteration:',
-                    examples: [],
-                    tabIndex: 0
-                }},
-            {id: uniqueId('template_'), name: 'Alliteration Generator', actionPayload: {
-                    prompt: 'Find synonyms for words that can create alliterations.\n' +
-                        '\n' +
-                        'Sentence: The dog went to the store.\n' +
-                        'Alliteration: The dog drove to the department.\n' +
-                        '\n' +
-                        'Sentence: David wears a hat everyday.\n' +
-                        'Alliteration: David dons a derby daily.\n' +
-                        '\n' +
-                        'Sentence: The soap dries over night.\n' +
-                        'Alliteration: The soap shrivels succeeding sunset.\n' +
-                        '\n' +
-                        'Sentence: {example}\n' +
-                        'Alliteration:',
-                    examples: [],
+                        '{example}\n' +
+                        'Product names:',
+                    examples: [
+                        {text: 'Product description: A zero carbohydrate cereal that tastes great.\n' +
+                                'Seed words: fitness, healthy, keto, clean, tasty', output: ''}
+                    ],
                     tabIndex: 0
                 }},
             {id: uniqueId('template_'), name: 'Rhyming', actionPayload: {
@@ -250,6 +274,27 @@ const templateGroups = [
                     stopSymbols: ['3'],
                     examples: [], tabIndex: 1
                 }},
+            {id: uniqueId('template_'), name: 'Tweet Generation', actionPayload: {
+                prompt: 'My favorite programming tweets:\n' +
+                    '-------\n' +
+                    'I asked @ilyasut how to set neural network init. He accidentally replied with a poem:\n' +
+                    'You want to be on the edge of chaos\n' +
+                    'Too small, and the init will be too stable, with vanishing gradients\n' +
+                    'Too large, and you\'ll be unstable, due to exploding gradients\n' +
+                    'You want to be on the edge\n' +
+                    '-------\n' +
+                    'I\'ve been programming for 10 years now. Still feels like magic out of a fantasy: say the words exactly right, and watch your intent get carried out; say the words slightly wrong, and things go haywire. Feeling of wonder and joy hasn\'t faded one bit.\n' +
+                    '-------\n' +
+                    'Web programming is the science of coming up with increasingly complicated ways of concatenating strings.\n' +
+                    '-------\n' +
+                    'If you ever feel alone in this world, read your firewall logs. Problem solved :)\n' +
+                    '-------\n' +
+                    'Always wanted to travel back in time to try fighting a younger version of yourself? Software development is the career for you!\n' +
+                    '-------\n' +
+                    'After 17 years as a professional developer, it seems that the answer to every programming question is "it depends"\n' +
+                    '-------\n',
+                    stopSymbols: ['\\n-'], examples: [], tabIndex: 1
+                }}
         ]}
 ];
 

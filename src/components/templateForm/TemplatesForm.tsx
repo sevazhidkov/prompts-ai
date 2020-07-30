@@ -43,7 +43,7 @@ export default function TemplatesForm() {
             dispatch(loadTemplate(template.actionPayload))
             dispatch(cleanExampleList());
         }}>
-            <FormControl>
+            <FormControl style={{minWidth: '100%'}}>
                 <Select native defaultValue="" id="template-select" name="templateId">
                     {templateGroups.map((templateGroup, ind) => (
                         <optgroup key={ind} label={templateGroup.name}>

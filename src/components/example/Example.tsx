@@ -43,9 +43,9 @@ function Example (props: Props) {
                     direction="row"
                     justify="flex-start"
                     alignItems="flex-start"
-                    spacing={2}
+                    spacing={1}
                 >
-                    <Grid item xs={11}>
+                    <Grid item xs={10} md={11}>
                         <Box mb={2}>
                             <TextField
                                 multiline
@@ -84,7 +84,7 @@ function Example (props: Props) {
                             </Box>
                         ))}
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={1} md={1}>
                         <Box>
                             {props.isLoading && <CircularProgress/>}
 

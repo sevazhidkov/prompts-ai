@@ -3,7 +3,6 @@ import uniqid from "uniqid";
 import axios from "axios";
 import {AppThunk, RootState} from "../store";
 import {ChoiceResult} from "../../libs/gptClient";
-import generateCodeExamples from '../../libs/codeGenerator';
 
 export interface Example {
     id: string;
@@ -398,18 +397,6 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
     } else {
         stopSymbols = '';
     }
-
-    console.log(generateCodeExamples({
-        apiKey: state.editor.present.apiKey,
-        engine: modelName,
-        maxTokens: maxTokens,
-        stop: stopSymbols,
-        prompt: text,
-        temperature: temperature,
-        topP: topP,
-        presencePenalty: presencePenalty,
-        frequencyPenalty: frequencyPenalty,
-    }, 0, state.editor.present.examples));
 
     axios({
         method: "POST",

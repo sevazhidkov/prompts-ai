@@ -22,6 +22,7 @@ const templateGroups = [
                         'Mcdonalds: Food, Fast Food, Logistics, Restaurants\n' +
                         '{example}:',
                     tabIndex: 0,
+                    stopSymbols: ['\\n'],
                     examples: [{text: 'Unilever', output: 'Consumer Goods, Food, Personal Care, Retail'}, {text: 'LinkedIn', output: 'Social Media, Technology, Business'}, {text: 'FedEx', output: 'Logistics, Transportation'}]
                 }},
             {id: uniqueId('template_'), name: 'Alliteration Generator', actionPayload: {
@@ -40,7 +41,8 @@ const templateGroups = [
                     'Alliteration:',
                 examples: [{text: 'A person was running to the church.', output: ''},
                      {text: 'A person cooked a great meal.', output: ''}],
-                tabIndex: 0
+                tabIndex: 0,
+                stopSymbols: ['\\n'],
                 }},
             {id: uniqueId('template_'), name: 'Song Generation', actionPayload: {
                     stopSymbols: ["\\n\\n"],
@@ -74,7 +76,7 @@ const templateGroups = [
                                 'Take me home, country roads',
                         output: ''}
                     ],
-                    tabIndex: 0
+                    tabIndex: 0,
                 }},
             {id: uniqueId('template_'), name: 'Sentence => Email', actionPayload: {
                     prompt: '```\n' +
@@ -386,7 +388,7 @@ const templateGroups = [
                     examples: [], tabIndex: 1
                 }},
             {id: uniqueId('template_'), name: 'Idea Generator', actionPayload: {
-                    prompt: 'Here is a list of 100 interesting ideas for new movie plots. Each plot is \n' +
+                    prompt: 'Here is a list of 100 interesting ideas for new movie plots. Each plot is ' +
                         'described with a title and a summary paragraph:\n' +
                         '\n' +
                         '1. The Bird. \n' +

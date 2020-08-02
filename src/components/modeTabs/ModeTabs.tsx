@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import ExampleModeTab from "../exampleModeTab/ExampleModeTab";
 import CreativeModeTab from '../creativeModTab/CreativeModeTab';
 import {useDispatch, useSelector} from "react-redux";
-import {selectTabIndex, updateTabIndex} from "../../app/slices/editorSlice";
+import {selectTabIndex, updateTabIndex, TabIndex} from "../../app/slices/editorSlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -66,14 +66,14 @@ export default function ModeTabs() {
         <div className={classes.root}>
             <AppBar position="static">
                 <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
-                    <Tab label="Multiple Examples" {...a11yProps(0)} />
-                    <Tab label="Creative Generation" {...a11yProps(1)} />
+                    <Tab label="Multiple Examples" {...a11yProps(TabIndex.multipleExamples)} />
+                    <Tab label="Creative Generation" {...a11yProps(TabIndex.creativeGeneration)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={tabIndex} index={0}>
+            <TabPanel value={tabIndex} index={TabIndex.multipleExamples}>
                 <ExampleModeTab/>
             </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
+            <TabPanel value={tabIndex} index={TabIndex.creativeGeneration}>
                 <CreativeModeTab/>
             </TabPanel>
         </div>

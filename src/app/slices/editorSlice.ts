@@ -3,13 +3,19 @@ import uniqid from "uniqid";
 import axios from "axios";
 import {AppThunk, RootState} from "../store";
 import {ChoiceResult} from "../../libs/gptClient";
+import generateCodeExamples from '../../libs/codeGenerator';
 
-interface Example {
+export interface Example {
     id: string;
     text: string;
     isLoading: boolean;
     output?: string;
     previousOutput?: string;
+}
+
+export enum TabIndex {
+    multipleExamples = 0,
+    creativeGeneration
 }
 
 interface EditExampleActionPayload {
@@ -78,7 +84,7 @@ interface EditorState {
     presencePenalty: number;
     stopSymbols: Array<string>;
     maxTokens: number;
-    tabIndex: number;
+    tabIndex: TabIndex;
 
     showExamplePreviousOutputs: boolean;
     examples: Array<Example>;
@@ -277,11 +283,11 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
 export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     switch (state.editor.present.tabIndex) {
-        case 0: {
+        case TabIndex.multipleExamples: {
             dispatch(fetchExamplesOutputsAsync());
             break;
         }
-        case 1: {
+        case TabIndex.creativeGeneration: {
             dispatch(fetchCreativeCompletionsAsync());
             break;
         }
@@ -392,6 +398,18 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
     } else {
         stopSymbols = '';
     }
+
+    console.log(generateCodeExamples({
+        apiKey: state.editor.present.apiKey,
+        engine: modelName,
+        maxTokens: maxTokens,
+        stop: stopSymbols,
+        prompt: text,
+        temperature: temperature,
+        topP: topP,
+        presencePenalty: presencePenalty,
+        frequencyPenalty: frequencyPenalty,
+    }, 0, state.editor.present.examples));
 
     axios({
         method: "POST",

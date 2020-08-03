@@ -456,5 +456,24 @@ export const selectTopP = (state: RootState) => state.editor.present.topP;
 export const selectFrequencyPenalty = (state: RootState) => state.editor.present.frequencyPenalty;
 export const selectPresencePenalty = (state: RootState) => state.editor.present.presencePenalty;
 export const selectMaxTokens = (state: RootState) => state.editor.present.maxTokens;
+export const selectCompletionParameters = (state: RootState) => ({
+    apiKey: state.editor.present.apiKey === undefined ? '' : state.editor.present.apiKey,
+    engine: state.editor.present.modelName,
+    maxTokens: state.editor.present.maxTokens,
+    stop: (() => {
+        if (state.editor.present.stopSymbols.length > 0) {
+            return state.editor.present.stopSymbols.map(symbol => {
+                return symbol.split('\\n').join('\n');
+            });
+        } else {
+            return '';
+        }
+    })(),
+    prompt: state.editor.present.prompt,
+    temperature: state.editor.present.temperature,
+    topP: state.editor.present.topP,
+    presencePenalty: state.editor.present.presencePenalty,
+    frequencyPenalty: state.editor.present.frequencyPenalty,
+});
 
 export default editorSlice.reducer;

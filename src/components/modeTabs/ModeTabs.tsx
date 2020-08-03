@@ -9,6 +9,8 @@ import ExampleModeTab from "../exampleModeTab/ExampleModeTab";
 import CreativeModeTab from '../creativeModTab/CreativeModeTab';
 import {useDispatch, useSelector} from "react-redux";
 import {selectTabIndex, updateTabIndex, TabIndex} from "../../app/slices/editorSlice";
+import {Grid, Hidden} from '@material-ui/core';
+import CodeGeneratorButton from '../codeGeneratorButton/CodeGeneratorButton';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -50,6 +52,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
     instructionCard: {
         backgroundColor: theme.palette.background.default
+    },
+    additionalItemsGridItem: {
+        marginRight: "10px",
     }
 }));
 
@@ -65,10 +70,24 @@ export default function ModeTabs() {
     return (
         <div className={classes.root}>
             <AppBar position="static">
-                <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
-                    <Tab label="Multiple Examples" {...a11yProps(TabIndex.multipleExamples)} />
-                    <Tab label="Creative Generation" {...a11yProps(TabIndex.creativeGeneration)} />
-                </Tabs>
+                <Grid
+                    justify="space-between" // Add it here :)
+                    alignItems="center"
+                    container
+                    spacing={1}
+                >
+                    <Grid item>
+                        <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
+                            <Tab label="Multiple Examples" {...a11yProps(TabIndex.multipleExamples)} />
+                            <Tab label="Creative Generation" {...a11yProps(TabIndex.creativeGeneration)} />
+                        </Tabs>
+                    </Grid>
+                    <Hidden smDown>
+                        <Grid item className={classes.additionalItemsGridItem}>
+                            <CodeGeneratorButton/>
+                        </Grid>
+                    </Hidden>
+                </Grid>
             </AppBar>
             <TabPanel value={tabIndex} index={TabIndex.multipleExamples}>
                 <ExampleModeTab/>

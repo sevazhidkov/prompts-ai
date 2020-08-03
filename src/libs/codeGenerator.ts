@@ -1,16 +1,17 @@
 import { TabIndex, Example } from "../app/slices/editorSlice";
 
 interface CodeExample {
+    id: string;
     name: string;
     text: string;
 }
 
-interface CompletionParameters {
+export interface CompletionParameters {
     apiKey: string;
     engine: string;
     maxTokens: number;
     stop: string | Array<string>;
-    prompt: string,
+    prompt: string;
     temperature: number;
     topP: number;
     presencePenalty: number;
@@ -27,10 +28,10 @@ export default function generateCodeExamples(completionParameters: CompletionPar
                                              examples: Array<Example>): Array<CodeExample> {
     const exampleText = getFirstExampleOrPlaceholder(examples);
     return [
-        {name: "Python", text: generatePythonExample(
+        {id: '1', name: "Python", text: generatePythonExample(
                 completionParameters, tabIndex, exampleText, PythonOutputType.plain
             )},
-        {name: "Python: Streaming", text: generatePythonExample(
+        {id: '2', name: "Python: Streaming", text: generatePythonExample(
                 completionParameters, tabIndex, exampleText, PythonOutputType.stream
             )},
         //{name: "Python: With Toxicity Check", text: generatePythonExample(

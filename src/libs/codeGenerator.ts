@@ -117,6 +117,9 @@ ${completionVariableName} = openai.Completion.create(
 ${outputCode}
 `;
         }
+        case TabIndex.chatBot: {
+            return ``;
+        }
     }
 }
 

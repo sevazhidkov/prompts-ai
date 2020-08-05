@@ -25,7 +25,8 @@ export interface CompletionParameters {
 
 export enum TabIndex {
     multipleExamples = 0,
-    creativeGeneration
+    creativeGeneration,
+    chatBot
 }
 
 interface EditExampleActionPayload {

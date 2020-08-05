@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectTabIndex, updateTabIndex, TabIndex} from "../../app/slices/editorSlice";
 import {Grid, Hidden} from '@material-ui/core';
 import CodeGeneratorButton from '../codeGeneratorButton/CodeGeneratorButton';
+import ChatBotMode from '../chatBotMode/ChatBotMode';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -78,8 +79,8 @@ export default function ModeTabs() {
                 >
                     <Grid item>
                         <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
-                            <Tab label="Multiple Examples" {...a11yProps(TabIndex.multipleExamples)} />
-                            <Tab label="Creative Generation" {...a11yProps(TabIndex.creativeGeneration)} />
+                            <Tab label="Examples" {...a11yProps(TabIndex.multipleExamples)} />
+                            <Tab label="Creative" {...a11yProps(TabIndex.creativeGeneration)} />
                         </Tabs>
                     </Grid>
                     <Hidden smDown>
@@ -94,6 +95,9 @@ export default function ModeTabs() {
             </TabPanel>
             <TabPanel value={tabIndex} index={TabIndex.creativeGeneration}>
                 <CreativeModeTab/>
+            </TabPanel>
+            <TabPanel value={tabIndex} index={TabIndex.chatBot}>
+                <ChatBotMode/>
             </TabPanel>
         </div>
     );

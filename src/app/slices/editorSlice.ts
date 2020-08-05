@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import uniqid from "uniqid";
-import axios from "axios";
 import {AppThunk, RootState} from "../store";
-import {ChoiceResult} from "../../libs/gptClient";
+import {ChoiceResult, completeWithGpt} from "../../libs/gptClient";
 
 export interface Example {
     id: string;
@@ -10,6 +9,18 @@ export interface Example {
     isLoading: boolean;
     output?: string;
     previousOutput?: string;
+}
+
+export interface CompletionParameters {
+    apiKey: string;
+    engine: string;
+    maxTokens: number;
+    stop: string | Array<string>;
+    prompt: string;
+    temperature: number;
+    topP: number;
+    presencePenalty: number;
+    frequencyPenalty: number;
 }
 
 export enum TabIndex {
@@ -93,13 +104,7 @@ interface EditorState {
     maxCreativeCompletions: number;
     showPromptForCreativeCompletions: boolean;
 }
-///
-// Output: Anna and Mike are going skiing.
-// Input: Anna and Pat are married; he has been together for 20 years.
-// Output: Anna and Pat are married; they have been together for 20 years.
-// Input: I walk to the store and I bought milk.
-// Output: I walked to the store and I bought milk.
-// Input: We all eat the fish and then made dessert.
+
 const initialState: EditorState = {
     prompt: "Input: Anna and Mike is going skiing.\n" +
         "Output: Anna and Mike are going skiing.\n" +
@@ -308,48 +313,18 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
         return;
     }
 
-    const text = state.editor.present.prompt;
     const examples = state.editor.present.examples.filter(example => example.text.length > 0);
-
     if (examples.length === 0) {
         alert('Enter at least one example');
         return;
     }
 
-    const examplePrompts = examples.map(example => text.replace('{example}', example.text));
+    const completionParams = selectCompletionParameters(state);
+    const examplePrompts = examples.map(example => completionParams.prompt.replace('{example}', example.text));
     const exampleIds = examples.map(example => example.id);
-    const modelName = state.editor.present.modelName;
-    const topP = state.editor.present.topP;
-    const presencePenalty = state.editor.present.presencePenalty;
-    const frequencyPenalty = state.editor.present.frequencyPenalty;
-    let stopSymbols;
-    if (state.editor.present.stopSymbols.length > 0) {
-        stopSymbols = state.editor.present.stopSymbols.map(symbol => {
-            return symbol.split('\\n').join('\n');
-        });
-    } else {
-        stopSymbols = '';
-    }
-
     exampleIds.map((exampleId) => dispatch(markExampleAsLoading(exampleId)));
 
-    axios({
-        method: "POST",
-        url: `https://api.openai.com/v1/engines/${modelName}/completions`,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${state.editor.present.apiKey}`,
-        },
-        data: {
-            "prompt": examplePrompts,
-            "max_tokens": state.editor.present.maxTokens,
-            "temperature": state.editor.present.temperature,
-            "stop": stopSymbols,
-            "top_p": topP,
-            "presence_penalty": presencePenalty,
-            "frequency_penalty": frequencyPenalty
-        }
-    }).then(response => {
+    completeWithGpt(examplePrompts, completionParams).then(response => {
         console.log(response.data);
         return { ...response.data };
     }).then(response => {
@@ -363,10 +338,6 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
         console.log(error.response);
         dispatch(markAllExamplesAsNotLoading());
     });
-
-    //setTimeout(() => {
-    //    dispatch(incrementByAmount(amount));
-    //}, 1000);
 };
 
 export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState) => {
@@ -382,40 +353,9 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
 
     dispatch(updateCreativeCompletionsLoadingStatus(true));
 
-    const text = state.editor.present.prompt;
-    const temperature = state.editor.present.temperature;
-    const modelName = state.editor.present.modelName;
-    const maxTokens = state.editor.present.maxTokens;
-    const topP = state.editor.present.topP;
-    const presencePenalty = state.editor.present.presencePenalty;
-    const frequencyPenalty = state.editor.present.frequencyPenalty;
-    let stopSymbols;
-    if (state.editor.present.stopSymbols.length > 0) {
-        stopSymbols = state.editor.present.stopSymbols.map(symbol => {
-            return symbol.split('\\n').join('\n');
-        });
-    } else {
-        stopSymbols = '';
-    }
+    const completionParams = selectCompletionParameters(state);
 
-    axios({
-        method: "POST",
-        url: `https://api.openai.com/v1/engines/${modelName}/completions`,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${state.editor.present.apiKey}`,
-        },
-        data: {
-            "prompt": text,
-            "n": state.editor.present.maxCreativeCompletions,
-            "temperature": temperature,
-            "max_tokens": maxTokens,
-            "stop": stopSymbols,
-            "top_p": topP,
-            "presence_penalty": presencePenalty,
-            "frequency_penalty": frequencyPenalty
-        }
-    }).then(response => {
+    completeWithGpt(completionParams.prompt, completionParams, state.editor.present.maxCreativeCompletions).then(response => {
         console.log(response.data);
         return { ...response.data };
     }).then(response => {
@@ -423,13 +363,13 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
         response.choices.map((creativeCompletionResult: ChoiceResult) => (
             dispatch(addCreativeCompletion({
                 output: creativeCompletionResult.text,
-                prompt: text,
-                temperature: temperature,
-                maxTokens: maxTokens,
-                topP: topP,
-                presencePenalty: presencePenalty,
-                frequencyPenalty: frequencyPenalty,
-                modelName: modelName
+                prompt: completionParams.prompt,
+                temperature: completionParams.temperature,
+                maxTokens: completionParams.maxTokens,
+                topP: completionParams.topP,
+                presencePenalty: completionParams.presencePenalty,
+                frequencyPenalty: completionParams.frequencyPenalty,
+                modelName: completionParams.engine
             }))
         ));
     }).catch(error => {

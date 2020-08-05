@@ -210,7 +210,8 @@ const templateGroups = [
                     examples: [
                         {text: 'Chicago, restaurants, summer', output: ''}
                     ],
-                    tabIndex: 0
+                    tabIndex: 0,
+                    stopSymbols: ['\\n']
                 }},
             {id: uniqueId('template_'), name: 'Product Name Generator', actionPayload: {
                     prompt: 'This is a product name generator. It takes a product\'s description and seed words, then outputs a list of potential product names.\n' +
@@ -229,7 +230,8 @@ const templateGroups = [
                         {text: 'Product description: A zero carbohydrate cereal that tastes great.\n' +
                                 'Seed words: fitness, healthy, keto, clean, tasty', output: ''}
                     ],
-                    tabIndex: 0
+                    tabIndex: 0,
+                    stopSymbols: ['\\n']
                 }},
             {id: uniqueId('template_'), name: 'Rhyming', actionPayload: {
                     prompt: 'A homophone is defined as a word that is pronounced the same as another word but \n' +

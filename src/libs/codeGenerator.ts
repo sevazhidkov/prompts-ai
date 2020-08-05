@@ -1,21 +1,9 @@
-import { TabIndex, Example } from "../app/slices/editorSlice";
+import {TabIndex, Example, CompletionParameters} from "../app/slices/editorSlice";
 
 interface CodeExample {
     id: string;
     name: string;
     text: string;
-}
-
-export interface CompletionParameters {
-    apiKey: string;
-    engine: string;
-    maxTokens: number;
-    stop: string | Array<string>;
-    prompt: string;
-    temperature: number;
-    topP: number;
-    presencePenalty: number;
-    frequencyPenalty: number;
 }
 
 enum PythonOutputType {

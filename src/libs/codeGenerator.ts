@@ -199,7 +199,7 @@ function generateShellExample(parameters: CompletionParameters, tabIndex: TabInd
                 'stop': formatStopSymbolsForShell(parameters.stop),
                 'presence_penalty': parameters.presencePenalty,
                 'frequency_penalty': parameters.frequencyPenalty
-            }, null, 1), "'", "\'")}'`;
+            }, null, 1), "'", "\\'")}'`;
         }
         case TabIndex.creativeGeneration: {
             return `import axios from 'axios' 
@@ -358,7 +358,7 @@ function formatStopSymbolsJavascriptStringOrStringList(value: Array<string> | st
 }
 
 function formatJavascriptStringList(value: Array<string>) {
-    return `[${value.map(value => `'${replaceAllOccurrences(value, "'", "\'")}'`).join(', ')}]`;
+    return `[${value.map(value => `'${replaceAllOccurrences(value, "'", "\\'")}'`).join(', ')}]`;
 }
 
 // Python helpers
@@ -377,7 +377,7 @@ function formatPythonStringList(value: Array<string>) {
 
 function formatPythonString(value: string) {
     if (value.includes("\n")) {
-        const formattedString = replaceAllOccurrences(value, '"""', '\"\"\"');
+        const formattedString = replaceAllOccurrences(value, '"""', '\\"\\"\\"');
         return `"""${formattedString}"""`;
     } else {
         const formattedString = replaceAllOccurrences(value, '"', '\\"');

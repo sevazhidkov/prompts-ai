@@ -106,7 +106,7 @@ export default function CodeGeneratorButton() {
                             .filter((codeExample) => codeExample.id === selectedExample)
                             .map((codeExample) => (
                             <Box key={codeExample.id}>
-                                <SyntaxHighlighter language="python">
+                                <SyntaxHighlighter language={codeExample.language}>
                                     {codeExample.text}
                                 </SyntaxHighlighter>
                             </Box>

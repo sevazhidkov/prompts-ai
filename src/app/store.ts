@@ -117,12 +117,24 @@ const migrations = {
                 }
             }
         }
+    },
+    9: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                present: {
+                    ...state.editor.present,
+                    conversations: []
+                }
+            }
+        }
     }
 };
 
 const persistConfig = {
     key: 'root',
-    version: 8,
+    version: 9,
     migrate: createMigrate(migrations),
     storage,
 }
@@ -133,6 +145,7 @@ export const store = configureStore({
     reducer: persistedReducer,
     middleware: getDefaultMiddleware({
         serializableCheck: false,
+        immutableCheck: false
     }),
 });
 export const persistor = persistStore(store);

@@ -25,13 +25,16 @@ function App() {
 
     useHotkeys('ctrl+enter', () => {
         dispatch(fetchForCurrentTab());
-    }, {filter: () => true});
+    }, {filter: (v) => {
+            console.log(v);
+            return true;
+        }});
     useHotkeys('ctrl+1', () => {
         dispatch(updateTabIndex(0));
-    }, {filter: () => true});
+    });
     useHotkeys('ctrl+2', () => {
         dispatch(updateTabIndex(1));
-    }, {filter: () => true});
+    });
 
 
     return (

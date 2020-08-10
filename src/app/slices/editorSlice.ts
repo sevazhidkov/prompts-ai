@@ -62,6 +62,70 @@ interface AddCreativeCompletionActionPayload {
     modelName: string;
 }
 
+export enum ConversationPartSource {
+    user = 'user',
+    gpt = 'gpt'
+}
+
+interface ConversationPart {
+    source: ConversationPartSource;
+    text: string;
+    submitted: boolean;
+}
+
+interface ConversationCompletionParameters {
+    engine: string;
+    maxTokens: number;
+    stop: string | Array<string>;
+    prompt: string;
+    temperature: number;
+    topP: number;
+    presencePenalty: number;
+    frequencyPenalty: number;
+}
+
+interface Conversation {
+    id: string;
+    initialPrompt?: string;
+    inputValue: string;
+    isLoading: boolean;
+    startSequence: string;
+    restartSequence: string;
+    parts: Array<ConversationPart>;
+    completionParams?: ConversationCompletionParameters;
+}
+
+interface SetConversationCompletionParametersActionPayload {
+    conversationId: string;
+    parameters: ConversationCompletionParameters;
+}
+
+interface SetConversationInitialPromptActionPayload {
+    conversationId: string;
+    initialPrompt: string;
+}
+
+interface UpdateConversationLoadingStatusActionPayload {
+    conversationId: string;
+    status: boolean;
+}
+
+interface UpdateConversationInputValueActionPayload {
+    conversationId: string;
+    inputValue: string;
+}
+
+interface AddMessageToConversationFromUserActionPayload {
+    conversationId: string;
+    source: ConversationPartSource.user;
+}
+
+interface AddMessageToConversationFromGptActionPayload {
+    conversationId: string;
+    text: string;
+    source: ConversationPartSource.gpt;
+}
+
 export interface LoadTemplateFromFileDataActionPayload {
     prompt: string;
     temperature: number;
@@ -104,6 +168,8 @@ interface EditorState {
     creativeCompletions: Array<CreativeCompletion>;
     maxCreativeCompletions: number;
     showPromptForCreativeCompletions: boolean;
+
+    conversations: Array<Conversation>;
 }
 
 const initialState: EditorState = {
@@ -135,6 +201,8 @@ const initialState: EditorState = {
     creativeCompletions: [],
     maxCreativeCompletions: 10,
     showPromptForCreativeCompletions: true,
+
+    conversations: [],
 };
 
 export const editorSlice = createSlice({
@@ -219,6 +287,102 @@ export const editorSlice = createSlice({
             state.showPromptForCreativeCompletions = action.payload;
         },
 
+        normalizeConversations: (state) => {
+            // Always add an empty conversation for user to start
+            if (state.conversations.length < 1 || state.conversations[state.conversations.length - 1].parts.length > 1) {
+                const startSequence = "\nAI:";
+                const restartSequence = "\nUser: ";
+                state.conversations.push({
+                    id: uniqid("conversation_"), parts: [
+                        {text: convertConversationPartToText(
+                            '', ConversationPartSource.user,
+                                startSequence, restartSequence),
+                            source: ConversationPartSource.user,
+                            submitted: false}
+                    ], completionParams: undefined, inputValue: '',
+                    isLoading: false, initialPrompt: undefined, startSequence: startSequence, restartSequence: restartSequence
+                });
+            }
+        },
+        setConversationCompletionParams: (state,
+                                          action: PayloadAction<SetConversationCompletionParametersActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id === action.payload.conversationId) {
+                    conversation.completionParams = action.payload.parameters;
+                }
+                return conversation;
+            });
+        },
+        setConversationInitialPrompt: (state, action: PayloadAction<SetConversationInitialPromptActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id === action.payload.conversationId) {
+                    conversation.initialPrompt = action.payload.initialPrompt;
+                }
+                return conversation;
+            });
+        },
+        updateConversationLoadingStatus: (state, action: PayloadAction<UpdateConversationLoadingStatusActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id === action.payload.conversationId) {
+                    conversation.isLoading = action.payload.status;
+                }
+                return conversation;
+            });
+        },
+        updateConversationInputValue: (state, action: PayloadAction<UpdateConversationInputValueActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id === action.payload.conversationId) {
+                    conversation.inputValue = action.payload.inputValue;
+                }
+                return conversation;
+            });
+        },
+        addMessageInConversation: (state, action: PayloadAction<AddMessageToConversationFromUserActionPayload | AddMessageToConversationFromGptActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id !== action.payload.conversationId) {
+                    return conversation;
+                }
+
+                let inputText: string;
+                if (action.payload.source === ConversationPartSource.user) {
+                    inputText = conversation.inputValue;
+                    conversation.inputValue = '';
+                } else {
+                    inputText = action.payload.text;
+                }
+
+                const lastPartInd = conversation.parts.length - 1;
+                const lastPart = conversation.parts[lastPartInd];
+
+                // It shouldn't happen.
+                if (lastPart.source !== action.payload.source) {
+                    console.log('[lastPart.source !== action.payload.source]');
+                    return conversation;
+                }
+
+                lastPart.text = convertConversationPartToText(
+                    inputText, lastPart.source,
+                    conversation.startSequence, conversation.restartSequence)
+                lastPart.submitted = true;
+                conversation.parts[lastPartInd] = lastPart;
+
+                const nextSource = (
+                    lastPart.source === ConversationPartSource.gpt
+                        ? ConversationPartSource.user
+                        : ConversationPartSource.gpt
+                );
+                conversation.parts.push({
+                    source: nextSource,
+                    text: convertConversationPartToText(
+                        '', nextSource,
+                        conversation.startSequence, conversation.restartSequence),
+                    submitted: false
+                });
+
+                return conversation;
+            });
+        },
+
         loadTemplate: (state, action: PayloadAction<LoadTemplateActionPayload>) => {
             state.prompt = action.payload.prompt;
             state.examples = action.payload.examples.map((example) => {
@@ -280,6 +444,8 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     markAllExamplesAsNotLoading,
     addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
     updateCreativeCompletionsLoadingStatus,
+    setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,
+    addMessageInConversation, setConversationInitialPrompt,
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
     loadTemplate, loadTemplateFromFileData,
@@ -380,16 +546,62 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
     });
 }
 
+export const sendMessageInConversationAsync = (conversationId: string): AppThunk => (dispatch, getState) => {
+    const state = getState();
+    if (state.editor.present.apiKey === undefined) {
+        alert('Enter an API key before running requests.');
+        return;
+    }
+    const conversation = state.editor.present.conversations.find(conversation => conversation.id === conversationId);
+    if (conversation === undefined) {
+        return;
+    }
+
+    // If it is a first message in the conversation, lock current completion parameters and prompt for whole conversation
+    if (conversation.parts.length === 1) {
+        dispatch(setConversationInitialPrompt({
+            conversationId: conversationId, initialPrompt: selectPrompt(state)
+        }));
+        dispatch(setConversationCompletionParams({
+            conversationId: conversationId, parameters: selectCompletionParameters(state)
+        }));
+    }
+
+    dispatch(addMessageInConversation({conversationId: conversationId, source: ConversationPartSource.user}))
+    dispatch(updateConversationLoadingStatus({conversationId: conversationId, status: true}));
+
+    const updatedState = getState();
+    const updatedConversation = updatedState.editor.present.conversations.find(conversation => conversation.id === conversationId);
+    if (updatedConversation === undefined) {
+        return;
+    }
+    const completionParams = {apiKey: state.editor.present.apiKey, ...updatedConversation.completionParams!};
+    const prompt = updatedConversation.initialPrompt + updatedConversation.parts.map(p => p.text).join('');
+    completeWithGpt(prompt, completionParams).then(response => {
+        console.log(response.data);
+        return { ...response.data };
+    }).then(response => {
+        dispatch(updateConversationLoadingStatus({conversationId: conversationId, status: false}));
+        dispatch(addMessageInConversation({conversationId: conversationId, source: ConversationPartSource.gpt,
+            text: response['choices'][0]['text']}))
+    });
+
+}
 
 export const selectTabIndex = (state: RootState) => state.editor.present.tabIndex;
 export const selectPrompt = (state: RootState) => state.editor.present.prompt;
 export const selectStopSymbols = (state: RootState) => state.editor.present.stopSymbols;
+
 export const selectExamples = (state: RootState) => state.editor.present.examples;
 export const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.present.showExamplePreviousOutputs;
+
 export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.present.loadingCreativeCompletions;
 export const selectCreativeCompletions = (state: RootState) => state.editor.present.creativeCompletions;
 export const selectMaxCreativeCompletions = (state: RootState) => state.editor.present.maxCreativeCompletions;
 export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.present.showPromptForCreativeCompletions;
+
+export const selectConversations = (state: RootState) => state.editor.present.conversations;
+
 export const selectApiKey = (state: RootState) => state.editor.present.apiKey;
 export const selectModelName = (state: RootState) => state.editor.present.modelName;
 export const selectTemperature = (state: RootState) => state.editor.present.temperature;
@@ -416,5 +628,16 @@ export const selectCompletionParameters = (state: RootState) => ({
     presencePenalty: state.editor.present.presencePenalty,
     frequencyPenalty: state.editor.present.frequencyPenalty,
 });
+
+// Helpers
+
+function convertConversationPartToText(text: string, source: ConversationPartSource,
+                                       startSequence: string, restartSequence: string): string {
+    if (source === ConversationPartSource.user) {
+        return restartSequence + text;
+    } else { // source === ConversationPartSource.gpt
+        return startSequence + text;
+    }
+}
 
 export default editorSlice.reducer;

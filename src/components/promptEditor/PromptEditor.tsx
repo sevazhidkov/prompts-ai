@@ -33,6 +33,7 @@ import {
     selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey, selectModelName, editModelName
 } from "../../app/slices/editorSlice";
 import {makeStyles} from "@material-ui/styles";
+import ModeTabs from "../modeTabs/ModeTabs";
 
 const useStyles = makeStyles({
     fullWidth: {
@@ -104,21 +105,8 @@ export function PromptEditor() {
                 alignItems="flex-start"
                 spacing={3}
             >
-                <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                        id="prompt-text"
-                        label="A prompt"
-                        multiline
-                        rows={23}
-                        rowsMax={100}
-                        fullWidth={true}
-                        onChange={handlePromptChange}
-                        value={prompt}
-                        variant="outlined"
-                    />
-                </Grid>
                 <Grid item xs={12} sm={3} md={3}>
-                    <Box mb={1}>
+                    {/*<Box mb={1}>
                         <Card>
                             <CardContent>
                                 <Box>
@@ -172,7 +160,7 @@ export function PromptEditor() {
                                 </Box>
                             </CardContent>
                         </Card>
-                    </Box>
+                    </Box>*/}
                     <Card>
                         <CardContent>
                             <Typography gutterBottom>
@@ -236,103 +224,105 @@ export function PromptEditor() {
                                 className={styles.fullWidth}
                             />
                         </CardContent>
+
+                        <CardContent>
+                            <Typography gutterBottom>
+                                <strong>Advanced parameters</strong>
+                            </Typography>
+                            <Tooltip title={'"Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered."'} placement="left">
+                                <Typography id="top-p-slider" gutterBottom>
+                                    Top P: <strong>{topP}</strong>
+                                </Typography>
+                            </Tooltip>
+                            <Slider
+                                defaultValue={0.5}
+                                value={topP}
+                                onChange={handleTopPChange}
+                                aria-labelledby="top-p-slider"
+                                valueLabelDisplay="auto"
+                                step={0.05}
+                                marks={[{
+                                    value: 0,
+                                    label: '0',
+                                }, {
+                                    value: 1,
+                                    label: '1',
+                                }]}
+                                min={0}
+                                max={1}
+                            />
+                            <Tooltip title={'"How much to penalize new tokens based on their existing frequency in the text so far. Decreases the model\'s likelihood to repeat the same line verbatim."'} placement="left">
+                                <Typography id="frequency-penalty-slider" gutterBottom>
+                                    Frequency Penalty: <strong>{frequencyPenalty}</strong>
+                                </Typography>
+                            </Tooltip>
+                            <Slider
+                                defaultValue={0.5}
+                                value={frequencyPenalty}
+                                onChange={handleFrequencyPenaltyChange}
+                                aria-labelledby="frequency-penalty-slider"
+                                valueLabelDisplay="auto"
+                                step={0.05}
+                                marks={[{
+                                    value: 0,
+                                    label: '0',
+                                }, {
+                                    value: 1,
+                                    label: '1',
+                                }]}
+                                min={0}
+                                max={1}
+                            />
+                            <Tooltip title={'"How much to penalize new tokens based on whether they appear in the text so far. Increases the model\'s likelihood to talk about new topics."'} placement="left">
+                                <Typography id="presence-penalty-slider" gutterBottom>
+                                    Presence Penalty: <strong>{presencePenalty}</strong>
+                                </Typography>
+                            </Tooltip>
+                            <Slider
+                                defaultValue={0.5}
+                                value={presencePenalty}
+                                onChange={handlePresencePenaltyChange}
+                                aria-labelledby="presence-penalty-slider"
+                                valueLabelDisplay="auto"
+                                step={0.05}
+                                marks={[{
+                                    value: 0,
+                                    label: '0',
+                                }, {
+                                    value: 1,
+                                    label: '1',
+                                }]}
+                                min={0}
+                                max={1}
+                            />
+                            <Typography id="model-name-typography" gutterBottom>
+                                Model name:
+                            </Typography>
+                            <Select native id="model-name-select" name="modelName" value={modelName} onChange={handleModelNameChange} className={styles.fullWidth}>
+                                {availableModelNames.map((modelName, ind) => (
+                                    <option key={ind} value={modelName}>{modelName}</option>
+                                ))}
+                            </Select>
+                        </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={3} md={3}>
-                    <Box mt={0}>
-                        <Card>
-                            <CardContent>
-                                <Typography gutterBottom>
-                                    <strong>Templates</strong>
-                                </Typography>
-                                <TemplatesForm/>
-                            </CardContent>
-                        </Card>
-                    </Box>
-                    <Hidden smDown><Box mt={1}>
-                        <Card>
-                            <CardContent>
-                                <Typography gutterBottom>
-                                    <strong>Advanced parameters</strong>
-                                </Typography>
-                                <Tooltip title={'"Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered."'} placement="left">
-                                    <Typography id="top-p-slider" gutterBottom>
-                                        Top P: <strong>{topP}</strong>
-                                    </Typography>
-                                </Tooltip>
-                                <Slider
-                                    defaultValue={0.5}
-                                    value={topP}
-                                    onChange={handleTopPChange}
-                                    aria-labelledby="top-p-slider"
-                                    valueLabelDisplay="auto"
-                                    step={0.05}
-                                    marks={[{
-                                        value: 0,
-                                        label: '0',
-                                    }, {
-                                        value: 1,
-                                        label: '1',
-                                    }]}
-                                    min={0}
-                                    max={1}
-                                />
-                                <Tooltip title={'"How much to penalize new tokens based on their existing frequency in the text so far. Decreases the model\'s likelihood to repeat the same line verbatim."'} placement="left">
-                                    <Typography id="frequency-penalty-slider" gutterBottom>
-                                        Frequency Penalty: <strong>{frequencyPenalty}</strong>
-                                    </Typography>
-                                </Tooltip>
-                                <Slider
-                                    defaultValue={0.5}
-                                    value={frequencyPenalty}
-                                    onChange={handleFrequencyPenaltyChange}
-                                    aria-labelledby="frequency-penalty-slider"
-                                    valueLabelDisplay="auto"
-                                    step={0.05}
-                                    marks={[{
-                                        value: 0,
-                                        label: '0',
-                                    }, {
-                                        value: 1,
-                                        label: '1',
-                                    }]}
-                                    min={0}
-                                    max={1}
-                                />
-                                <Tooltip title={'"How much to penalize new tokens based on whether they appear in the text so far. Increases the model\'s likelihood to talk about new topics."'} placement="left">
-                                    <Typography id="presence-penalty-slider" gutterBottom>
-                                        Presence Penalty: <strong>{presencePenalty}</strong>
-                                    </Typography>
-                                </Tooltip>
-                                <Slider
-                                    defaultValue={0.5}
-                                    value={presencePenalty}
-                                    onChange={handlePresencePenaltyChange}
-                                    aria-labelledby="presence-penalty-slider"
-                                    valueLabelDisplay="auto"
-                                    step={0.05}
-                                    marks={[{
-                                        value: 0,
-                                        label: '0',
-                                    }, {
-                                        value: 1,
-                                        label: '1',
-                                    }]}
-                                    min={0}
-                                    max={1}
-                                />
-                                <Typography id="model-name-typography" gutterBottom>
-                                    Model name:
-                                </Typography>
-                                <Select native id="model-name-select" name="modelName" value={modelName} onChange={handleModelNameChange} className={styles.fullWidth}>
-                                    {availableModelNames.map((modelName, ind) => (
-                                        <option key={ind} value={modelName}>{modelName}</option>
-                                    ))}
-                                </Select>
-                            </CardContent>
-                        </Card>
-                    </Box></Hidden>
+                <Grid item xs={12} sm={9} md={9}>
+                    <TextField
+                        id="prompt-text"
+                        label="A prompt"
+                        multiline
+                        rows={18}
+                        rowsMax={100}
+                        fullWidth={true}
+                        onChange={handlePromptChange}
+                        value={prompt}
+                        variant="outlined"
+                    />
+                    <br/>
+                    <br/>
+                    <ModeTabs/>
                 </Grid>
+
             </Grid>
         </div>
     );

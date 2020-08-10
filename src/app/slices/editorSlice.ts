@@ -170,6 +170,9 @@ interface EditorState {
     showPromptForCreativeCompletions: boolean;
 
     conversations: Array<Conversation>;
+
+    showApiKeyDialog: boolean;
+    showTemplateDialog: boolean;
 }
 
 const initialState: EditorState = {
@@ -203,6 +206,8 @@ const initialState: EditorState = {
     showPromptForCreativeCompletions: true,
 
     conversations: [],
+    showApiKeyDialog: false,
+    showTemplateDialog: false,
 };
 
 export const editorSlice = createSlice({
@@ -436,7 +441,14 @@ export const editorSlice = createSlice({
         },
         updateTabIndex: (state, action: PayloadAction<number>) => {
             state.tabIndex = action.payload;
-        }
+        },
+
+        toggleApiKeyDialog: (state, action: PayloadAction<boolean>) => {
+            state.showApiKeyDialog = action.payload;
+        },
+        toggleTemplateDialog: (state, action: PayloadAction<boolean>) => {
+            state.showTemplateDialog = action.payload;
+        },
     },
 });
 
@@ -449,7 +461,7 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
     loadTemplate, loadTemplateFromFileData,
-    editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex } = editorSlice.actions;
+    editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex, toggleApiKeyDialog, toggleTemplateDialog } = editorSlice.actions;
 
 export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();
@@ -609,6 +621,8 @@ export const selectTopP = (state: RootState) => state.editor.present.topP;
 export const selectFrequencyPenalty = (state: RootState) => state.editor.present.frequencyPenalty;
 export const selectPresencePenalty = (state: RootState) => state.editor.present.presencePenalty;
 export const selectMaxTokens = (state: RootState) => state.editor.present.maxTokens;
+export const selectApiKeyDialogVisible = (state: RootState) => state.editor.present.showApiKeyDialog;
+export const selectTemplateDialogVisible = (state: RootState) => state.editor.present.showTemplateDialog;
 export const selectCompletionParameters = (state: RootState) => ({
     apiKey: state.editor.present.apiKey === undefined ? '' : state.editor.present.apiKey,
     engine: state.editor.present.modelName,

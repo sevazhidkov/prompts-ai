@@ -1,7 +1,7 @@
 import { uniqueId } from "lodash";
 import {LoadTemplateActionPayload} from '../app/slices/editorSlice';
 
-interface Template {
+export interface Template {
     id: string;
     name: string;
     actionPayload: LoadTemplateActionPayload;

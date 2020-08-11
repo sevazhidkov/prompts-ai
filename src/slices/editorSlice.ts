@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import uniqid from "uniqid";
 import {AppThunk, RootState} from "../store";
-import {ChoiceResult, completeWithGpt} from "../libs/gptClient";
+import GptAPI, {ChoiceResult} from "../services/GptAPI";
 
 export interface Example {
     id: string;
@@ -502,7 +502,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
     const exampleIds = examples.map(example => example.id);
     exampleIds.map((exampleId) => dispatch(markExampleAsLoading(exampleId)));
 
-    completeWithGpt(examplePrompts, completionParams).then(response => {
+    GptAPI.generateCompletions(examplePrompts, completionParams).then(response => {
         console.log(response.data);
         return { ...response.data };
     }).then(response => {
@@ -533,7 +533,7 @@ export const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
 
     const completionParams = selectCompletionParameters(state);
 
-    completeWithGpt(completionParams.prompt, completionParams, state.editor.present.maxVariations).then(response => {
+    GptAPI.generateCompletions(completionParams.prompt, completionParams, state.editor.present.maxVariations).then(response => {
         console.log(response.data);
         return { ...response.data };
     }).then(response => {
@@ -588,7 +588,7 @@ export const sendMessageInConversationAsync = (conversationId: string): AppThunk
     }
     const completionParams = {apiKey: state.editor.present.apiKey, ...updatedConversation.completionParams!};
     const prompt = updatedConversation.initialPrompt + updatedConversation.parts.map(p => p.text).join('');
-    completeWithGpt(prompt, completionParams).then(response => {
+    GptAPI.generateCompletions(prompt, completionParams).then(response => {
         console.log(response.data);
         return { ...response.data };
     }).then(response => {

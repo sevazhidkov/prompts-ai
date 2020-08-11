@@ -1,12 +1,12 @@
 import React from 'react';
 import {Grid, Hidden, AppBar, Tabs, Tab, Typography, Box} from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import ExampleModeTab from "../exampleModeTab/ExampleModeTab";
-import VariationsTab from '../creativeModTab/VariationsTab';
+import ExampleModeTab from "./ExampleModeTab";
+import VariationsTab from './VariationsTab';
 import {useDispatch, useSelector} from "react-redux";
-import {selectTabIndex, updateTabIndex, TabIndex} from "../../app/slices/editorSlice";
-import CodeGeneratorButton from '../codeGeneratorButton/CodeGeneratorButton';
-import ConversationsMode from '../chatBotMode/ConversationsMode';
+import {selectTabIndex, updateTabIndex, TabIndex} from "../app/slices/editorSlice";
+import CodeGeneratorButton from './CodeGeneratorButton';
+import ConversationsMode from './ConversationsMode';
 
 interface TabPanelProps {
     children?: React.ReactNode;

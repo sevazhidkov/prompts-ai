@@ -19,9 +19,9 @@ import {
     selectTopP,
     toggleApiKeyDialog,
     toggleTemplateDialog
-} from "../../app/slices/editorSlice";
+} from "../app/slices/editorSlice";
 import {ActionCreators} from "redux-undo";
-import getTemplateGroups from "../../libs/templatesLibrary";
+import getTemplateGroups from "../libs/templatesLibrary";
 
 const useStyles = makeStyles((theme: Theme) => ({
     buttonGroup: {

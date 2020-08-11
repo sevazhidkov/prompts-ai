@@ -1,14 +1,14 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import ExampleCollection from '../exampleCollection/ExampleCollection';
+import ExampleCollection from './ExampleCollection';
 import {
     cleanExampleList,
     selectExamplePreviousOutputsStatus,
     updateExamplePreviousOutputsStatus
-} from "../../app/slices/editorSlice";
+} from "../app/slices/editorSlice";
 import {Box, Typography, Card, CardContent, Grid, FormControlLabel, Switch} from "@material-ui/core";
-import RunExamplesButton from "../runExamplesButton/RunExamplesButton";
-import { useStyles } from '../modeTabs/ModeTabs';
+import RunExamplesButton from "./RunExamplesButton";
+import { useStyles } from './ModeTabs';
 
 // cleanExampleList
 

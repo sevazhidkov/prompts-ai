@@ -5,7 +5,7 @@ import {
     deleteExample,
     cleanExampleList,
     selectExamplePreviousOutputsStatus
-} from "../../app/slices/editorSlice";
+} from "../app/slices/editorSlice";
 import {TextField, Card, CardContent, Box, CircularProgress, Grid, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 import {makeStyles, Theme} from "@material-ui/core/styles";

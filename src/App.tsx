@@ -1,11 +1,11 @@
 import React from 'react';
-import {PromptEditor} from './components/promptEditor/PromptEditor';
+import {PromptEditor} from './components/PromptEditor';
 import './App.css';
 import {Box, Container, createMuiTheme, CssBaseline, Link, ThemeProvider, Typography,} from "@material-ui/core";
 import {useHotkeys} from "react-hotkeys-hook";
 import {useDispatch} from "react-redux";
 import {fetchForCurrentTab, updateTabIndex} from "./app/slices/editorSlice";
-import Header from "./components/header/Header";
+import Header from "./components/Header";
 import TemplateDialog from "./components/dialogs/TemplateDialog";
 import ApiKeyDialog from "./components/dialogs/ApiKeyDialog";
 

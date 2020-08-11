@@ -3,7 +3,7 @@ import {Card, CardActions, CardContent, Typography, TextField, Grid, Box, Paper,
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SendIcon from '@material-ui/icons/Send';
-import { RootState } from "../../app/store";
+import { RootState } from "../app/store";
 import {useDispatch, useSelector} from "react-redux";
 import {
     ConversationPartSource,
@@ -11,7 +11,7 @@ import {
     selectPrompt,
     updateConversationInputValue,
     sendMessageInConversationAsync
-} from "../../app/slices/editorSlice";
+} from "../app/slices/editorSlice";
 
 interface Props {
     id: string;

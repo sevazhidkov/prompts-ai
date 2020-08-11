@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
 import { ActionCreators } from "redux-undo";
-import TemplatesForm from '../templateForm/TemplatesForm';
+import TemplatesForm from './TemplatesForm';
 import {
     selectPrompt,
     editPrompt,
@@ -31,9 +31,9 @@ import {
     editPresencePenalty,
     selectTopP,
     selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey, selectModelName, editModelName
-} from "../../app/slices/editorSlice";
+} from "../app/slices/editorSlice";
 import {makeStyles} from "@material-ui/styles";
-import ModeTabs from "../modeTabs/ModeTabs";
+import ModeTabs from "./ModeTabs";
 
 const useStyles = makeStyles({
     fullWidth: {

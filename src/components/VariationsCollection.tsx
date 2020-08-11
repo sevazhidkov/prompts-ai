@@ -1,9 +1,9 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {selectVariations} from "../../app/slices/editorSlice";
+import {selectVariations} from "../app/slices/editorSlice";
 import { Grid, Box } from '@material-ui/core';
 import {makeStyles} from "@material-ui/styles";
-import Variation from "../variation/Variation";
+import Variation from "./Variation";
 
 const useStyles = makeStyles({
     gridCard: {

@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ChatBotMode() {
+export default function ConversationsMode() {
     const styles = useStyles();
     const dispatch = useDispatch();
     const conversations = useSelector(selectConversations);

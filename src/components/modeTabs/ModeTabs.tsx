@@ -6,7 +6,7 @@ import VariationsTab from '../creativeModTab/VariationsTab';
 import {useDispatch, useSelector} from "react-redux";
 import {selectTabIndex, updateTabIndex, TabIndex} from "../../app/slices/editorSlice";
 import CodeGeneratorButton from '../codeGeneratorButton/CodeGeneratorButton';
-import ChatBotMode from '../chatBotMode/ChatBotMode';
+import ConversationsMode from '../chatBotMode/ConversationsMode';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -92,7 +92,7 @@ export default function ModeTabs() {
                 <VariationsTab/>
             </TabPanel>
             <TabPanel value={tabIndex} index={TabIndex.chatBot}>
-                <ChatBotMode/>
+                <ConversationsMode/>
             </TabPanel>
         </div>
     );

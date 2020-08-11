@@ -5,6 +5,7 @@ import {Button, FormControl, Select, Box, Grid} from "@material-ui/core";
 import Files from "react-files";
 import getTemplateGroups, {getFlattenedTemplates} from "../libs/templatesLibrary";
 import {loadTemplate, cleanExampleList, LoadTemplateFromFileDataActionPayload, loadTemplateFromFileData} from "../slices/editorSlice";
+import UploadButton from "./fileExport/UploadButton";
 
 interface FormElements extends HTMLCollection {
     templateId: HTMLSelectElement;
@@ -15,22 +16,6 @@ export default function TemplatesForm() {
     const flattenedTemplates = getFlattenedTemplates();
 
     const dispatch = useDispatch();
-
-    const fileReader = new FileReader();
-    fileReader.onload = (event) => {
-        if (event.target === undefined) {
-            return;
-        }
-        if (event.target!.result === undefined) {
-            return;
-        }
-        const template: LoadTemplateFromFileDataActionPayload = JSON.parse(event.target!.result as string);
-
-        template.stopSymbols = template.stopSymbols.map(symbol => {
-            return symbol.split('\n').join('\\n');
-        });
-        dispatch(loadTemplateFromFileData(template));
-    };
 
     return <Box>
         <form onSubmit={(event) => {
@@ -60,19 +45,7 @@ export default function TemplatesForm() {
                         <Button type="submit" variant="contained" color="primary">Load</Button>
                     </Grid>
                     <Grid>
-                        <Files
-                            className="files-dropzone"
-                            onChange={(file: any) => {
-                                fileReader.readAsText(file[0]);
-                            }}
-                            onError={(err: any) => console.log(err)}
-                            accepts={['.json']}
-                            maxFileSize={10000000}
-                            minFileSize={0}
-                            clickable
-                        >
-                            <Button>From file</Button>
-                        </Files>
+                        <UploadButton/>
                     </Grid>
                 </Grid>
 

@@ -155,7 +155,7 @@ export function PromptEditor() {
                                 onChange={handleTemperatureChange}
                                 aria-labelledby="temperature-slider"
                                 valueLabelDisplay="auto"
-                                step={0.05}
+                                step={0.01}
                                 marks={[{
                                     value: 0,
                                     label: '0',
@@ -217,7 +217,7 @@ export function PromptEditor() {
                                 onChange={handleTopPChange}
                                 aria-labelledby="top-p-slider"
                                 valueLabelDisplay="auto"
-                                step={0.05}
+                                step={0.01}
                                 marks={[{
                                     value: 0,
                                     label: '0',
@@ -239,7 +239,7 @@ export function PromptEditor() {
                                 onChange={handleFrequencyPenaltyChange}
                                 aria-labelledby="frequency-penalty-slider"
                                 valueLabelDisplay="auto"
-                                step={0.05}
+                                step={0.01}
                                 marks={[{
                                     value: 0,
                                     label: '0',
@@ -261,7 +261,7 @@ export function PromptEditor() {
                                 onChange={handlePresencePenaltyChange}
                                 aria-labelledby="presence-penalty-slider"
                                 valueLabelDisplay="auto"
-                                step={0.05}
+                                step={0.01}
                                 marks={[{
                                     value: 0,
                                     label: '0',

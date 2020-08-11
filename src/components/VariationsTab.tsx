@@ -10,7 +10,7 @@ import {
     cleanVariations,
     selectShowPromptForVariations,
     updateShowPromptForVariations,
-} from "../app/slices/editorSlice";
+} from "../slices/editorSlice";
 
 export default function VariationsTab() {
     const styles = useStyles();

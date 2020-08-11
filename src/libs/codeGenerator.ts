@@ -1,4 +1,4 @@
-import {TabIndex, Example, CompletionParameters} from "../app/slices/editorSlice";
+import {TabIndex, Example, CompletionParameters} from "../slices/editorSlice";
 
 interface CodeExample {
     id: string;

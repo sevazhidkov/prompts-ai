@@ -31,7 +31,7 @@ import {
     editPresencePenalty,
     selectTopP,
     selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey, selectModelName, editModelName
-} from "../app/slices/editorSlice";
+} from "../slices/editorSlice";
 import {makeStyles} from "@material-ui/styles";
 import ModeTabs from "./ModeTabs";
 

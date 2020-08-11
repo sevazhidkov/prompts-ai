@@ -22,7 +22,7 @@ import {
     LoadTemplateFromFileDataActionPayload,
     selectTemplateDialogVisible,
     toggleTemplateDialog
-} from "../../app/slices/editorSlice";
+} from "../../slices/editorSlice";
 import getTemplateGroups, {Template} from "../../libs/templatesLibrary";
 import {makeStyles} from "@material-ui/core/styles";
 

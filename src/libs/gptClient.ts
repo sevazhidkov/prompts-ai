@@ -1,6 +1,6 @@
 import axios from "axios";
 import {AxiosPromise} from "axios";
-import {CompletionParameters} from "../app/slices/editorSlice";
+import {CompletionParameters} from "../slices/editorSlice";
 
 export function completeWithGpt(prompt: string | Array<string>, completionParams: CompletionParameters,
                                 n: number = 1): AxiosPromise {

@@ -1,5 +1,5 @@
 import { uniqueId } from "lodash";
-import {LoadTemplateActionPayload, TabIndex} from '../app/slices/editorSlice';
+import {LoadTemplateActionPayload, TabIndex} from '../slices/editorSlice';
 
 export interface Template {
     id: string;

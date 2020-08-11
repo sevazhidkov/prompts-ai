@@ -3,7 +3,7 @@ import {Box, Grid} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import Conversation from "./Conversation";
-import {selectConversations, normalizeConversations} from "../app/slices/editorSlice";
+import {selectConversations, normalizeConversations} from "../slices/editorSlice";
 
 const useStyles = makeStyles({
     gridItem: {

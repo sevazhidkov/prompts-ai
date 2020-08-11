@@ -2,7 +2,7 @@ import React from "react";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {Card, CardContent, Typography, CardActions} from "@material-ui/core";
 import {useSelector} from "react-redux";
-import {selectShowPromptForVariations} from "../app/slices/editorSlice";
+import {selectShowPromptForVariations} from "../slices/editorSlice";
 
 interface Props {
     id: string;

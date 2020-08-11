@@ -9,7 +9,7 @@ import {
     Theme
 } from "@material-ui/core";
 import React from "react";
-import {editApiKey, selectApiKey, selectApiKeyDialogVisible, toggleApiKeyDialog} from "../../app/slices/editorSlice";
+import {editApiKey, selectApiKey, selectApiKeyDialogVisible, toggleApiKeyDialog} from "../../slices/editorSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 

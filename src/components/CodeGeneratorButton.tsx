@@ -6,7 +6,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import generateCodeExamples from '../libs/codeGenerator';
 import {useSelector} from "react-redux";
-import {selectExamples, selectTabIndex, selectCompletionParameters} from "../app/slices/editorSlice";
+import {selectExamples, selectTabIndex, selectCompletionParameters} from "../slices/editorSlice";
 import { Box, Theme, IconButton, FormControl, Select } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';

@@ -1,7 +1,7 @@
 import React from 'react';
 import Example from './Example';
 import {useSelector} from "react-redux";
-import {selectExamples} from "../app/slices/editorSlice";
+import {selectExamples} from "../slices/editorSlice";
 import { Grid, Box } from '@material-ui/core';
 import {makeStyles} from "@material-ui/styles";
 

@@ -4,7 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import ExampleModeTab from "./ExampleModeTab";
 import VariationsTab from './VariationsTab';
 import {useDispatch, useSelector} from "react-redux";
-import {selectTabIndex, updateTabIndex, TabIndex} from "../app/slices/editorSlice";
+import {selectTabIndex, updateTabIndex, TabIndex} from "../slices/editorSlice";
 import CodeGeneratorButton from './CodeGeneratorButton';
 import ConversationsMode from './ConversationsMode';
 

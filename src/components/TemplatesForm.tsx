@@ -4,7 +4,7 @@ import {Button, FormControl, Select, Box, Grid} from "@material-ui/core";
 // @ts-ignore
 import Files from "react-files";
 import getTemplateGroups, {getFlattenedTemplates} from "../libs/templatesLibrary";
-import {loadTemplate, cleanExampleList, LoadTemplateFromFileDataActionPayload, loadTemplateFromFileData} from "../app/slices/editorSlice";
+import {loadTemplate, cleanExampleList, LoadTemplateFromFileDataActionPayload, loadTemplateFromFileData} from "../slices/editorSlice";
 
 interface FormElements extends HTMLCollection {
     templateId: HTMLSelectElement;

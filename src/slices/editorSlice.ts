@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import uniqid from "uniqid";
 import {AppThunk, RootState} from "../store";
-import {ChoiceResult, completeWithGpt} from "../../libs/gptClient";
+import {ChoiceResult, completeWithGpt} from "../libs/gptClient";
 
 export interface Example {
     id: string;

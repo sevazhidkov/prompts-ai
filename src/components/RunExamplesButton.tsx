@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch} from "react-redux";
-import {fetchExamplesOutputsAsync} from "../app/slices/editorSlice";
+import {fetchExamplesOutputsAsync} from "../slices/editorSlice";
 import { Button } from '@material-ui/core';
 
 export default function RunExamplesButton() {

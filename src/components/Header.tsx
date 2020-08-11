@@ -19,7 +19,7 @@ import {
     selectTopP,
     toggleApiKeyDialog,
     toggleTemplateDialog
-} from "../app/slices/editorSlice";
+} from "../slices/editorSlice";
 import {ActionCreators} from "redux-undo";
 import getTemplateGroups from "../libs/templatesLibrary";
 

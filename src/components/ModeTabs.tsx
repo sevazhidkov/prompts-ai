@@ -1,12 +1,12 @@
 import React from 'react';
 import {Grid, Hidden, AppBar, Tabs, Tab, Typography, Box} from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import ExampleModeTab from "./ExampleModeTab";
+import ExamplesTab from "./ExamplesTab";
 import VariationsTab from './VariationsTab';
 import {useDispatch, useSelector} from "react-redux";
 import {selectTabIndex, updateTabIndex, TabIndex} from "../slices/editorSlice";
 import CodeGeneratorButton from './CodeGeneratorButton';
-import ConversationsMode from './ConversationsMode';
+import ConversationsTab from './ConversationsTab';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -86,13 +86,13 @@ export default function ModeTabs() {
                 </Grid>
             </AppBar>
             <TabPanel value={tabIndex} index={TabIndex.multipleExamples}>
-                <ExampleModeTab/>
+                <ExamplesTab/>
             </TabPanel>
             <TabPanel value={tabIndex} index={TabIndex.variations}>
                 <VariationsTab/>
             </TabPanel>
             <TabPanel value={tabIndex} index={TabIndex.chatBot}>
-                <ConversationsMode/>
+                <ConversationsTab/>
             </TabPanel>
         </div>
     );

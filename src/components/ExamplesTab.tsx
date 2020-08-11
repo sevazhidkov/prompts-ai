@@ -12,7 +12,7 @@ import { useStyles } from './ModeTabs';
 
 // cleanExampleList
 
-export default function ExampleModeTab() {
+export default function ExamplesTab() {
     const dispatch = useDispatch();
 
     const showPreviousOutputs = useSelector(selectExamplePreviousOutputsStatus);

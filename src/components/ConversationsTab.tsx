@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ConversationsMode() {
+export default function ConversationsTab() {
     const styles = useStyles();
     const dispatch = useDispatch();
     const conversations = useSelector(selectConversations);

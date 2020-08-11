@@ -2,26 +2,16 @@ import {AppBar, Container, IconButton, Theme, Toolbar, Typography} from "@materi
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
-import SaveIcon from "@material-ui/icons/Save";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {
     selectApiKey,
-    selectFrequencyPenalty,
-    selectMaxTokens,
-    selectModelName,
-    selectPresencePenalty,
-    selectPrompt,
-    selectStopSymbols,
-    selectTemperature,
-    selectTopP,
     toggleApiKeyDialog,
     toggleTemplateDialog
 } from "../slices/editorSlice";
 import {ActionCreators} from "redux-undo";
-import getTemplateGroups from "../libs/templatesLibrary";
 import DownloadButton from "./fileExport/DownloadButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,8 +41,6 @@ export default function Header() {
     const handleRedoClick = () => {
         dispatch(ActionCreators.redo());
     };
-
-    const templateGroups = getTemplateGroups();
 
     return <AppBar position="static">
         <Container maxWidth={"lg"}>

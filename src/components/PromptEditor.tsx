@@ -6,16 +6,11 @@ import {
     TextField,
     Grid,
     Tooltip,
-    Box,
     Card,
     CardContent,
-    Button,
-    Hidden,
     Select
 } from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
-import { ActionCreators } from "redux-undo";
-import TemplatesForm from './TemplatesForm';
 import {
     selectPrompt,
     editPrompt,
@@ -30,7 +25,7 @@ import {
     editFrequencyPenalty,
     editPresencePenalty,
     selectTopP,
-    selectFrequencyPenalty, selectPresencePenalty, editApiKey, selectApiKey, selectModelName, editModelName
+    selectFrequencyPenalty, selectPresencePenalty, selectModelName, editModelName
 } from "../slices/editorSlice";
 import {makeStyles} from "@material-ui/styles";
 import ModeTabs from "./ModeTabs";
@@ -46,7 +41,6 @@ export function PromptEditor() {
     const styles = useStyles();
 
     const prompt = useSelector(selectPrompt);
-    const apiKey = useSelector(selectApiKey);
     const temperature = useSelector(selectTemperature);
     const topP = useSelector(selectTopP);
     const frequencyPenalty = useSelector(selectFrequencyPenalty);
@@ -77,23 +71,6 @@ export function PromptEditor() {
     }
     const handleModelNameChange = (event: any) => {
         dispatch(editModelName(event.target.value));
-    }
-
-    const handleSaveAndDownload = () => {
-        const element = document.createElement("a");
-        const savedStopSymbols = stopSymbols.map(symbol => {
-            return symbol.split('\\n').join('\n');
-        });
-        const file = new Blob([
-            JSON.stringify({prompt: prompt, temperature: temperature, topP: topP,
-                frequencyPenalty: frequencyPenalty, presencePenalty: presencePenalty,
-                maxTokens: maxTokens, stopSymbols: savedStopSymbols, modelName: modelName
-            })
-        ], {type: 'text/plain'});
-        element.href = URL.createObjectURL(file);
-        element.download = `prompt_${Math.trunc(Date.now() / 1000)}.json`;
-        document.body.appendChild(element);
-        element.click();
     }
 
     return (

@@ -110,7 +110,7 @@ axios(config)
 });
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }
@@ -178,7 +178,7 @@ axios({
 });
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }
@@ -230,7 +230,7 @@ axios({
 });
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }
@@ -321,7 +321,7 @@ ${completionVariableName} = openai.Completion.create(
 ${outputCode}
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }

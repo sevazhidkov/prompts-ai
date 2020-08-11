@@ -91,7 +91,7 @@ export default function ModeTabs() {
             <TabPanel value={tabIndex} index={TabIndex.variations}>
                 <VariationsTab/>
             </TabPanel>
-            <TabPanel value={tabIndex} index={TabIndex.chatBot}>
+            <TabPanel value={tabIndex} index={TabIndex.conversations}>
                 <ConversationsTab/>
             </TabPanel>
         </div>

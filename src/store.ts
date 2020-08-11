@@ -2,7 +2,6 @@ import { configureStore, ThunkAction, Action, combineReducers, getDefaultMiddlew
 import { persistStore, persistReducer, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import undoable from 'redux-undo';
-import counterReducer from './components/counter/counterSlice';
 import editorReducer from './slices/editorSlice';
 
 const filteredActions = ['editor/addStopSymbol', 'editor/deleteStopSymbol',
@@ -13,7 +12,6 @@ const filteredActions = ['editor/addStopSymbol', 'editor/deleteStopSymbol',
 
 const reducers = combineReducers(
     {
-      counter: counterReducer,
       editor: undoable(editorReducer, {
           limit: 20,
           filter: (action: Action) => {

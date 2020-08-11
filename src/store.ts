@@ -14,7 +14,7 @@ const filteredActions = ['editor/addStopSymbol', 'editor/deleteStopSymbol',
 const reducers = combineReducers(
     {
       editor: undoable(editorReducer, {
-          limit: 20,
+          limit: 10,
           filter: (action: Action) => {
               return filteredActions.includes(action.type);
           },

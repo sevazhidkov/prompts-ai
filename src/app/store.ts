@@ -129,12 +129,28 @@ const migrations = {
                 }
             }
         }
+    },
+
+    10: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                present: {
+                    ...state.editor.present,
+                    loadingVariations: state.editor.present.loadingCreativeCompletions,
+                    variations: state.editor.present.creativeCompletions,
+                    maxVariations: state.editor.present.maxCreativeCompletions,
+                    showPromptForVariations: state.editor.present.showPromptForCreativeCompletions
+                }
+            }
+        }
     }
 };
 
 const persistConfig = {
     key: 'root',
-    version: 9,
+    version: 10,
     migrate: createMigrate(migrations),
     storage,
 }

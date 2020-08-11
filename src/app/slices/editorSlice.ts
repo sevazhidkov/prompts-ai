@@ -25,7 +25,7 @@ export interface CompletionParameters {
 
 export enum TabIndex {
     multipleExamples = 0,
-    creativeGeneration,
+    variations,
     chatBot
 }
 
@@ -39,7 +39,7 @@ interface LoadExampleOutputActionPayload {
     output: string;
 }
 
-interface CreativeCompletion {
+interface Variation {
     id: string;
     prompt: string;
     output: string;
@@ -51,7 +51,7 @@ interface CreativeCompletion {
     modelName: string;
 }
 
-interface AddCreativeCompletionActionPayload {
+interface AddVariationActionPayload {
     output: string;
     prompt: string;
     temperature: number;
@@ -164,10 +164,10 @@ interface EditorState {
     showExamplePreviousOutputs: boolean;
     examples: Array<Example>;
 
-    loadingCreativeCompletions: boolean;
-    creativeCompletions: Array<CreativeCompletion>;
-    maxCreativeCompletions: number;
-    showPromptForCreativeCompletions: boolean;
+    loadingVariations: boolean;
+    variations: Array<Variation>;
+    maxVariations: number;
+    showPromptForVariations: boolean;
 
     conversations: Array<Conversation>;
 
@@ -200,10 +200,10 @@ const initialState: EditorState = {
         {id: uniqid("input_"), text: "I like ski every day.", output: "I like skiing every day.", isLoading: false},
         ],
 
-    loadingCreativeCompletions: false,
-    creativeCompletions: [],
-    maxCreativeCompletions: 10,
-    showPromptForCreativeCompletions: true,
+    loadingVariations: false,
+    variations: [],
+    maxVariations: 10,
+    showPromptForVariations: true,
 
     conversations: [],
     showApiKeyDialog: false,
@@ -266,12 +266,12 @@ export const editorSlice = createSlice({
             state.showExamplePreviousOutputs = action.payload;
         },
 
-        updateCreativeCompletionsLoadingStatus: (state, action: PayloadAction<boolean>) => {
-            state.loadingCreativeCompletions = action.payload;
+        updateVariationsLoadingStatus: (state, action: PayloadAction<boolean>) => {
+            state.loadingVariations = action.payload;
         },
-        addCreativeCompletion: (state, action: PayloadAction<AddCreativeCompletionActionPayload>) => {
-            state.creativeCompletions.push({
-                id: uniqid('completion_'),
+        addVariation: (state, action: PayloadAction<AddVariationActionPayload>) => {
+            state.variations.push({
+                id: uniqid('variation_'),
                 output: action.payload.output,
                 prompt: action.payload.prompt,
                 temperature: action.payload.temperature,
@@ -282,14 +282,14 @@ export const editorSlice = createSlice({
                 modelName: action.payload.modelName,
             });
         },
-        editMaxCreativeCompletions: (state, action: PayloadAction<number>) => {
-            state.maxCreativeCompletions = action.payload;
+        editMaxVariations: (state, action: PayloadAction<number>) => {
+            state.maxVariations = action.payload;
         },
-        cleanCreativeCompletions: (state) => {
-            state.creativeCompletions = [];
+        cleanVariations: (state) => {
+            state.variations = [];
         },
-        updateShowPromptForCreativeCompletions: (state, action: PayloadAction<boolean>) => {
-            state.showPromptForCreativeCompletions = action.payload;
+        updateShowPromptForVariations: (state, action: PayloadAction<boolean>) => {
+            state.showPromptForVariations = action.payload;
         },
 
         normalizeConversations: (state) => {
@@ -454,8 +454,7 @@ export const editorSlice = createSlice({
 
 export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
     markAllExamplesAsNotLoading,
-    addCreativeCompletion, editMaxCreativeCompletions, cleanCreativeCompletions, updateShowPromptForCreativeCompletions,
-    updateCreativeCompletionsLoadingStatus,
+    addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
     setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,
     addMessageInConversation, setConversationInitialPrompt,
     addStopSymbol, deleteStopSymbol,
@@ -470,8 +469,8 @@ export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
             dispatch(fetchExamplesOutputsAsync());
             break;
         }
-        case TabIndex.creativeGeneration: {
-            dispatch(fetchCreativeCompletionsAsync());
+        case TabIndex.variations: {
+            dispatch(fetchVariationsAsync());
             break;
         }
     }
@@ -519,7 +518,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
     });
 };
 
-export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState) => {
+export const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     if (state.editor.present.apiKey === undefined) {
         alert('Enter an API key before running requests.');
@@ -530,18 +529,18 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
         return;
     }
 
-    dispatch(updateCreativeCompletionsLoadingStatus(true));
+    dispatch(updateVariationsLoadingStatus(true));
 
     const completionParams = selectCompletionParameters(state);
 
-    completeWithGpt(completionParams.prompt, completionParams, state.editor.present.maxCreativeCompletions).then(response => {
+    completeWithGpt(completionParams.prompt, completionParams, state.editor.present.maxVariations).then(response => {
         console.log(response.data);
         return { ...response.data };
     }).then(response => {
-        dispatch(updateCreativeCompletionsLoadingStatus(false));
-        response.choices.map((creativeCompletionResult: ChoiceResult) => (
-            dispatch(addCreativeCompletion({
-                output: creativeCompletionResult.text,
+        dispatch(updateVariationsLoadingStatus(false));
+        response.choices.map((variationResult: ChoiceResult) => (
+            dispatch(addVariation({
+                output: variationResult.text,
                 prompt: completionParams.prompt,
                 temperature: completionParams.temperature,
                 maxTokens: completionParams.maxTokens,
@@ -554,7 +553,7 @@ export const fetchCreativeCompletionsAsync = (): AppThunk => (dispatch, getState
     }).catch(error => {
         alert('API returned an error. Refer to the console to inspect it.')
         console.log(error.response);
-        dispatch(updateCreativeCompletionsLoadingStatus(false));
+        dispatch(updateVariationsLoadingStatus(false));
     });
 }
 
@@ -607,10 +606,10 @@ export const selectStopSymbols = (state: RootState) => state.editor.present.stop
 export const selectExamples = (state: RootState) => state.editor.present.examples;
 export const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.present.showExamplePreviousOutputs;
 
-export const selectCreativeCompletionsLoadingStatus = (state: RootState) => state.editor.present.loadingCreativeCompletions;
-export const selectCreativeCompletions = (state: RootState) => state.editor.present.creativeCompletions;
-export const selectMaxCreativeCompletions = (state: RootState) => state.editor.present.maxCreativeCompletions;
-export const selectShowPromptForCreativeCompletions = (state: RootState) => state.editor.present.showPromptForCreativeCompletions;
+export const selectVariationsLoadingStatus = (state: RootState) => state.editor.present.loadingVariations;
+export const selectVariations = (state: RootState) => state.editor.present.variations;
+export const selectMaxVariations = (state: RootState) => state.editor.present.maxVariations;
+export const selectShowPromptForVariations = (state: RootState) => state.editor.present.showPromptForVariations;
 
 export const selectConversations = (state: RootState) => state.editor.present.conversations;
 

@@ -79,7 +79,7 @@ axios(config)
 });
 `;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `var axios = require('axios');
 
 var config = {
@@ -149,7 +149,7 @@ axios({
 });
 `;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `import axios from 'axios' 
 
 axios({
@@ -201,7 +201,7 @@ function generateShellExample(parameters: CompletionParameters, tabIndex: TabInd
                 'frequency_penalty': parameters.frequencyPenalty
             }, null, 1), "'", "\\'")}'`;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `import axios from 'axios' 
 
 axios({
@@ -303,7 +303,7 @@ ${completionVariableName} = openai.Completion.create(
 ${outputCode}
 `;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `import openai
 openai.api_key = "${parameters.apiKey}"
 ${completionVariableName} = openai.Completion.create(

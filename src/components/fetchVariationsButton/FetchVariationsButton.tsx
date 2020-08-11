@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Button, CircularProgress} from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { green } from '@material-ui/core/colors';
-import {fetchCreativeCompletionsAsync, selectCreativeCompletionsLoadingStatus} from "../../app/slices/editorSlice";
+import {fetchVariationsAsync, selectVariationsLoadingStatus} from "../../app/slices/editorSlice";
 
 const useStyles = makeStyles(
     createStyles({
@@ -18,12 +18,12 @@ const useStyles = makeStyles(
     }),
 );
 
-export default function RunCreativeButton() {
+export default function FetchVariationsButton() {
     const styles = useStyles();
     const dispatch = useDispatch();
-    const isLoading = useSelector(selectCreativeCompletionsLoadingStatus);
+    const isLoading = useSelector(selectVariationsLoadingStatus);
     const fetchOutputs = () => {
-        dispatch(fetchCreativeCompletionsAsync());
+        dispatch(fetchVariationsAsync());
     };
     return (
         <Button variant="contained" size="large" color="primary" onClick={fetchOutputs}

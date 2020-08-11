@@ -2,7 +2,7 @@ import React from "react";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {Card, CardContent, Typography, CardActions} from "@material-ui/core";
 import {useSelector} from "react-redux";
-import {selectShowPromptForCreativeCompletions} from "../../app/slices/editorSlice";
+import {selectShowPromptForVariations} from "../../app/slices/editorSlice";
 
 interface Props {
     id: string;
@@ -29,27 +29,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-export default function CreativeCompletion(props: Props) {
+export default function Variation(props: Props) {
     const styles = useStyles();
-    const showPromptForCreativeCompletions = useSelector(selectShowPromptForCreativeCompletions);
+    const showPromptForVariations = useSelector(selectShowPromptForVariations);
 
     return <Card className={styles.card}>
         <CardContent>
-            { showPromptForCreativeCompletions && (
+            { showPromptForVariations && (
                 <>
                     <Typography className={styles.prompt}>{props.prompt}</Typography>
                     <span role={"img"} aria-label={"brain"}>🧠️</span>
                     <Typography className={styles.output} component={'span'}><strong>{props.output}</strong></Typography>
                 </>
             )}
-            { !showPromptForCreativeCompletions && (
+            { !showPromptForVariations && (
                 <>
                     <span role={"img"} aria-label={"brain"}>🧠️</span>
                     <Typography className={styles.output} component={'span'}>{props.output}</Typography>
                 </>
             )}
         </CardContent>
-        { showPromptForCreativeCompletions && (
+        { showPromptForVariations && (
             <CardActions>
                 <Typography variant="caption">Temperature: {props.temperature}</Typography>
                 <Typography variant="caption">Max tokens: {props.maxTokens}</Typography>

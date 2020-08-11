@@ -6,7 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ExampleModeTab from "../exampleModeTab/ExampleModeTab";
-import CreativeModeTab from '../creativeModTab/CreativeModeTab';
+import VariationsTab from '../creativeModTab/VariationsTab';
 import {useDispatch, useSelector} from "react-redux";
 import {selectTabIndex, updateTabIndex, TabIndex} from "../../app/slices/editorSlice";
 import {Grid, Hidden} from '@material-ui/core';
@@ -80,7 +80,7 @@ export default function ModeTabs() {
                     <Grid item>
                         <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
                             <Tab label="Examples" {...a11yProps(TabIndex.multipleExamples)} />
-                            <Tab label="Creative" {...a11yProps(TabIndex.creativeGeneration)} />
+                            <Tab label="Variations" {...a11yProps(TabIndex.variations)} />
                         </Tabs>
                     </Grid>
                     <Hidden smDown>
@@ -93,8 +93,8 @@ export default function ModeTabs() {
             <TabPanel value={tabIndex} index={TabIndex.multipleExamples}>
                 <ExampleModeTab/>
             </TabPanel>
-            <TabPanel value={tabIndex} index={TabIndex.creativeGeneration}>
-                <CreativeModeTab/>
+            <TabPanel value={tabIndex} index={TabIndex.variations}>
+                <VariationsTab/>
             </TabPanel>
             <TabPanel value={tabIndex} index={TabIndex.chatBot}>
                 <ChatBotMode/>

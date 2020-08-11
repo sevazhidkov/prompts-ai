@@ -17,7 +17,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {
     selectCompletionParameters, selectExamples,
 } from "../slices/editorSlice";
-import SharedPrompt from '../resources/sharedPrompt';
+import SharedPrompt from '../resources/SharedPrompt';
 import {useSelector} from "react-redux";
 import {green} from "@material-ui/core/colors";
 

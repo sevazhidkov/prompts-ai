@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {Box, Card, CardContent, Slider, Typography, Button, Grid, Switch, FormControlLabel} from "@material-ui/core";
-import {useStyles} from "./ModeTabs";
+import {useStyles} from "../ModeTabs";
 import FetchVariationsButton from "./FetchVariationsButton";
 import VariationsCollection from "./VariationsCollection";
 import {
@@ -10,7 +10,7 @@ import {
     cleanVariations,
     selectShowPromptForVariations,
     updateShowPromptForVariations,
-} from "../slices/editorSlice";
+} from "../../slices/editorSlice";
 
 export default function VariationsTab() {
     const styles = useStyles();

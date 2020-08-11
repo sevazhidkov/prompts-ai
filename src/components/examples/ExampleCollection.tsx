@@ -1,9 +1,9 @@
 import React from 'react';
+import Example from './Example';
 import {useSelector} from "react-redux";
-import {selectVariations} from "../slices/editorSlice";
+import {selectExamples} from "../../slices/editorSlice";
 import { Grid, Box } from '@material-ui/core';
 import {makeStyles} from "@material-ui/styles";
-import Variation from "./Variation";
 
 const useStyles = makeStyles({
     gridCard: {
@@ -12,8 +12,8 @@ const useStyles = makeStyles({
 });
 
 
-export default function VariationsCollection() {
-    const completions = useSelector(selectVariations);
+export default function ExampleCollection() {
+    const examples = useSelector(selectExamples);
     const styles = useStyles();
 
     return (
@@ -24,9 +24,9 @@ export default function VariationsCollection() {
                   alignItems="flex-start"
                   spacing={1}
             >
-                {completions.slice().reverse().map(completion => (
-                    <Grid item key={completion.id} xs={12} className={styles.gridCard}>
-                        <Variation {...completion} />
+                {examples.map((example, ind) => (
+                    <Grid item key={example.id} xs={12} className={styles.gridCard}>
+                        <Example ind={ind} isLast={ind === examples.length - 1} {...example}/>
                     </Grid>
                 ))}
             </Grid>

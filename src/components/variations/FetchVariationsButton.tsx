@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Button, CircularProgress} from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { green } from '@material-ui/core/colors';
-import {fetchVariationsAsync, selectVariationsLoadingStatus} from "../slices/editorSlice";
+import {fetchVariationsAsync, selectVariationsLoadingStatus} from "../../slices/editorSlice";
 
 const useStyles = makeStyles(
     createStyles({

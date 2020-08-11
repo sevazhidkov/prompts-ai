@@ -5,10 +5,10 @@ import {
     cleanExampleList,
     selectExamplePreviousOutputsStatus,
     updateExamplePreviousOutputsStatus
-} from "../slices/editorSlice";
+} from "../../slices/editorSlice";
 import {Box, Typography, Card, CardContent, Grid, FormControlLabel, Switch} from "@material-ui/core";
 import RunExamplesButton from "./RunExamplesButton";
-import { useStyles } from './ModeTabs';
+import { useStyles } from '../ModeTabs';
 
 // cleanExampleList
 

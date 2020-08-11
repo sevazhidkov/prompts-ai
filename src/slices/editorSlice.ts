@@ -3,7 +3,11 @@ import uniqid from "uniqid";
 import {AppThunk, RootState} from "../store";
 import GptAPI, {ChoiceResult} from "../services/GptAPI";
 
-export interface Example {
+// TODO: This file grew too fast. It needs to be split into separate slices for different modes.
+
+// State
+
+interface Example {
     id: string;
     text: string;
     isLoading: boolean;
@@ -11,7 +15,7 @@ export interface Example {
     previousOutput?: string;
 }
 
-export interface CompletionParameters {
+interface CompletionParameters {
     apiKey: string;
     engine: string;
     maxTokens: number;
@@ -23,20 +27,10 @@ export interface CompletionParameters {
     frequencyPenalty: number;
 }
 
-export enum TabIndex {
+enum TabIndex {
     multipleExamples = 0,
     variations,
     conversations
-}
-
-interface EditExampleActionPayload {
-    id: string;
-    text: string;
-}
-
-interface LoadExampleOutputActionPayload {
-    id: string;
-    output: string;
 }
 
 interface Variation {
@@ -51,18 +45,7 @@ interface Variation {
     modelName: string;
 }
 
-interface AddVariationActionPayload {
-    output: string;
-    prompt: string;
-    temperature: number;
-    maxTokens: number;
-    topP: number;
-    frequencyPenalty: number;
-    presencePenalty: number;
-    modelName: string;
-}
-
-export enum ConversationPartSource {
+enum ConversationPartSource {
     user = 'user',
     gpt = 'gpt'
 }
@@ -93,60 +76,6 @@ interface Conversation {
     restartSequence: string;
     parts: Array<ConversationPart>;
     completionParams?: ConversationCompletionParameters;
-}
-
-interface SetConversationCompletionParametersActionPayload {
-    conversationId: string;
-    parameters: ConversationCompletionParameters;
-}
-
-interface SetConversationInitialPromptActionPayload {
-    conversationId: string;
-    initialPrompt: string;
-}
-
-interface UpdateConversationLoadingStatusActionPayload {
-    conversationId: string;
-    status: boolean;
-}
-
-interface UpdateConversationInputValueActionPayload {
-    conversationId: string;
-    inputValue: string;
-}
-
-interface AddMessageToConversationFromUserActionPayload {
-    conversationId: string;
-    source: ConversationPartSource.user;
-}
-
-interface AddMessageToConversationFromGptActionPayload {
-    conversationId: string;
-    text: string;
-    source: ConversationPartSource.gpt;
-}
-
-export interface LoadTemplateFromFileDataActionPayload {
-    prompt: string;
-    temperature: number;
-    topP: number;
-    frequencyPenalty: number;
-    presencePenalty: number;
-    maxTokens: number;
-    stopSymbols: Array<string>;
-    modelName: string;
-}
-
-export interface LoadTemplateActionExample {
-    text: string;
-    output: string;
-}
-
-export interface LoadTemplateActionPayload {
-    prompt: string;
-    examples: Array<LoadTemplateActionExample>;
-    stopSymbols?: Array<string>;
-    tabIndex: number;
 }
 
 interface EditorState {
@@ -198,7 +127,7 @@ const initialState: EditorState = {
     examples: [
         {id: uniqid("input_"), text: "We all eat the fish and then made dessert.", output: "We all ate the fish and then made dessert.", isLoading: false},
         {id: uniqid("input_"), text: "I like ski every day.", output: "I like skiing every day.", isLoading: false},
-        ],
+    ],
 
     loadingVariations: false,
     variations: [],
@@ -210,7 +139,90 @@ const initialState: EditorState = {
     showTemplateDialog: false,
 };
 
-export const editorSlice = createSlice({
+// Action Payloads: Examples
+
+interface EditExampleActionPayload {
+    id: string;
+    text: string;
+}
+
+interface LoadExampleOutputActionPayload {
+    id: string;
+    output: string;
+}
+
+// Action Payloads: Variations
+
+interface AddVariationActionPayload {
+    output: string;
+    prompt: string;
+    temperature: number;
+    maxTokens: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
+    modelName: string;
+}
+
+// Action Payloads: Conversations
+
+interface SetConversationCompletionParametersActionPayload {
+    conversationId: string;
+    parameters: ConversationCompletionParameters;
+}
+
+interface SetConversationInitialPromptActionPayload {
+    conversationId: string;
+    initialPrompt: string;
+}
+
+interface UpdateConversationLoadingStatusActionPayload {
+    conversationId: string;
+    status: boolean;
+}
+
+interface UpdateConversationInputValueActionPayload {
+    conversationId: string;
+    inputValue: string;
+}
+
+interface AddMessageToConversationFromUserActionPayload {
+    conversationId: string;
+    source: ConversationPartSource.user;
+}
+
+interface AddMessageToConversationFromGptActionPayload {
+    conversationId: string;
+    text: string;
+    source: ConversationPartSource.gpt;
+}
+
+// Action Payloads: Templates
+
+interface LoadTemplateFromFileDataActionPayload {
+    prompt: string;
+    temperature: number;
+    topP: number;
+    frequencyPenalty: number;
+    presencePenalty: number;
+    maxTokens: number;
+    stopSymbols: Array<string>;
+    modelName: string;
+}
+
+interface LoadTemplateActionExample {
+    text: string;
+    output: string;
+}
+
+interface LoadTemplateActionPayload {
+    prompt: string;
+    examples: Array<LoadTemplateActionExample>;
+    stopSymbols?: Array<string>;
+    tabIndex: number;
+}
+
+const editorSlice = createSlice({
     name: 'editor',
     initialState,
     reducers: {
@@ -452,17 +464,7 @@ export const editorSlice = createSlice({
     },
 });
 
-export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
-    markAllExamplesAsNotLoading,
-    addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
-    setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,
-    addMessageInConversation, setConversationInitialPrompt,
-    addStopSymbol, deleteStopSymbol,
-    editTopP, editFrequencyPenalty, editPresencePenalty,
-    loadTemplate, loadTemplateFromFileData,
-    editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex, toggleApiKeyDialog, toggleTemplateDialog } = editorSlice.actions;
-
-export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
+const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     switch (state.editor.present.tabIndex) {
         case TabIndex.multipleExamples: {
@@ -476,7 +478,7 @@ export const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     }
 }
 
-export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
+const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     if (state.editor.present.apiKey === undefined) {
         alert('Enter an API key before running requests.');
@@ -518,7 +520,7 @@ export const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) =>
     });
 };
 
-export const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
+const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     if (state.editor.present.apiKey === undefined) {
         alert('Enter an API key before running requests.');
@@ -557,7 +559,7 @@ export const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
     });
 }
 
-export const sendMessageInConversationAsync = (conversationId: string): AppThunk => (dispatch, getState) => {
+const sendMessageInConversationAsync = (conversationId: string): AppThunk => (dispatch, getState) => {
     const state = getState();
     if (state.editor.present.apiKey === undefined) {
         alert('Enter an API key before running requests.');
@@ -599,30 +601,20 @@ export const sendMessageInConversationAsync = (conversationId: string): AppThunk
 
 }
 
-export const selectTabIndex = (state: RootState) => state.editor.present.tabIndex;
-export const selectPrompt = (state: RootState) => state.editor.present.prompt;
-export const selectStopSymbols = (state: RootState) => state.editor.present.stopSymbols;
+const selectTabIndex = (state: RootState) => state.editor.present.tabIndex;
+const selectPrompt = (state: RootState) => state.editor.present.prompt;
+const selectStopSymbols = (state: RootState) => state.editor.present.stopSymbols;
 
-export const selectExamples = (state: RootState) => state.editor.present.examples;
-export const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.present.showExamplePreviousOutputs;
-
-export const selectVariationsLoadingStatus = (state: RootState) => state.editor.present.loadingVariations;
-export const selectVariations = (state: RootState) => state.editor.present.variations;
-export const selectMaxVariations = (state: RootState) => state.editor.present.maxVariations;
-export const selectShowPromptForVariations = (state: RootState) => state.editor.present.showPromptForVariations;
-
-export const selectConversations = (state: RootState) => state.editor.present.conversations;
-
-export const selectApiKey = (state: RootState) => state.editor.present.apiKey;
-export const selectModelName = (state: RootState) => state.editor.present.modelName;
-export const selectTemperature = (state: RootState) => state.editor.present.temperature;
-export const selectTopP = (state: RootState) => state.editor.present.topP;
-export const selectFrequencyPenalty = (state: RootState) => state.editor.present.frequencyPenalty;
-export const selectPresencePenalty = (state: RootState) => state.editor.present.presencePenalty;
-export const selectMaxTokens = (state: RootState) => state.editor.present.maxTokens;
-export const selectApiKeyDialogVisible = (state: RootState) => state.editor.present.showApiKeyDialog;
-export const selectTemplateDialogVisible = (state: RootState) => state.editor.present.showTemplateDialog;
-export const selectCompletionParameters = (state: RootState) => ({
+const selectApiKey = (state: RootState) => state.editor.present.apiKey;
+const selectModelName = (state: RootState) => state.editor.present.modelName;
+const selectTemperature = (state: RootState) => state.editor.present.temperature;
+const selectTopP = (state: RootState) => state.editor.present.topP;
+const selectFrequencyPenalty = (state: RootState) => state.editor.present.frequencyPenalty;
+const selectPresencePenalty = (state: RootState) => state.editor.present.presencePenalty;
+const selectMaxTokens = (state: RootState) => state.editor.present.maxTokens;
+const selectApiKeyDialogVisible = (state: RootState) => state.editor.present.showApiKeyDialog;
+const selectTemplateDialogVisible = (state: RootState) => state.editor.present.showTemplateDialog;
+const selectCompletionParameters = (state: RootState) => ({
     apiKey: state.editor.present.apiKey === undefined ? '' : state.editor.present.apiKey,
     engine: state.editor.present.modelName,
     maxTokens: state.editor.present.maxTokens,
@@ -642,6 +634,16 @@ export const selectCompletionParameters = (state: RootState) => ({
     frequencyPenalty: state.editor.present.frequencyPenalty,
 });
 
+const selectExamples = (state: RootState) => state.editor.present.examples;
+const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.present.showExamplePreviousOutputs;
+
+const selectVariationsLoadingStatus = (state: RootState) => state.editor.present.loadingVariations;
+const selectVariations = (state: RootState) => state.editor.present.variations;
+const selectMaxVariations = (state: RootState) => state.editor.present.maxVariations;
+const selectShowPromptForVariations = (state: RootState) => state.editor.present.showPromptForVariations;
+
+const selectConversations = (state: RootState) => state.editor.present.conversations;
+
 // Helpers
 
 function convertConversationPartToText(text: string, source: ConversationPartSource,
@@ -653,4 +655,60 @@ function convertConversationPartToText(text: string, source: ConversationPartSou
     }
 }
 
+// Exports
+
 export default editorSlice.reducer;
+export {editorSlice};
+
+// State Enums
+
+export {TabIndex, ConversationPartSource};
+
+// State Parts
+
+export type {
+    CompletionParameters, Example, // for code generator
+};
+
+// Action payloads
+
+export type {
+    LoadTemplateFromFileDataActionPayload, LoadTemplateActionPayload, // for templates library
+};
+
+// Selectors
+
+export {
+    // Common
+    selectTabIndex, selectPrompt, selectStopSymbols, selectApiKey, selectModelName,
+    selectTemperature, selectTopP, selectFrequencyPenalty, selectPresencePenalty,
+    selectMaxTokens, selectApiKeyDialogVisible, selectTemplateDialogVisible,
+    selectCompletionParameters,
+
+    // Modes
+    selectExamples, selectExamplePreviousOutputsStatus,
+    selectVariationsLoadingStatus, selectVariations, selectMaxVariations,
+    selectShowPromptForVariations,
+    selectConversations,
+
+};
+
+// Async Actions
+
+export {
+    fetchForCurrentTab, fetchExamplesOutputsAsync,
+    fetchVariationsAsync, sendMessageInConversationAsync
+};
+
+// Actions
+export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
+    markAllExamplesAsNotLoading,
+    addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
+    setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,
+    addMessageInConversation, setConversationInitialPrompt,
+    addStopSymbol, deleteStopSymbol,
+    editTopP, editFrequencyPenalty, editPresencePenalty,
+    loadTemplate, loadTemplateFromFileData,
+    editPrompt, editApiKey, editModelName, editTemperature, editMaxTokens, updateTabIndex, toggleApiKeyDialog, toggleTemplateDialog } = editorSlice.actions;
+
+// Action Payloads

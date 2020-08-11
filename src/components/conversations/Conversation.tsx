@@ -1,4 +1,4 @@
-import React from "react";
+import React, {createRef, useEffect} from "react";
 import {Card, CardActions, CardContent, Typography, TextField, Grid, Box, Paper, AccordionDetails, AccordionSummary, Accordion, InputAdornment, IconButton} from "@material-ui/core";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -49,10 +49,7 @@ export default function Conversation(props: Props) {
     const styles = useStyles();
     const dispatch = useDispatch();
     const prompt = useSelector(selectPrompt);
-    const conversation = useSelector((state: RootState) => state.editor.present.conversations.find(c => c.id === props.id));
-    if (conversation === undefined) {
-        return <></>;
-    }
+    const conversation = useSelector((state: RootState) => state.editor.present.conversations.find(c => c.id === props.id)!);
 
     const hasStarted = conversation.parts.some(c => c.submitted);
     const onInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -61,12 +58,19 @@ export default function Conversation(props: Props) {
     }
     const onSend = () => {
         dispatch(sendMessageInConversationAsync(props.id));
+        conversationBottom.current!.scrollTop = conversationBottom.current!.scrollHeight;
     }
+
+    useEffect(() => {
+        conversationBottom.current!.scrollTop = conversationBottom.current!.scrollHeight;
+    });
+
+    const conversationBottom = createRef<HTMLDivElement>();
 
     return <Card className={styles.card}>
         <CardContent>
             <Box mt={1} className={styles.conversationBox}>
-                <Paper className={styles.conversationBox}>
+                <Paper className={styles.conversationBox} ref={conversationBottom}>
                     <Box ml={1} mt={1}>
                         {hasStarted && (<>
                             <Typography component={'span'} className={styles.promptedText}>{conversation.initialPrompt}</Typography>
@@ -79,6 +83,7 @@ export default function Conversation(props: Props) {
                             <Typography component={'span'} className={styles.promptedText}>{prompt}</Typography>
                             <Typography component={'span'} className={styles.promptedText}>{conversation.restartSequence}</Typography>
                         </>)}
+                        <div />
                     </Box>
                 </Paper>
             </Box>
@@ -88,6 +93,11 @@ export default function Conversation(props: Props) {
                            placeholder={'Start a conversation'}
                            value={conversation.inputValue}
                            onChange={onInputChange}
+                           onKeyUp={(event: React.KeyboardEvent<HTMLDivElement>) => {
+                               if (event.ctrlKey && event.key === 'Enter') {
+                                   onSend();
+                               }
+                           }}
                            variant={'outlined'}
                            fullWidth={true}
                            InputProps={{

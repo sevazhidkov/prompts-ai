@@ -309,7 +309,7 @@ const editorSlice = createSlice({
             if (state.conversations.length < 1 || state.conversations[state.conversations.length - 1].parts.length > 1) {
                 const startSequence = "\nAI:";
                 const restartSequence = "\nUser: ";
-                state.conversations.push({
+                state.conversations.unshift({
                     id: uniqid("conversation_"), parts: [
                         {text: convertConversationPartToText(
                             '', ConversationPartSource.user,

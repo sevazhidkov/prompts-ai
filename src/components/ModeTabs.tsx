@@ -76,6 +76,7 @@ export default function ModeTabs() {
                         <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
                             <Tab label="Examples" {...a11yProps(TabIndex.multipleExamples)} />
                             <Tab label="Variations" {...a11yProps(TabIndex.variations)} />
+                            <Tab label="Conversations" {...a11yProps(TabIndex.conversations)} />
                         </Tabs>
                     </Grid>
                     <Hidden smDown>

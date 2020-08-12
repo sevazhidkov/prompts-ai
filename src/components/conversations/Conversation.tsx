@@ -11,9 +11,10 @@ import {
     selectPrompt,
     updateConversationInputValue,
     sendMessageInConversationAsync,
-    deleteConversation,
+    deleteConversation, selectCompletionParameters,
 } from "../../slices/editorSlice";
 import {Delete} from "@material-ui/icons";
+import CompletionParameters from "./CompletionParameters";
 
 interface Props {
     id: string;
@@ -52,6 +53,7 @@ export default function Conversation(props: Props) {
     const styles = useStyles();
     const dispatch = useDispatch();
     const prompt = useSelector(selectPrompt);
+    const globalCompletionParameters = useSelector(selectCompletionParameters);
     const conversation = useSelector((state: RootState) => state.editor.present.conversations.find(c => c.id === props.id)!);
 
     const hasStarted = conversation.parts.some(c => c.submitted);
@@ -152,6 +154,14 @@ export default function Conversation(props: Props) {
                                 <Grid item><TextField value={'\\nPerson: '} className={styles.settingField} label={'Before User Input'} variant={'outlined'}/></Grid>
                                 <Grid item><TextField value={'\\nAI:'} className={styles.settingField} label={'Before GPT-3 Completion'} variant={'outlined'}/></Grid>
                             </Grid>
+                            <Box mt={1}>
+                                {conversation.completionParams === undefined && (
+                                    <CompletionParameters parameters={globalCompletionParameters} />
+                                )}
+                                {conversation.completionParams !== undefined && (
+                                    <CompletionParameters parameters={conversation.completionParams} />
+                                )}
+                            </Box>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>

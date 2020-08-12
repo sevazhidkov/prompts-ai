@@ -671,6 +671,7 @@ export {TabIndex, ConversationPartSource};
 
 export type {
     CompletionParameters, Example, // for code generator
+    ConversationCompletionParameters, // for conversation's completion parameters props
 };
 
 // Action payloads

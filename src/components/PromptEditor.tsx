@@ -167,7 +167,7 @@ export function PromptEditor() {
                                 max={1}
                             />
                             <Typography id="max-tokens-slider" gutterBottom>
-                                Response length (in words): <strong>{maxTokens}</strong>
+                                Response length: <strong>{maxTokens}</strong>
                             </Typography>
                             <Slider
                                 defaultValue={10}

@@ -15,10 +15,9 @@ export default function ConversationsTab() {
     const styles = useStyles();
     const dispatch = useDispatch();
     const conversations = useSelector(selectConversations);
-
     useEffect(() => {
         dispatch(normalizeConversations());
-    })
+    });
 
     return <Box>
         <Grid container
@@ -26,9 +25,9 @@ export default function ConversationsTab() {
               justify="flex-start"
               alignItems="flex-start"
               spacing={1}>
-            {conversations.map(conversation => (
+            {conversations.map((conversation, ind) => (
                 <Grid item key={conversation.id} className={styles.gridItem}>
-                    <Conversation id={conversation.id} />
+                    <Conversation id={conversation.id} ind={conversations.length - ind} />
                 </Grid>
             ))}
         </Grid>

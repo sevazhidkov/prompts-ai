@@ -10,11 +10,14 @@ import {
     normalizeConversations,
     selectPrompt,
     updateConversationInputValue,
-    sendMessageInConversationAsync
+    sendMessageInConversationAsync,
+    deleteConversation,
 } from "../../slices/editorSlice";
+import {Delete} from "@material-ui/icons";
 
 interface Props {
     id: string;
+    ind: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -69,6 +72,28 @@ export default function Conversation(props: Props) {
 
     return <Card className={styles.card}>
         <CardContent>
+            <Grid container alignItems={'center'} justify={'space-between'}>
+                <Grid item><Typography>
+                    {!hasStarted && (
+                        "New Conversation"
+                    )}
+                    {hasStarted && (
+                        <Box>
+                            <Typography component={'span'}>Conversation #{props.ind}</Typography><br/>
+                            <Typography variant={'caption'} component={'span'}>The prompt and parameters are locked.</Typography>
+                        </Box>
+                    )}
+                </Typography></Grid>
+                <Grid item>
+                    {hasStarted && (
+                        <IconButton onClick={() => {
+                            dispatch(deleteConversation(props.id));
+                        }}>
+                            <Delete />
+                        </IconButton>
+                    )}
+                </Grid>
+            </Grid>
             <Box mt={1} className={styles.conversationBox}>
                 <Paper className={styles.conversationBox} ref={conversationBottom}>
                     <Box ml={1} mt={1}>
@@ -90,7 +115,10 @@ export default function Conversation(props: Props) {
             <Box mt={2} className={styles.responseInput}>
                 <TextField multiline
                            label={'Message (Ctrl+Enter to send)'}
-                           placeholder={'Start a conversation'}
+                           InputLabelProps={{
+                               shrink: true,
+                           }}
+                           placeholder={hasStarted ? 'Your response' : 'Start a conversation'}
                            value={conversation.inputValue}
                            onChange={onInputChange}
                            onKeyUp={(event: React.KeyboardEvent<HTMLDivElement>) => {

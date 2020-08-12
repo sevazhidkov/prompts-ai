@@ -306,7 +306,7 @@ const editorSlice = createSlice({
 
         normalizeConversations: (state) => {
             // Always add an empty conversation for user to start
-            if (state.conversations.length < 1 || state.conversations[state.conversations.length - 1].parts.length > 1) {
+            if (state.conversations.length < 1 || state.conversations[0].parts.length > 1) {
                 const startSequence = "\nAI:";
                 const restartSequence = "\nUser: ";
                 state.conversations.unshift({
@@ -398,6 +398,9 @@ const editorSlice = createSlice({
 
                 return conversation;
             });
+        },
+        deleteConversation: (state, action: PayloadAction<string>) => {
+            state.conversations = state.conversations.filter(c => c.id !== action.payload);
         },
 
         loadTemplate: (state, action: PayloadAction<LoadTemplateActionPayload>) => {
@@ -705,7 +708,7 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     markAllExamplesAsNotLoading,
     addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
     setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,
-    addMessageInConversation, setConversationInitialPrompt,
+    addMessageInConversation, setConversationInitialPrompt, deleteConversation,
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
     loadTemplate, loadTemplateFromFileData,

@@ -186,6 +186,17 @@ interface UpdateConversationInputValueActionPayload {
     inputValue: string;
 }
 
+interface UpdateConversationStartSequenceActionPayload {
+    conversationId: string;
+    startSequence: string;
+}
+
+interface UpdateConversationRestartSequenceActionPayload {
+    conversationId: string;
+    restartSequence: string;
+}
+
+
 interface AddMessageToConversationFromUserActionPayload {
     conversationId: string;
     source: ConversationPartSource.user;
@@ -350,6 +361,22 @@ const editorSlice = createSlice({
             state.conversations = state.conversations.map(conversation => {
                 if (conversation.id === action.payload.conversationId) {
                     conversation.inputValue = action.payload.inputValue;
+                }
+                return conversation;
+            });
+        },
+        updateConversationStartSequence: (state, action: PayloadAction<UpdateConversationStartSequenceActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id === action.payload.conversationId) {
+                    conversation.startSequence = action.payload.startSequence;
+                }
+                return conversation;
+            });
+        },
+        updateConversationRestartSequence: (state, action: PayloadAction<UpdateConversationRestartSequenceActionPayload>) => {
+            state.conversations = state.conversations.map(conversation => {
+                if (conversation.id === action.payload.conversationId) {
+                    conversation.restartSequence = action.payload.restartSequence;
                 }
                 return conversation;
             });
@@ -709,7 +736,8 @@ export const { editExample, loadOutputForExample, deleteExample, cleanExampleLis
     markAllExamplesAsNotLoading,
     addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
     setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,
-    addMessageInConversation, setConversationInitialPrompt, deleteConversation,
+    updateConversationStartSequence, updateConversationRestartSequence, addMessageInConversation,
+    setConversationInitialPrompt, deleteConversation,
     addStopSymbol, deleteStopSymbol,
     editTopP, editFrequencyPenalty, editPresencePenalty,
     loadTemplate, loadTemplateFromFileData,

@@ -11,7 +11,7 @@ import {
     selectPrompt,
     updateConversationInputValue,
     sendMessageInConversationAsync,
-    deleteConversation, selectCompletionParameters,
+    deleteConversation, selectCompletionParameters, updateConversationRestartSequence, updateConversationStartSequence,
 } from "../../slices/editorSlice";
 import {Delete} from "@material-ui/icons";
 import CompletionParameters from "./CompletionParameters";
@@ -151,8 +151,34 @@ export default function Conversation(props: Props) {
                     <AccordionDetails>
                         <Typography>
                             <Grid container spacing={1}>
-                                <Grid item><TextField value={'\\nPerson: '} className={styles.settingField} label={'Before User Input'} variant={'outlined'}/></Grid>
-                                <Grid item><TextField value={'\\nAI:'} className={styles.settingField} label={'Before GPT-3 Completion'} variant={'outlined'}/></Grid>
+                                <Grid item>
+                                    <TextField
+                                        value={conversation.restartSequence.split('\n').join('\\n')}
+                                        onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                            dispatch(updateConversationRestartSequence({
+                                                conversationId: props.id,
+                                                restartSequence: event.currentTarget.value.split('\\n').join('\n')
+                                            }));
+                                        }}
+                                        className={styles.settingField}
+                                        label={'Before User Input'}
+                                        variant={'outlined'}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        value={conversation.startSequence.split('\n').join('\\n')}
+                                        onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                            dispatch(updateConversationStartSequence({
+                                                conversationId: props.id,
+                                                startSequence: event.currentTarget.value.split('\\n').join('\n')
+                                            }));
+                                        }}
+                                        className={styles.settingField}
+                                        label={'Before GPT-3 Completion'}
+                                        variant={'outlined'}
+                                    />
+                                </Grid>
                             </Grid>
                             <Box mt={1}>
                                 {conversation.completionParams === undefined && (

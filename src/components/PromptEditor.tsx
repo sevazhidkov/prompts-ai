@@ -288,7 +288,7 @@ export function PromptEditor() {
                         id="prompt-text"
                         label="A prompt"
                         multiline
-                        rows={18}
+                        rows={9}
                         rowsMax={100}
                         fullWidth={true}
                         onChange={handlePromptChange}

@@ -13,7 +13,10 @@ const useStyles = makeStyles({
 
 export default function ConversationsTab() {
     const styles = useStyles();
-    const conversationIds = useSelector((state: RootState) => state.editor.present.conversations.map(c => c.id));
+    const conversationIds = useSelector((state: RootState) => {
+        const workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!;
+        return workspace.conversations.map(c => c.id);
+    });
 
     return <Box>
         <Grid container

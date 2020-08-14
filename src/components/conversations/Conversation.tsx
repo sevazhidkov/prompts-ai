@@ -51,7 +51,10 @@ export default function Conversation(props: Props) {
     const dispatch = useDispatch();
     const prompt = useSelector(selectPrompt);
     const globalCompletionParameters = useSelector(selectCompletionParameters);
-    const conversation = useSelector((state: RootState) => state.editor.present.conversations.find(c => c.id === props.id)!);
+    const conversation = useSelector((state: RootState) => {
+        const workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!;
+        return workspace.conversations.find(c => c.id === props.id)!;
+    });
 
     const hasStarted = conversation.parts.some(c => c.submitted);
 

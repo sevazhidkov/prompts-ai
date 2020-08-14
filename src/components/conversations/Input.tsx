@@ -18,11 +18,16 @@ export default function Input(props: Props) {
     const dispatch = useDispatch();
 
     const inputValue = useSelector(
-        (state: RootState) => state.editor.present.conversations.find(c => c.id === props.conversationId)!.inputValue
+        (state: RootState) => {
+            const workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!;
+            return workspace.conversations.find(c => c.id === props.conversationId)!.inputValue;
+        }
     );
     const hasStarted = useSelector(
-        (state: RootState) => state.editor.present.conversations.find(c => c.id === props.conversationId)!
-            .parts.some(c => c.submitted)
+        (state: RootState) => {
+            const workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!;
+            return workspace.conversations.find(c => c.id === props.conversationId)!.parts.some(c => c.submitted);
+        }
     );
     const onSend = () => {
         dispatch(sendMessageInConversationAsync(props.conversationId));

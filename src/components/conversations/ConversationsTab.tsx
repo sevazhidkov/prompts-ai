@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Box, Grid} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import Conversation from "./Conversation";
-import {selectConversations, normalizeConversations} from "../../slices/editorSlice";
+import {RootState} from "../../store";
 
 const useStyles = makeStyles({
     gridItem: {
@@ -13,11 +13,7 @@ const useStyles = makeStyles({
 
 export default function ConversationsTab() {
     const styles = useStyles();
-    const dispatch = useDispatch();
-    const conversations = useSelector(selectConversations);
-    useEffect(() => {
-        dispatch(normalizeConversations());
-    });
+    const conversationIds = useSelector((state: RootState) => state.editor.present.conversations.map(c => c.id));
 
     return <Box>
         <Grid container
@@ -25,9 +21,9 @@ export default function ConversationsTab() {
               justify="flex-start"
               alignItems="flex-start"
               spacing={1}>
-            {conversations.map((conversation, ind) => (
-                <Grid item key={conversation.id} className={styles.gridItem}>
-                    <Conversation id={conversation.id} ind={conversations.length - ind} />
+            {conversationIds.map((conversationId, ind) => (
+                <Grid item key={conversationId} className={styles.gridItem}>
+                    <Conversation id={conversationId} ind={conversationIds.length - ind} />
                 </Grid>
             ))}
         </Grid>

@@ -18,10 +18,7 @@ function App() {
 
     useHotkeys('ctrl+enter', () => {
         dispatch(fetchForCurrentTab());
-    }, {filter: (v) => {
-            console.log(v);
-            return true;
-        }});
+    }, {filter: () => true});
     useHotkeys('ctrl+1', () => {
         dispatch(updateTabIndex(0));
     });

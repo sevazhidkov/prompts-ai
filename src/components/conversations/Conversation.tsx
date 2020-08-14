@@ -1,20 +1,17 @@
 import React, {createRef, useEffect} from "react";
-import {Card, CardActions, CardContent, Typography, TextField, Grid, Box, Paper, AccordionDetails, AccordionSummary, Accordion, InputAdornment, IconButton} from "@material-ui/core";
+import {Card, CardActions, CardContent, Typography, TextField, Grid, Box, Paper, AccordionDetails, AccordionSummary, Accordion, IconButton} from "@material-ui/core";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SendIcon from '@material-ui/icons/Send';
 import { RootState } from "../../store";
 import {useDispatch, useSelector} from "react-redux";
 import {
     ConversationPartSource,
-    normalizeConversations,
     selectPrompt,
-    updateConversationInputValue,
-    sendMessageInConversationAsync,
     deleteConversation, selectCompletionParameters, updateConversationRestartSequence, updateConversationStartSequence,
 } from "../../slices/editorSlice";
 import {Delete} from "@material-ui/icons";
 import CompletionParameters from "./CompletionParameters";
+import Input from "./Input";
 
 interface Props {
     id: string;
@@ -57,14 +54,6 @@ export default function Conversation(props: Props) {
     const conversation = useSelector((state: RootState) => state.editor.present.conversations.find(c => c.id === props.id)!);
 
     const hasStarted = conversation.parts.some(c => c.submitted);
-    const onInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        dispatch(updateConversationInputValue({conversationId: props.id, inputValue: event.currentTarget.value}));
-        dispatch(normalizeConversations());
-    }
-    const onSend = () => {
-        dispatch(sendMessageInConversationAsync(props.id));
-        conversationBottom.current!.scrollTop = conversationBottom.current!.scrollHeight;
-    }
 
     useEffect(() => {
         conversationBottom.current!.scrollTop = conversationBottom.current!.scrollHeight;
@@ -115,29 +104,9 @@ export default function Conversation(props: Props) {
                 </Paper>
             </Box>
             <Box mt={2} className={styles.responseInput}>
-                <TextField multiline
-                           label={'Message (Ctrl+Enter to send)'}
-                           InputLabelProps={{
-                               shrink: true,
-                           }}
-                           placeholder={hasStarted ? 'Your response' : 'Start a conversation'}
-                           value={conversation.inputValue}
-                           onChange={onInputChange}
-                           onKeyUp={(event: React.KeyboardEvent<HTMLDivElement>) => {
-                               if (event.ctrlKey && event.key === 'Enter') {
-                                   onSend();
-                               }
-                           }}
-                           variant={'outlined'}
-                           fullWidth={true}
-                           InputProps={{
-                               endAdornment: (<InputAdornment position="end">
-                               <IconButton edge="end" onClick={onSend}>
-                                   <SendIcon />
-                               </IconButton>
-                               </InputAdornment>)
-                           }}
-                />
+                <Input conversationId={props.id} afterSend={() => {
+                    conversationBottom.current!.scrollTop = conversationBottom.current!.scrollHeight;
+                }}/>
             </Box>
             <Box mt={1}>
                 <Accordion>

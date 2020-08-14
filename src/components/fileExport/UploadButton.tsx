@@ -4,8 +4,13 @@ import Files from "react-files";
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {loadTemplateFromFileData, LoadTemplateFromFileDataActionPayload} from "../../slices/editorSlice";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
-export default function UploadButton() {
+interface Props {
+    className: string;
+}
+
+export default function UploadButton(props: Props) {
     const dispatch = useDispatch();
 
     const fileReader = new FileReader();
@@ -35,6 +40,14 @@ export default function UploadButton() {
         minFileSize={0}
         clickable
     >
-        <Button>From file</Button>
+        <Button
+            variant="outlined"
+            color="default"
+            className={props.className}
+            size={'small'}
+            startIcon={<CloudUploadIcon />}
+        >
+            Upload
+        </Button>
     </Files>;
 }

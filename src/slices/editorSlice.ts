@@ -515,7 +515,7 @@ const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
         return;
     }
     if (state.editor.present.prompt.length === 0) {
-        alert("Prompts can't be empty");
+        alert("The prompt can't be empty");
         return;
     }
     if (state.editor.present.prompt.indexOf('{example}') === -1) {
@@ -557,7 +557,7 @@ const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
         return;
     }
     if (state.editor.present.prompt.length === 0) {
-        alert("Prompts can't be empty");
+        alert("The prompt can't be empty");
         return;
     }
 

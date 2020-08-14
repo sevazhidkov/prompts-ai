@@ -2,17 +2,14 @@ import {AppBar, Container, IconButton, Theme, Toolbar, Typography} from "@materi
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
-import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {
     selectApiKey,
     toggleApiKeyDialog,
-    toggleTemplateDialog
 } from "../slices/editorSlice";
 import {ActionCreators} from "redux-undo";
-import DownloadButton from "./fileExport/DownloadButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
     buttonGroup: {
@@ -31,9 +28,6 @@ export default function Header() {
     const apiKeyPresent = !!apiKey;
     const handleApiKeyDialogOpen = () => {
         dispatch(toggleApiKeyDialog(true));
-    };
-    const handleTemplateDialogOpen = () => {
-        dispatch(toggleTemplateDialog(true));
     };
     const handleUndoClick = () => {
         dispatch(ActionCreators.undo());
@@ -56,10 +50,6 @@ export default function Header() {
                 <div className={classes.buttonGroup}>
                     <IconButton onClick={handleUndoClick}><UndoIcon/></IconButton>
                     <IconButton onClick={handleRedoClick}><RedoIcon/></IconButton>
-                </div>
-                <div className={classes.buttonGroup}>
-                    <DownloadButton/>
-                    <IconButton onClick={handleTemplateDialogOpen}><FolderOpenIcon/></IconButton>
                 </div>
             </Toolbar>
         </Container>

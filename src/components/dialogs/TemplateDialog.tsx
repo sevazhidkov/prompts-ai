@@ -6,27 +6,21 @@ import {
     DialogTitle,
     List,
     ListItem,
-    ListItemIcon,
     ListItemText,
-    ListSubheader, Theme
+    ListSubheader,
 } from "@material-ui/core";
-import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import React from "react";
-// @ts-ignore
-import Files from "react-files";
 import {useDispatch, useSelector} from "react-redux";
 import {
     cleanExampleList,
     loadTemplate,
-    loadTemplateFromFileData,
-    LoadTemplateFromFileDataActionPayload,
     selectTemplateDialogVisible,
     toggleTemplateDialog
 } from "../../slices/editorSlice";
 import getTemplateGroups, {Template} from "../../libs/templatesLibrary";
 import {makeStyles} from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
     templateDialog: {
         minWidth: '50vw',
     },
@@ -48,23 +42,6 @@ export default function TemplateDialog() {
         handleTemplateDialogClose();
     };
 
-    const fileReader = new FileReader();
-    fileReader.onload = (event) => {
-        if (event.target === undefined) {
-            return;
-        }
-        if (event.target!.result === undefined) {
-            return;
-        }
-        const template: LoadTemplateFromFileDataActionPayload = JSON.parse(event.target!.result as string);
-
-        template.stopSymbols = template.stopSymbols.map(symbol => {
-            return symbol.split('\n').join('\\n');
-        });
-        dispatch(loadTemplateFromFileData(template));
-        handleTemplateDialogClose();
-    };
-
     return <Dialog
         open={templateDialogOpen}
         onClose={handleTemplateDialogClose}
@@ -74,22 +51,6 @@ export default function TemplateDialog() {
         <DialogContent
             className={classes.templateDialog}
         >
-            <List>
-                <Files
-                    className="files-dropzone"
-                    onChange={(file: any) => {
-                        fileReader.readAsText(file[0]);
-                    }}
-                    onError={(err: any) => console.log(err)}
-                    accepts={['.json']}
-                    maxFileSize={10000000}
-                    minFileSize={0}
-                    clickable
-                >
-                    <ListItem button><ListItemIcon><FolderOpenIcon/></ListItemIcon><ListItemText>From
-                        file</ListItemText></ListItem>
-                </Files>
-            </List>
             {templateGroups.map((templateGroup, ind) => (
                 <div key={ind}>
                     <List subheader={<ListSubheader>{templateGroup.name}</ListSubheader>}>

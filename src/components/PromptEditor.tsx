@@ -8,7 +8,8 @@ import {
     Tooltip,
     Card,
     CardContent,
-    Select
+    Select,
+    Box
 } from "@material-ui/core";
 import ChipInput from 'material-ui-chip-input'
 import {
@@ -29,6 +30,7 @@ import {
 } from "../slices/editorSlice";
 import {makeStyles} from "@material-ui/styles";
 import ModeTabs from "./ModeTabs";
+import WorkspaceForm from "./WorkspaceForm";
 
 const useStyles = makeStyles({
     fullWidth: {
@@ -138,6 +140,16 @@ export function PromptEditor() {
                             </CardContent>
                         </Card>
                     </Box>*/}
+                    <Box mb={1}>
+                        <Card>
+                            <CardContent>
+                                <Typography gutterBottom>
+                                    <strong>Workspace</strong>
+                                </Typography>
+                                <WorkspaceForm/>
+                            </CardContent>
+                        </Card>
+                    </Box>
                     <Card>
                         <CardContent>
                             <Typography gutterBottom>

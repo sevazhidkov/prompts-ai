@@ -7,7 +7,7 @@ export default function CreateButton() {
         console.log('123');
     };
 
-    return <IconButton aria-label="close" onClick={onAdd}>
+    return <IconButton aria-label="close" onClick={onAdd} size={'small'}>
         <AddIcon/>
     </IconButton>;
 }

@@ -7,7 +7,7 @@ import DeleteButton from "./DeleteButton";
 
 const useStyles = makeStyles({
     selectGridItem: {
-        width: '200px',
+        width: '150px',
     },
 });
 

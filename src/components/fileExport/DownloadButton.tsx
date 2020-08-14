@@ -1,6 +1,6 @@
 import React from "react";
 import {useSelector} from "react-redux";
-import {IconButton} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import {
     selectFrequencyPenalty, selectMaxTokens, selectModelName,
@@ -10,7 +10,11 @@ import {
     selectTopP
 } from "../../slices/editorSlice";
 
-export default function DownloadButton() {
+interface Props {
+    className: string;
+}
+
+export default function DownloadButton(props: Props) {
     const prompt = useSelector(selectPrompt);
     const temperature = useSelector(selectTemperature);
     const topP = useSelector(selectTopP);
@@ -32,10 +36,19 @@ export default function DownloadButton() {
             })
         ], {type: 'text/plain'});
         element.href = URL.createObjectURL(file);
-        element.download = `prompt_${Math.trunc(Date.now() / 1000)}.json`;
+        element.download = `gpt3_workspace_${Math.trunc(Date.now() / 1000)}.json`;
         document.body.appendChild(element);
         element.click();
     }
 
-    return <IconButton onClick={handleSaveAndDownload}><SaveIcon/></IconButton>;
+    return <Button
+        variant="outlined"
+        color="default"
+        className={props.className}
+        size={'small'}
+        startIcon={<SaveIcon />}
+        onClick={handleSaveAndDownload}
+    >
+        Download
+    </Button>;
 }

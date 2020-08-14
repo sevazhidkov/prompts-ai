@@ -1,11 +1,8 @@
 import React from "react";
 import {useDispatch} from "react-redux";
 import {Button, FormControl, Select, Box, Grid} from "@material-ui/core";
-// @ts-ignore
-import Files from "react-files";
 import getTemplateGroups, {getFlattenedTemplates} from "../libs/templatesLibrary";
-import {loadTemplate, cleanExampleList, LoadTemplateFromFileDataActionPayload, loadTemplateFromFileData} from "../slices/editorSlice";
-import UploadButton from "./fileExport/UploadButton";
+import {loadTemplate, cleanExampleList,} from "../slices/editorSlice";
 
 interface FormElements extends HTMLCollection {
     templateId: HTMLSelectElement;
@@ -43,9 +40,6 @@ export default function TemplatesForm() {
                 <Grid container spacing={1} alignItems="center">
                     <Grid item>
                         <Button type="submit" variant="contained" color="primary">Load</Button>
-                    </Grid>
-                    <Grid>
-                        <UploadButton/>
                     </Grid>
                 </Grid>
 

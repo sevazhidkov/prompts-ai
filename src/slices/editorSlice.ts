@@ -80,6 +80,7 @@ interface Conversation {
 
 interface Workspace {
     id: string;
+    name: string;
 
     prompt: string;
     modelName: string;
@@ -116,6 +117,7 @@ const initialState: EditorState = {
     currentWorkspaceId: 'first_workspace',
     workspaces: [{
         id: 'first_workspace',
+        name: 'Draft #1',
         prompt: "Input: Anna and Mike is going skiing.\n" +
             "Output: Anna and Mike are going skiing.\n" +
             "Input: Anna and Pat are married; he has been together for 20 years.\n" +

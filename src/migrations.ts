@@ -166,7 +166,23 @@ export const migrations = {
                 }
             }
         }
+    },
+
+    13: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                present: {
+                    ...state.editor.present,
+                    workspaces: state.editor.present.workspaces.map((workspace: any) => ({
+                        ...workspace,
+                        name: 'Draft #1'
+                    })),
+                }
+            }
+        }
     }
 };
 
-export const currentVersion = 12;
+export const currentVersion = 13;

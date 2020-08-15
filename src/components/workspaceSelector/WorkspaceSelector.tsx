@@ -4,6 +4,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import CreateButton from './CreateButton';
 import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
+import {selectWorkspacesList, selectCurrentWorkspaceId, updateWorkspaceId} from "../../slices/editorSlice";
+import {useDispatch, useSelector} from 'react-redux';
 
 const useStyles = makeStyles({
     selectGridItem: {
@@ -13,21 +15,24 @@ const useStyles = makeStyles({
 
 export default function WorkspaceSelector() {
     const styles = useStyles();
+    const dispatch = useDispatch();
+    const workspaceId = useSelector(selectCurrentWorkspaceId);
+    const workspaces = useSelector(selectWorkspacesList);
 
     const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        console.log(event.target.value as string);
+        dispatch(updateWorkspaceId(event.target.value as string));
     }
     return <Grid container alignItems={'center'} spacing={1}>
         <Grid item className={styles.selectGridItem}>
             <Select
                 native
-                value={"draft1"}
+                value={workspaceId}
                 fullWidth={true}
                 onChange={handleSelectChange}
             >
-                <option value={"draft1"}>Draft 1</option>
-                <option value={"draft2"}>Draft 2</option>
-                <option value={"draft3"}>Draft 3</option>
+                {workspaces.map((workspace) => (
+                    <option value={workspace.id}>{workspace.name}</option>
+                ))}
             </Select>
         </Grid>
         <Grid item>

@@ -532,7 +532,31 @@ const editorSlice = createSlice({
         },
 
         updateWorkspaceId: (state, action: PayloadAction<string>) => {
-          state.currentWorkspaceId = action.payload;
+            if (state.workspaces.find(w => w.id === action.payload) === undefined) {
+                return;
+            }
+            state.currentWorkspaceId = action.payload;
+        },
+        createWorkspace: (state) => {
+            let currentWorkspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
+            const newWorkspace = {
+                ...currentWorkspace,
+                id: uniqid('workspace_'),
+                name: `Draft #${state.workspaces.length + 1}`
+            };
+            state.workspaces.push(newWorkspace);
+            state.currentWorkspaceId = newWorkspace.id;
+        },
+        updateCurrentWorkspaceName: (state, action: PayloadAction<string>) => {
+            let workspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
+            workspace.name = action.payload;
+        },
+        deleteCurrentWorkspace: (state) => {
+            if (state.workspaces.length < 2) {
+                return;
+            }
+            state.workspaces = state.workspaces.filter(w => w.id !== state.currentWorkspaceId);
+            state.currentWorkspaceId = state.workspaces[state.workspaces.length - 1].id;
         },
 
         toggleApiKeyDialog: (state, action: PayloadAction<boolean>) => {
@@ -689,6 +713,9 @@ const sendMessageInConversationAsync = (conversationId: string): AppThunk => (di
 const selectApiKey = (state: RootState) => state.editor.present.apiKey;
 const selectApiKeyDialogVisible = (state: RootState) => state.editor.present.showApiKeyDialog;
 const selectTemplateDialogVisible = (state: RootState) => state.editor.present.showTemplateDialog;
+const selectCurrentWorkspaceId = (state: RootState) => state.editor.present.currentWorkspaceId;
+const selectCurrentWorkspaceName = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.name;
+const selectWorkspacesList = (state: RootState) => state.editor.present.workspaces.map(w => ({id: w.id, name: w.name}));
 
 const selectTabIndex = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.tabIndex;
 const selectPrompt = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.prompt;
@@ -771,7 +798,7 @@ export {
     selectTabIndex, selectPrompt, selectStopSymbols, selectApiKey, selectModelName,
     selectTemperature, selectTopP, selectFrequencyPenalty, selectPresencePenalty,
     selectMaxTokens, selectApiKeyDialogVisible, selectTemplateDialogVisible,
-    selectCompletionParameters,
+    selectCompletionParameters, selectCurrentWorkspaceId, selectCurrentWorkspaceName, selectWorkspacesList,
 
     // Modes
     selectExamples, selectExamplePreviousOutputsStatus,
@@ -787,7 +814,9 @@ export {
 };
 
 // Actions
-export const { editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
+export const {
+    updateWorkspaceId, createWorkspace, deleteCurrentWorkspace, updateCurrentWorkspaceName,
+    editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
     markAllExamplesAsNotLoading,
     addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
     setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,

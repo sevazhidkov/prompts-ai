@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {PromptEditor} from './components/PromptEditor';
 import {Box, Container, createMuiTheme, CssBaseline, ThemeProvider, Typography,} from "@material-ui/core";
 import {useHotkeys} from "react-hotkeys-hook";
 import {useDispatch} from "react-redux";
-import {fetchForCurrentTab, updateTabIndex} from "./slices/editorSlice";
+import {fetchForCurrentTab, updateTabIndex, normalizeConversations} from "./slices/editorSlice";
 import Header from "./components/Header";
 import TemplateDialog from "./components/dialogs/TemplateDialog";
 import ApiKeyDialog from "./components/dialogs/ApiKeyDialog";
@@ -14,6 +14,10 @@ function App() {
         palette: {
             type: "dark"
         }
+    });
+
+    useEffect(() => {
+        dispatch(normalizeConversations());
     });
 
     useHotkeys('ctrl+enter', () => {

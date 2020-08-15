@@ -10,7 +10,7 @@ export default function DeleteButton() {
     };
 
     return <>
-        <IconButton aria-label="close" onClick={openPopup}>
+        <IconButton aria-label="close" onClick={openPopup} size={'small'}>
             <DeleteIcon />
         </IconButton>
         <DeletePopup open={isPopupOpen} onClose={() => {

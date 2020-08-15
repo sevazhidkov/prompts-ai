@@ -10,7 +10,7 @@ export default function EditButton() {
     };
 
     return <>
-        <IconButton aria-label="close" onClick={openPopup}>
+        <IconButton aria-label="close" onClick={openPopup} size={'small'}>
             <EditIcon />
         </IconButton>
         <EditPopup open={isPopupOpen} onClose={() => {

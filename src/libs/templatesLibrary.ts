@@ -1,7 +1,7 @@
 import { uniqueId } from "lodash";
-import {LoadTemplateActionPayload} from '../app/slices/editorSlice';
+import {LoadTemplateActionPayload, TabIndex} from '../slices/editorSlice';
 
-interface Template {
+export interface Template {
     id: string;
     name: string;
     actionPayload: LoadTemplateActionPayload;
@@ -21,7 +21,7 @@ const templateGroups = [
                         'Uber: Transportation, Technology, Marketplace\n' +
                         'Mcdonalds: Food, Fast Food, Logistics, Restaurants\n' +
                         '{example}:',
-                    tabIndex: 0,
+                    tabIndex: TabIndex.multipleExamples,
                     stopSymbols: ['\\n'],
                     examples: [{text: 'Unilever', output: 'Consumer Goods, Food, Personal Care, Retail'}, {text: 'LinkedIn', output: 'Social Media, Technology, Business'}, {text: 'FedEx', output: 'Logistics, Transportation'}]
                 }},
@@ -76,7 +76,7 @@ const templateGroups = [
                                 'Take me home, country roads',
                         output: ''}
                     ],
-                    tabIndex: 0,
+                    tabIndex: TabIndex.multipleExamples,
                 }},
             {id: uniqueId('template_'), name: 'Sentence => Email', actionPayload: {
                     prompt: '```\n' +
@@ -154,7 +154,7 @@ const templateGroups = [
                     examples: [
                         {'text': 'Ask RAM Co. if they have new storage units in stock.', 'output': ''}
                     ],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
             {id: uniqueId('template_'), name: 'Book Review', actionPayload: {
                     prompt: 'Title: Lovely War\n' +
@@ -192,7 +192,7 @@ const templateGroups = [
                                 '- Got me to delete a social media I used too much\n' +
                                 '- I like that Cal Newport is a computer scientist as well', output: ''}
                     ],
-                    tabIndex: 0,
+                    tabIndex: TabIndex.multipleExamples,
                     stopSymbols: ['\\n\\n']
                 }},
             {id: uniqueId('template_'), name: 'Headline Generation', actionPayload: {
@@ -210,7 +210,7 @@ const templateGroups = [
                     examples: [
                         {text: 'Chicago, restaurants, summer', output: ''}
                     ],
-                    tabIndex: 0,
+                    tabIndex: TabIndex.multipleExamples,
                     stopSymbols: ['\\n']
                 }},
             {id: uniqueId('template_'), name: 'Product Name Generator', actionPayload: {
@@ -230,7 +230,7 @@ const templateGroups = [
                         {text: 'Product description: A zero carbohydrate cereal that tastes great.\n' +
                                 'Seed words: fitness, healthy, keto, clean, tasty', output: ''}
                     ],
-                    tabIndex: 0,
+                    tabIndex: TabIndex.multipleExamples,
                     stopSymbols: ['\\n']
                 }},
             {id: uniqueId('template_'), name: 'Rhyming', actionPayload: {
@@ -249,7 +249,7 @@ const templateGroups = [
                         {text: "b", output: ""}
                     ],
                     stopSymbols: [],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
             {id: uniqueId('template_'), name: 'Q&A', actionPayload: {
                     prompt: "Q: What is the definition of a linearly independent list?\n" +
@@ -278,7 +278,7 @@ const templateGroups = [
 
                     ],
                     stopSymbols: ["\\n"],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
             {id: uniqueId('template_'), name: 'Summarization', actionPayload: {
                     prompt: '```\n' +
@@ -304,7 +304,7 @@ const templateGroups = [
                             output: ""},
                     ],
                     stopSymbols: ['"""'],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
             {id: uniqueId('template_'), name: 'Code Translation', actionPayload: {
                     prompt: 'Python:\n' +
@@ -341,7 +341,7 @@ const templateGroups = [
                                 'print(a)', output: ""}
                     ],
                     stopSymbols: ["Python:"],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
             {id: uniqueId('template_'), name: 'Translation', actionPayload: {
                     prompt: 'English: I do not speak French.\n' +
@@ -359,7 +359,7 @@ const templateGroups = [
                         {text: "What rooms do you have available?", output: ""}
                     ],
                     stopSymbols: ['\\n'],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
             {id: uniqueId('template_'), name: 'Estimation', actionPayload: {
                     prompt: 'Lower and upper bound for each quantity:\n' +
@@ -373,21 +373,21 @@ const templateGroups = [
                         {text: "How much does the iPhone XI cost?", output: ""}
                     ],
                     stopSymbols: ['\\n'],
-                    tabIndex: 0
+                    tabIndex: TabIndex.multipleExamples
                 }},
         ]
     },
-    {name: 'Creative', templates: [
+    {name: 'Variations', templates: [
             {id: uniqueId('template_'), name: 'React Components', actionPayload: {
                 prompt: 'import React from \'react\';\n' +
                     '\n' +
                     'const ThreeButtonComponent=()=>(',
-                examples: [], tabIndex: 1
+                examples: [], tabIndex: TabIndex.variations
                 }},
             {id: uniqueId('template_'), name: 'Analogies Generator', actionPayload: {
                     prompt: 'Neural networks are like',
                     stopSymbols: ['.'],
-                    examples: [], tabIndex: 1
+                    examples: [], tabIndex: TabIndex.variations
                 }},
             {id: uniqueId('template_'), name: 'Idea Generator', actionPayload: {
                     prompt: 'Here is a list of 100 interesting ideas for new movie plots. Each plot is ' +
@@ -398,7 +398,7 @@ const templateGroups = [
                         '\n' +
                         '2.',
                     stopSymbols: ['3'],
-                    examples: [], tabIndex: 1
+                    examples: [], tabIndex: TabIndex.variations
                 }},
             {id: uniqueId('template_'), name: 'Tweet Generation', actionPayload: {
                 prompt: 'My favorite programming tweets:\n' +
@@ -419,7 +419,7 @@ const templateGroups = [
                     '-------\n' +
                     'After 17 years as a professional developer, it seems that the answer to every programming question is "it depends"\n' +
                     '-------\n',
-                    stopSymbols: ['\\n-'], examples: [], tabIndex: 1
+                    stopSymbols: ['\\n-'], examples: [], tabIndex: TabIndex.variations
                 }},
             {id: uniqueId('template_'), name: 'Poem Generator', actionPayload: {
                     prompt: 'Who trusted God was love indeed\n' +
@@ -431,7 +431,7 @@ const templateGroups = [
                         'hey melt like mist, the solid lands,\n' +
                         'Like clouds they shape themselves and go.\n' +
                         '----\n',
-                    stopSymbols: ['--'], examples: [], tabIndex: 1
+                    stopSymbols: ['--'], examples: [], tabIndex: TabIndex.variations
                 }},
         ]},
 ];

@@ -1,4 +1,4 @@
-import {TabIndex, Example, CompletionParameters} from "../app/slices/editorSlice";
+import {TabIndex, Example, CompletionParameters} from "../slices/editorSlice";
 
 interface CodeExample {
     id: string;
@@ -79,7 +79,7 @@ axios(config)
 });
 `;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `var axios = require('axios');
 
 var config = {
@@ -110,7 +110,7 @@ axios(config)
 });
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }
@@ -149,7 +149,7 @@ axios({
 });
 `;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `import axios from 'axios' 
 
 axios({
@@ -178,7 +178,7 @@ axios({
 });
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }
@@ -201,7 +201,7 @@ function generateShellExample(parameters: CompletionParameters, tabIndex: TabInd
                 'frequency_penalty': parameters.frequencyPenalty
             }, null, 1), "'", "\\'")}'`;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `import axios from 'axios' 
 
 axios({
@@ -230,7 +230,7 @@ axios({
 });
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }
@@ -303,7 +303,7 @@ ${completionVariableName} = openai.Completion.create(
 ${outputCode}
 `;
         }
-        case TabIndex.creativeGeneration: {
+        case TabIndex.variations: {
             return `import openai
 openai.api_key = "${parameters.apiKey}"
 ${completionVariableName} = openai.Completion.create(
@@ -321,7 +321,7 @@ ${completionVariableName} = openai.Completion.create(
 ${outputCode}
 `;
         }
-        case TabIndex.chatBot: {
+        case TabIndex.conversations: {
             return ``;
         }
     }

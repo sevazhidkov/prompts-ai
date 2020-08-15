@@ -1,6 +1,6 @@
-## Prompts AI: An advanced playground for GPT-3
+## Prompts AI
 
-Prompts AI, a GPT-3 playground hosted at https://prompts.ai/,
+[Prompts AI](https://prompts.ai/)
 has two main goals:
 1) Help first-time GPT-3 users to discover capabilities, strengths
 and weaknesses of the technology.

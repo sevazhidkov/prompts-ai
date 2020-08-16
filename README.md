@@ -1,7 +1,8 @@
 ## Prompts AI
 
-[Prompts AI](https://prompts.ai/)
-has two main goals:
+[Prompts AI](https://prompts.ai/) is an advanced [GPT-3](https://en.wikipedia.org/wiki/GPT-3) playground.
+
+It has two main goals:
 1) Help first-time GPT-3 users to discover capabilities, strengths
 and weaknesses of the technology.
 2) Help developers to experiment with prompt engineering by optimizing

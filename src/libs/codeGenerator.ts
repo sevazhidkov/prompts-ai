@@ -114,6 +114,8 @@ axios(config)
             return ``;
         }
     }
+
+    return '';
 }
 
 function generateTypescriptExample(parameters: CompletionParameters, tabIndex: TabIndex, exampleText: string) {
@@ -182,6 +184,8 @@ axios({
             return ``;
         }
     }
+
+    return '';
 }
 
 function generateShellExample(parameters: CompletionParameters, tabIndex: TabIndex, exampleText: string) {
@@ -234,6 +238,8 @@ axios({
             return ``;
         }
     }
+
+    return '';
 }
 
 function generatePythonExample(parameters: CompletionParameters, tabIndex: TabIndex, exampleText: string,
@@ -325,6 +331,8 @@ ${outputCode}
             return ``;
         }
     }
+
+    return '';
 }
 
 // Shell helpers

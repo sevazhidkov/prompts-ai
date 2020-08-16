@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectTabIndex, updateTabIndex, TabIndex} from "../slices/editorSlice";
 import CodeGeneratorButton from './CodeGeneratorButton';
 import ConversationsTab from './conversations/ConversationsTab';
+import BasicTab from "./basic/BasicTab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,6 +75,7 @@ export default function ModeTabs() {
                 >
                     <Grid item>
                         <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
+                            <Tab label="Basic" {...a11yProps(TabIndex.basic)} />
                             <Tab label="Examples" {...a11yProps(TabIndex.multipleExamples)} />
                             <Tab label="Variations" {...a11yProps(TabIndex.variations)} />
                             <Tab label="Conversations" {...a11yProps(TabIndex.conversations)} />
@@ -86,6 +88,9 @@ export default function ModeTabs() {
                     </Hidden>
                 </Grid>
             </AppBar>
+            <TabPanel value={tabIndex} index={TabIndex.basic}>
+                <BasicTab/>
+            </TabPanel>
             <TabPanel value={tabIndex} index={TabIndex.multipleExamples}>
                 <ExamplesTab/>
             </TabPanel>

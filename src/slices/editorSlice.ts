@@ -28,7 +28,8 @@ interface CompletionParameters {
 }
 
 enum TabIndex {
-    multipleExamples = 0,
+    basic = 0,
+    multipleExamples,
     variations,
     conversations
 }
@@ -43,6 +44,11 @@ interface Variation {
     frequencyPenalty: number;
     presencePenalty: number;
     modelName: string;
+}
+
+interface Basic {
+    output: string;
+    loading: boolean;
 }
 
 enum ConversationPartSource {
@@ -100,6 +106,8 @@ interface Workspace {
     maxVariations: number;
     showPromptForVariations: boolean;
 
+    basic: Basic;
+
     conversations: Array<Conversation>;
 }
 
@@ -147,6 +155,11 @@ const initialState: EditorState = {
         showPromptForVariations: true,
 
         conversations: [],
+
+        basic: {
+            output: '',
+            loading: false,
+        },
     }],
     showApiKeyDialog: false,
     showTemplateDialog: false,
@@ -307,6 +320,14 @@ const editorSlice = createSlice({
         updateExamplePreviousOutputsStatus: (state, action: PayloadAction<boolean>) => {
             let workspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
             workspace.showExamplePreviousOutputs = action.payload;
+        },
+        loadBasicOutput: (state, action: PayloadAction<string>) => {
+            let workspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
+            workspace.basic.output = action.payload;
+        },
+        setBasicLoading: (state, action: PayloadAction<boolean>) => {
+            let workspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
+            workspace.basic.loading = action.payload;
         },
 
         updateVariationsLoadingStatus: (state, action: PayloadAction<boolean>) => {
@@ -583,6 +604,35 @@ const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     }
 }
 
+const fetchBasicOutputAsync = (): AppThunk => (dispatch, getState) => {
+    const state = getState();
+    let workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!
+    if (state.editor.present.apiKey === undefined) {
+        alert('Enter an API key before running requests.');
+        return;
+    }
+    if (workspace.prompt.length === 0) {
+        alert("The prompt can't be empty");
+        return;
+    }
+
+    const completionParams = selectCompletionParameters(state);
+    dispatch(setBasicLoading(true));
+    GptAPI.generateCompletions(completionParams.prompt, completionParams).then(response => {
+        console.log(response.data);
+        return { ...response.data };
+    }).then(response => {
+        const choiceResult = response.choices[0] as ChoiceResult;
+        dispatch(loadBasicOutput(choiceResult.text));
+    }).catch(error => {
+        alert('API returned an error. Refer to the console to inspect it.')
+        console.log(error.response);
+        dispatch(markAllExamplesAsNotLoading());
+    }).finally(() => {
+        dispatch(setBasicLoading(false));
+    });
+};
+
 const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     let workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!
@@ -595,7 +645,7 @@ const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
         return;
     }
     if (workspace.prompt.indexOf('{example}') === -1) {
-        alert('Use "{example"} in your prompt to use the Multiple Examples mode');
+        alert('Use "{example}" in your prompt to use the Multiple Examples mode');
         return;
     }
 
@@ -753,6 +803,9 @@ const selectCompletionParameters = (state: RootState) => {
 const selectExamples = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.examples;
 const selectExamplePreviousOutputsStatus = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.showExamplePreviousOutputs;
 
+const selectBasicOutput = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.basic.output;
+const selectBasicLoading = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.basic.loading;
+
 const selectVariationsLoadingStatus = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.loadingVariations;
 const selectVariations = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.variations;
 const selectMaxVariations = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.maxVariations;
@@ -803,20 +856,20 @@ export {
     // Modes
     selectExamples, selectExamplePreviousOutputsStatus,
     selectVariationsLoadingStatus, selectVariations, selectMaxVariations,
-    selectShowPromptForVariations,
+    selectShowPromptForVariations, selectBasicOutput, selectBasicLoading,
 };
 
 // Async Actions
 
 export {
-    fetchForCurrentTab, fetchExamplesOutputsAsync,
+    fetchForCurrentTab, fetchExamplesOutputsAsync, fetchBasicOutputAsync,
     fetchVariationsAsync, sendMessageInConversationAsync
 };
 
 // Actions
 export const {
     updateWorkspaceId, createWorkspace, deleteCurrentWorkspace, updateCurrentWorkspaceName,
-    editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus,
+    editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus, loadBasicOutput, setBasicLoading,
     markAllExamplesAsNotLoading,
     addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,
     setConversationCompletionParams, normalizeConversations, updateConversationLoadingStatus, updateConversationInputValue,

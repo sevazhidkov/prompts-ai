@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import { createStateSyncMiddleware, initMessageListener } from 'redux-state-sync';
 import undoable from 'redux-undo';
 import {migrations, currentVersion} from './migrations';
 import editorReducer from './slices/editorSlice';
@@ -31,15 +32,20 @@ const persistConfig = {
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers);
+const middlewares = [
+    createStateSyncMiddleware(),
+    ...getDefaultMiddleware({
+        serializableCheck: false,
+        immutableCheck: false})
+];
 
 export const store = configureStore({
     reducer: persistedReducer,
-    middleware: getDefaultMiddleware({
-        serializableCheck: false,
-        immutableCheck: false
-    }),
+    middleware: middlewares,
 });
+
 export const persistor = persistStore(store);
+initMessageListener(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<

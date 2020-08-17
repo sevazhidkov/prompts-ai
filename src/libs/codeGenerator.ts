@@ -79,6 +79,8 @@ axios(config)
 });
 `;
         }
+        case TabIndex.basic:
+        case TabIndex.conversations:
         case TabIndex.variations: {
             return `var axios = require('axios');
 
@@ -109,9 +111,6 @@ axios(config)
   console.log(error);
 });
 `;
-        }
-        case TabIndex.conversations: {
-            return ``;
         }
     }
 
@@ -151,6 +150,8 @@ axios({
 });
 `;
         }
+        case TabIndex.basic:
+        case TabIndex.conversations:
         case TabIndex.variations: {
             return `import axios from 'axios' 
 
@@ -179,9 +180,6 @@ axios({
   console.log(error)
 });
 `;
-        }
-        case TabIndex.conversations: {
-            return ``;
         }
     }
 
@@ -205,37 +203,22 @@ function generateShellExample(parameters: CompletionParameters, tabIndex: TabInd
                 'frequency_penalty': parameters.frequencyPenalty
             }, null, 1), "'", "\\'")}'`;
         }
+        case TabIndex.basic:
+        case TabIndex.conversations:
         case TabIndex.variations: {
-            return `import axios from 'axios' 
-
-axios({
-  method: 'post',
-  url: 'https://api.openai.com/v1/engines/${parameters.engine}/completions',
-  headers: { 
-    'Content-Type': 'application/json', 
-    'Authorization': 'Bearer ${parameters.apiKey}'
-  },
-  data: {
-    'prompt': ${formatJavascriptString(parameters.prompt)},
-    'max_tokens': ${parameters.maxTokens},
-    'temperature': ${parameters.temperature},
-    'top_p': ${parameters.topP},
-    'n': 1,
-    'stop': ${formatStopSymbolsJavascriptStringOrStringList(parameters.stop)},
-    'presence_penalty': ${parameters.presencePenalty},
-    'frequency_penalty': ${parameters.frequencyPenalty}}
-})
-.then(function (response) {
-  console.log(response.data)
-  console.log(response.data['choices'][0]['text'])
-})
-.catch(function (error) {
-  console.log(error)
-});
-`;
-        }
-        case TabIndex.conversations: {
-            return ``;
+            return `curl --location --request POST 'https://api.openai.com/v1/engines/davinci/completions' \\
+--header 'Content-Type: application/json' \\
+--header 'Authorization: Bearer ${parameters.apiKey}' \\
+--data-raw '${replaceAllOccurrences(JSON.stringify({
+                'prompt': parameters.prompt,
+                'max_tokens': parameters.maxTokens,
+                'temperature': parameters.temperature,
+                'top_p': parameters.topP,
+                'n': 1,
+                'stop': formatStopSymbolsForShell(parameters.stop),
+                'presence_penalty': parameters.presencePenalty,
+                'frequency_penalty': parameters.frequencyPenalty
+            }, null, 1), "'", "\\'")}'`;
         }
     }
 
@@ -309,6 +292,8 @@ ${completionVariableName} = openai.Completion.create(
 ${outputCode}
 `;
         }
+        case TabIndex.basic:
+        case TabIndex.conversations:
         case TabIndex.variations: {
             return `import openai
 openai.api_key = "${parameters.apiKey}"
@@ -326,9 +311,6 @@ ${completionVariableName} = openai.Completion.create(
 )
 ${outputCode}
 `;
-        }
-        case TabIndex.conversations: {
-            return ``;
         }
     }
 

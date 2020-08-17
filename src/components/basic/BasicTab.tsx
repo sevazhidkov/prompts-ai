@@ -25,7 +25,7 @@ export default function BasicTab() {
             <Box mb={1}>
                 <Card className={styles.instructionCard}>
                     <CardContent>
-                        <Typography variant="subtitle1">Basic</Typography>
+                        <Typography variant="subtitle1">Simple</Typography>
                         <Typography variant="body2">This is a basic tool to explore the general idea of GPT-3. The prompt from the text field above is fed to the GPT-3 as is, and the resulting text in displayed in the field below.</Typography>
                         <Box mt={1}>
                             <Button

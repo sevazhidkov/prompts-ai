@@ -75,7 +75,7 @@ export default function ModeTabs() {
                 >
                     <Grid item>
                         <Tabs value={tabIndex} onChange={handleTabIndexChange} aria-label="simple tabs example">
-                            <Tab label="Basic" {...a11yProps(TabIndex.basic)} />
+                            <Tab label="Simple" {...a11yProps(TabIndex.basic)} />
                             <Tab label="Examples" {...a11yProps(TabIndex.multipleExamples)} />
                             <Tab label="Variations" {...a11yProps(TabIndex.variations)} />
                             <Tab label="Conversations" {...a11yProps(TabIndex.conversations)} />

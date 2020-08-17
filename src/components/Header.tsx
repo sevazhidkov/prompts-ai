@@ -2,6 +2,7 @@ import {AppBar, Container, IconButton, Theme, Toolbar, Typography} from "@materi
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
+import GitHubIcon from "@material-ui/icons/GitHub";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
@@ -50,6 +51,11 @@ export default function Header() {
                 <div className={classes.buttonGroup}>
                     <IconButton onClick={handleUndoClick}><UndoIcon/></IconButton>
                     <IconButton onClick={handleRedoClick}><RedoIcon/></IconButton>
+                </div>
+                <div className={classes.buttonGroup}>
+                    <IconButton aria-label="GitHib" onClick={() => window.open('https://github.com/sevazhidkov/prompts-ai', '_blank')}>
+                        <GitHubIcon fontSize={'small'}/>
+                    </IconButton>
                 </div>
             </Toolbar>
         </Container>

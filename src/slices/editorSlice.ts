@@ -593,6 +593,10 @@ const fetchForCurrentTab = (): AppThunk => (dispatch, getState) => {
     const state = getState();
     let workspace = state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!
     switch (workspace.tabIndex) {
+        case TabIndex.basic: {
+            dispatch(fetchBasicOutputAsync());
+            break;
+        }
         case TabIndex.multipleExamples: {
             dispatch(fetchExamplesOutputsAsync());
             break;

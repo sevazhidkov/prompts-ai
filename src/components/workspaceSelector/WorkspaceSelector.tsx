@@ -31,7 +31,7 @@ export default function WorkspaceSelector() {
                 onChange={handleSelectChange}
             >
                 {workspaces.map((workspace) => (
-                    <option value={workspace.id}>{workspace.name}</option>
+                    <option key={workspace.id} value={workspace.id}>{workspace.name}</option>
                 ))}
             </Select>
         </Grid>

@@ -39,13 +39,18 @@ export default function Input(props: Props) {
         dispatch(updateConversationInputValue({conversationId: props.conversationId, inputValue: event.currentTarget.value}));
     }
     return <TextField multiline
-                      label={'Message (Ctrl+Enter to send)'}
+                      label={'Message (Cmd+Enter to send)'}
                       InputLabelProps={{
                           shrink: true,
                       }}
                       placeholder={hasStarted ? 'Your response' : 'Start a conversation'}
                       value={inputValue}
                       onChange={onInputChange}
+                      onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
+                          if (event.metaKey && event.key === 'Enter') {
+                              onSend();
+                          }
+                      }}
                       onKeyUp={(event: React.KeyboardEvent<HTMLDivElement>) => {
                           if (event.ctrlKey && event.key === 'Enter') {
                               onSend();

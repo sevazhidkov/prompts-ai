@@ -20,7 +20,7 @@ function App() {
         dispatch(normalizeConversations());
     });
 
-    useHotkeys('ctrl+enter', () => {
+    useHotkeys('ctrl+enter,cmd+enter', () => {
         dispatch(fetchForCurrentTab());
     }, {filter: () => true});
     useHotkeys('ctrl+1', () => {
@@ -28,6 +28,12 @@ function App() {
     });
     useHotkeys('ctrl+2', () => {
         dispatch(updateTabIndex(1));
+    });
+    useHotkeys('ctrl+3', () => {
+        dispatch(updateTabIndex(2));
+    });
+    useHotkeys('ctrl+4', () => {
+        dispatch(updateTabIndex(3));
     });
 
     return (

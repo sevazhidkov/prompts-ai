@@ -9,7 +9,7 @@ import editorReducer from './slices/editorSlice';
 const filteredActions = ['editor/addStopSymbol', 'editor/deleteStopSymbol',
     'editor/editTopP', 'editor/editFrequencyPenalty', 'editor/editPresencePenalty',
     'editor/loadTemplate', 'editor/editPrompt', 'editor/editApiKey', 'editor/editTemperature', 'editor/editModelName',
-    'editor/editMaxTokens', 'editor/loadTemplateFromFileData'
+    'editor/editMaxTokens', 'editor/loadTemplateFromFileData' // todo: examples?????
 ];
 
 const reducers = combineReducers(
@@ -19,7 +19,7 @@ const reducers = combineReducers(
           filter: (action: Action) => {
               return filteredActions.includes(action.type);
           },
-          groupBy: (action) => filteredActions.includes(action.type) ? `${action.type}_${Math.floor(Date.now() / 1000 / 10)}` : null
+          groupBy: (action) => filteredActions.includes(action.type) ? `${action.type}_${Math.floor(Date.now() / 1000 / 10)}` : null,
       })
     }
 );

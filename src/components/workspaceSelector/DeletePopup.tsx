@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import {useDispatch} from "react-redux";
 import { deleteCurrentWorkspace } from '../../slices/editorSlice';
+import {ActionCreators} from "redux-undo";
 
 interface Props {
     open: boolean;
@@ -18,6 +19,7 @@ export default function DeletePopup(props: Props) {
     const dispatch = useDispatch();
     const onDelete = () => {
         dispatch(deleteCurrentWorkspace());
+        dispatch(ActionCreators.clearHistory())
         props.onClose();
     };
     return <Dialog open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">

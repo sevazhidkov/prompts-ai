@@ -6,6 +6,7 @@ import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
 import {selectWorkspacesList, selectCurrentWorkspaceId, updateWorkspaceId} from "../../slices/editorSlice";
 import {useDispatch, useSelector} from 'react-redux';
+import { ActionCreators } from 'redux-undo';
 
 const useStyles = makeStyles({
     selectGridItem: {
@@ -21,6 +22,7 @@ export default function WorkspaceSelector() {
 
     const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         dispatch(updateWorkspaceId(event.target.value as string));
+        dispatch(ActionCreators.clearHistory())
     }
     return <Grid container alignItems={'center'} spacing={1}>
         <Grid item className={styles.selectGridItem}>

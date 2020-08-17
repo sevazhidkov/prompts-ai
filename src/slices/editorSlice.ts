@@ -257,6 +257,8 @@ interface LoadTemplateActionPayload {
     examples: Array<LoadTemplateActionExample>;
     stopSymbols?: Array<string>;
     tabIndex: number;
+    startSequence?: string;
+    restartSequence?: string;
 }
 
 const editorSlice = createSlice({
@@ -365,8 +367,12 @@ const editorSlice = createSlice({
             let workspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
             // Always add an empty conversation for user to start
             if (workspace.conversations.length < 1 || workspace.conversations[0].parts.length > 1) {
-                const startSequence = "\nAI:";
-                const restartSequence = "\nUser: ";
+                let startSequence = "\nAI:";
+                let restartSequence = "\nUser: ";
+                if (workspace.conversations.length >= 1) {
+                    startSequence = workspace.conversations[0].startSequence;
+                    restartSequence = workspace.conversations[0].restartSequence;
+                }
                 workspace.conversations.unshift({
                     id: uniqid("conversation_"), parts: [
                         {text: convertConversationPartToText(
@@ -492,8 +498,11 @@ const editorSlice = createSlice({
                 return {id: uniqid('example_'), text: example.text, output: example.output, isLoading: false}
             });
 
-            if (action.payload.stopSymbols !== undefined) {
-                workspace.stopSymbols = action.payload.stopSymbols;
+            if (action.payload.startSequence !== undefined) {
+                workspace.conversations[0]!.startSequence = action.payload.startSequence;
+            }
+            if (action.payload.restartSequence !== undefined) {
+                workspace.conversations[0]!.restartSequence = action.payload.restartSequence;
             }
             workspace.tabIndex = action.payload.tabIndex;
         },

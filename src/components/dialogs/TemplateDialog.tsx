@@ -18,12 +18,15 @@ import {
     toggleTemplateDialog
 } from "../../slices/editorSlice";
 import getTemplateGroups, {Template} from "../../libs/templatesLibrary";
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
     templateDialog: {
         minWidth: '50vw',
     },
+    templateGroupHeader: {
+        backgroundColor: theme.palette.background.paper,
+    }
 }));
 
 export default function TemplateDialog() {
@@ -53,7 +56,7 @@ export default function TemplateDialog() {
         >
             {templateGroups.map((templateGroup, ind) => (
                 <div key={ind}>
-                    <List subheader={<ListSubheader>{templateGroup.name}</ListSubheader>}>
+                    <List subheader={<ListSubheader className={classes.templateGroupHeader}>{templateGroup.name}</ListSubheader>}>
                         {templateGroup.templates.map(template => (
                             <ListItem key={template.id} button
                                       onClick={handleLoadTemplate(template)}><ListItemText>{template.name}</ListItemText></ListItem>

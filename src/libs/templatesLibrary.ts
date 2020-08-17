@@ -1,4 +1,4 @@
-import { uniqueId } from "lodash";
+import {uniqueId} from "lodash";
 import {LoadTemplateActionPayload, TabIndex} from '../slices/editorSlice';
 
 export interface Template {
@@ -13,7 +13,61 @@ interface TemplateGroup {
 }
 
 const templateGroups = [
-    {name: 'Multiple Examples', templates: [
+    {name: 'Simple', templates: [
+            {
+                id: uniqueId('template_'),
+                name: 'Top 10 Women',
+                actionPayload: {
+                    prompt: 'Top 10 most important women in human history, and their greatest achievements:\n' +
+                        '\n' +
+                        '1.',
+                    stopSymbols: ['11.'],
+                    tabIndex: TabIndex.basic,
+                    examples: []
+                }
+            },
+            {
+                id: uniqueId('template_'),
+                name: 'Email Generation',
+                actionPayload: {
+                    prompt: 'The following email explains two things:\n' +
+                        '1) The writer, Andy, is going to miss work.\n' +
+                        '2) The receiver, Betty, is Andy\'s boss and can email if anything needs to be done.\n' +
+                        '\n' +
+                        'From: ',
+                    stopSymbols: [],
+                    tabIndex: TabIndex.basic,
+                    examples: []
+                },
+            },
+            {
+                id: uniqueId('template_'),
+                name: 'Federalist Paper (Memory)',
+                actionPayload: {
+                    prompt: 'FEDERALIST No. 79. The Judiciary Continued\n' +
+                        '\n' +
+                        'HAMILTON\n' +
+                        '\n' +
+                        'To the People of the State of New York.\n' +
+                        '\n' +
+                        'IN THE course of the preceding papers,',
+                    stopSymbols: [],
+                    tabIndex: TabIndex.basic,
+                    examples: []
+                },
+            },
+            {
+                id: uniqueId('template_'),
+                name: 'Simple Math',
+                actionPayload: {
+                    prompt: '2 * 4 =',
+                    stopSymbols: ['\\n'],
+                    tabIndex: TabIndex.basic,
+                    examples: []
+                },
+            }
+        ]},
+    {name: 'Examples', templates: [
             {id: uniqueId('template_'), name: 'Company Classification', actionPayload: {
                     prompt: 'The following is a list of companies and the categories they fall into\n' +
                         '\n' +
@@ -434,6 +488,30 @@ const templateGroups = [
                     stopSymbols: ['--'], examples: [], tabIndex: TabIndex.variations
                 }},
         ]},
+    {
+        name: 'Conversations',
+        templates: [
+            {id: uniqueId('template_'), name: 'Mark Zuckerberg', actionPayload: {
+                    prompt: 'The following is a transcript of a conversation between Steve, a computer science student, ' +
+                    'and Mark Zuckerberg. Mark Zuckerberg is an American media magnate, internet entrepreneur, and philanthropist. ' +
+                    'He is known for co-founding Facebook, Inc. and serves as its chairman, chief executive officer,' +
+                    ' and controlling shareholder.\n',
+                    stopSymbols: ['\\n'],
+                    examples: [],
+                    tabIndex: TabIndex.conversations,
+                    startSequence: '\nMark:',
+                    restartSequence: '\nSteve: ',
+                }},
+            {id: uniqueId('template_'), name: 'AI Assistant', actionPayload: {
+                    prompt: 'The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n',
+                    stopSymbols: ['\\n'],
+                    examples: [],
+                    tabIndex: TabIndex.conversations,
+                    startSequence: '\nAI:',
+                    restartSequence: '\nHuman: ',
+                }}
+        ]
+    }
 ];
 
 export default function getTemplateGroups() : Array<TemplateGroup> {

@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import { PERSIST, PURGE, REHYDRATE } from 'redux-persist/es/constants';
 import { createStateSyncMiddleware, initMessageListener } from 'redux-state-sync';
 import undoable from 'redux-undo';
 import {migrations, currentVersion} from './migrations';
@@ -33,10 +34,10 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 const middlewares = [
-    createStateSyncMiddleware(),
     ...getDefaultMiddleware({
         serializableCheck: false,
-        immutableCheck: false})
+        immutableCheck: false}),
+    createStateSyncMiddleware({blacklist: [PERSIST, PURGE, REHYDRATE]}),
 ];
 
 export const store = configureStore({

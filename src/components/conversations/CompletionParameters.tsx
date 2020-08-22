@@ -18,7 +18,9 @@ interface Props {
 
 export default function CompletionParameters(props: Props) {
     let stopSymbols: Array<string>;
-    if (props.parameters.stop instanceof String) {
+    if (props.parameters.stop === "") {
+        stopSymbols = [];
+    } else if (typeof props.parameters.stop === 'string') {
         stopSymbols = [props.parameters.stop as string];
     } else {
         stopSymbols = props.parameters.stop as Array<string>;

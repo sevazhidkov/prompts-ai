@@ -498,6 +498,9 @@ const editorSlice = createSlice({
                 return {id: uniqid('example_'), text: example.text, output: example.output, isLoading: false}
             });
 
+            if (action.payload.stopSymbols !== undefined) {
+                workspace.stopSymbols = action.payload.stopSymbols;
+            }
             if (action.payload.startSequence !== undefined) {
                 workspace.conversations[0]!.startSequence = action.payload.startSequence;
             }

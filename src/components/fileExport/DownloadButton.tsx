@@ -9,6 +9,7 @@ import {
     selectTemperature,
     selectTopP
 } from "../../slices/editorSlice";
+import {useHotkeys} from "react-hotkeys-hook";
 
 interface Props {
     className: string;
@@ -23,6 +24,11 @@ export default function DownloadButton(props: Props) {
     const maxTokens = useSelector(selectMaxTokens);
     const stopSymbols = useSelector(selectStopSymbols);
     const modelName = useSelector(selectModelName);
+
+    useHotkeys('ctrl+s,cmd+s', (event) => {
+        event.preventDefault();
+        handleSaveAndDownload();
+    });
 
     const handleSaveAndDownload = () => {
         const element = document.createElement("a");

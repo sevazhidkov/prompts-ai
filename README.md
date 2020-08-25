@@ -36,8 +36,19 @@ State in the local storage. Download/upload prompt with parameters and examples
 as file.
 * Code generators for Python, Node.js, Javascript, shell.
 * Undo/redo for parameters and prompts.
-* Shortcuts.
+* Shortcuts. 
 * Templates. 
+
+```
+Shortcuts
+===
+
+Export the workspace to a file: Ctrl+S, Cmd+S
+Run: Ctrl+Enter, Cmd+Enter
+
+Switch between modes: Ctrl+1-4 
+(1 - simple, 2 - examples, 3 - variations, 4 - conversations)
+```
 
 ### Roadmap
 

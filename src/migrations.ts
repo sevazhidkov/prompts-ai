@@ -201,7 +201,20 @@ export const migrations = {
                 }
             }
         }
-    }
+    },
+
+    15: (state: any) => {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                present: {
+                    ...state.editor.present,
+                    editableWorkspaceName: state.editor.present.workspaces.find((w: any) => w.id === state.editor.present.currentWorkspaceId).name
+                }
+            }
+        }
+    },
 };
 
-export const currentVersion = 14;
+export const currentVersion = 15;

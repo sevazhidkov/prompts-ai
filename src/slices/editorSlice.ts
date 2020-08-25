@@ -114,6 +114,7 @@ interface Workspace {
 interface EditorState {
     apiKey?: string;
     currentWorkspaceId: string;
+    editableWorkspaceName: string;
     workspaces: Array<Workspace>;
 
     showApiKeyDialog: boolean;
@@ -123,6 +124,7 @@ interface EditorState {
 const initialState: EditorState = {
     apiKey: undefined,
     currentWorkspaceId: 'first_workspace',
+    editableWorkspaceName: 'Draft #1',
     workspaces: [{
         id: 'first_workspace',
         name: 'Draft #1',
@@ -565,10 +567,12 @@ const editorSlice = createSlice({
         },
 
         updateWorkspaceId: (state, action: PayloadAction<string>) => {
-            if (state.workspaces.find(w => w.id === action.payload) === undefined) {
+            const newWorkspace = state.workspaces.find(w => w.id === action.payload);
+            if (newWorkspace === undefined) {
                 return;
             }
             state.currentWorkspaceId = action.payload;
+            state.editableWorkspaceName = newWorkspace.name;
         },
         createWorkspace: (state) => {
             let currentWorkspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
@@ -579,17 +583,23 @@ const editorSlice = createSlice({
             };
             state.workspaces.push(newWorkspace);
             state.currentWorkspaceId = newWorkspace.id;
+            state.editableWorkspaceName = newWorkspace.name;
         },
-        updateCurrentWorkspaceName: (state, action: PayloadAction<string>) => {
+        updateCurrentWorkspaceName: (state) => {
             let workspace = state.workspaces.find(w => w.id === state.currentWorkspaceId)!
-            workspace.name = action.payload;
+            workspace.name = state.editableWorkspaceName;
+        },
+        updateEditableWorkspaceName: (state, action: PayloadAction<string>) => {
+            state.editableWorkspaceName = action.payload;
         },
         deleteCurrentWorkspace: (state) => {
             if (state.workspaces.length < 2) {
                 return;
             }
             state.workspaces = state.workspaces.filter(w => w.id !== state.currentWorkspaceId);
-            state.currentWorkspaceId = state.workspaces[state.workspaces.length - 1].id;
+            const newWorkspace = state.workspaces[state.workspaces.length - 1];
+            state.currentWorkspaceId = newWorkspace.id;
+            state.editableWorkspaceName = newWorkspace.name;
         },
 
         toggleApiKeyDialog: (state, action: PayloadAction<boolean>) => {
@@ -780,6 +790,7 @@ const selectApiKey = (state: RootState) => state.editor.present.apiKey;
 const selectApiKeyDialogVisible = (state: RootState) => state.editor.present.showApiKeyDialog;
 const selectTemplateDialogVisible = (state: RootState) => state.editor.present.showTemplateDialog;
 const selectCurrentWorkspaceId = (state: RootState) => state.editor.present.currentWorkspaceId;
+const selectEditableWorkspaceName = (state: RootState) => state.editor.present.editableWorkspaceName;
 const selectCurrentWorkspaceName = (state: RootState) => state.editor.present.workspaces.find(w => w.id === state.editor.present.currentWorkspaceId)!.name;
 const selectWorkspacesList = (state: RootState) => state.editor.present.workspaces.map(w => ({id: w.id, name: w.name}));
 
@@ -867,7 +878,8 @@ export {
     selectTabIndex, selectPrompt, selectStopSymbols, selectApiKey, selectModelName,
     selectTemperature, selectTopP, selectFrequencyPenalty, selectPresencePenalty,
     selectMaxTokens, selectApiKeyDialogVisible, selectTemplateDialogVisible,
-    selectCompletionParameters, selectCurrentWorkspaceId, selectCurrentWorkspaceName, selectWorkspacesList,
+    selectCompletionParameters, selectCurrentWorkspaceId, selectEditableWorkspaceName, selectCurrentWorkspaceName,
+    selectWorkspacesList,
 
     // Modes
     selectExamples, selectExamplePreviousOutputsStatus,
@@ -884,7 +896,7 @@ export {
 
 // Actions
 export const {
-    updateWorkspaceId, createWorkspace, deleteCurrentWorkspace, updateCurrentWorkspaceName,
+    updateWorkspaceId, createWorkspace, deleteCurrentWorkspace, updateCurrentWorkspaceName, updateEditableWorkspaceName,
     editExample, loadOutputForExample, deleteExample, cleanExampleList, markExampleAsLoading, updateExamplePreviousOutputsStatus, loadBasicOutput, setBasicLoading,
     markAllExamplesAsNotLoading,
     addVariation, editMaxVariations, cleanVariations, updateShowPromptForVariations, updateVariationsLoadingStatus,

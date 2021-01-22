@@ -50,10 +50,10 @@ export function PromptEditor() {
     const maxTokens = useSelector(selectMaxTokens);
     const stopSymbols = useSelector(selectStopSymbols);
 
-    const availableModelNames = ['davinci', 'davinci-beta',
-        'curie', 'curie-beta',
-        'babbage', 'babbage-beta',
-        'ada', 'ada-beta'];
+    const availableModelNames = ['davinci', 'davinci-instruct-beta',
+        'curie', 'curie-instruct-beta',
+        'babbage',
+        'ada'];
     const modelName = useSelector(selectModelName);
 
     const handlePromptChange = (event: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>) => {

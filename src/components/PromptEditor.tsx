@@ -50,7 +50,7 @@ export function PromptEditor() {
     const maxTokens = useSelector(selectMaxTokens);
     const stopSymbols = useSelector(selectStopSymbols);
 
-    const availableModelNames = ['davinci', 'davinci-instruct-beta',
+    const availableModelNames = ['davinci-codex','davinci', 'davinci-instruct-beta',
         'curie', 'curie-instruct-beta',
         'babbage',
         'ada'];
@@ -195,11 +195,11 @@ export function PromptEditor() {
                                     value: 1,
                                     label: '1',
                                 }, {
-                                    value: 512,
-                                    label: '512',
+                                    value: 2000,
+                                    label: '2000',
                                 }]}
                                 min={1}
-                                max={512}
+                                max={2000}
                             />
 
                             <Tooltip title="On which symbols GPT-3 should stop generating text. Enter \n for a line break." placement="left">
@@ -304,7 +304,7 @@ export function PromptEditor() {
                         label="A prompt"
                         multiline
                         rows={9}
-                        rowsMax={100}
+                        rowsMax={500}
                         fullWidth={true}
                         onChange={handlePromptChange}
                         value={prompt}

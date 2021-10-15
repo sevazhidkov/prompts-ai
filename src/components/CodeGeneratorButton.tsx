@@ -75,8 +75,7 @@ export default function CodeGeneratorButton() {
                 onClose={handleClose}
                 scroll={scroll}
                 fullWidth={true}
-                maxWidth={'lg'}
-            >
+                maxWidth={'lg'}>
                 <DialogTitle id="scroll-dialog-title">
                     Code Generator
                     <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
@@ -87,18 +86,15 @@ export default function CodeGeneratorButton() {
                     <DialogContentText
                         id="scroll-dialog-description"
                         ref={descriptionElementRef}
-                        tabIndex={-1}
-                    >
+                        tabIndex={-1}>
                         <FormControl className={classes.fullWidth}>
                             <Select
                                 native
                                 value={selectedExample}
                                 onChange={handleSelectChange}
                                 className={classes.fullWidth}>
-                            >
                                 {generateCodeExamples(completionParameters, tabIndex, examples).map((codeExample) => (
-                                    <option key={codeExample.id} value={codeExample.id}>{codeExample.name}</option>
-                                ))}
+                                    <option key={codeExample.id} value={codeExample.id}>{codeExample.name}</option>))}
                             </Select>
                         </FormControl>
 

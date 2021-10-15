@@ -49,7 +49,7 @@ export default function BasicTab() {
                             fullWidth={true}
                             multiline
                             rows={9}
-                            rowsMax={100}
+                            rowsMax={500}
                             value={basicOutput}
                             InputProps={{
                                 readOnly: true,

@@ -1,4 +1,6 @@
-import firebase from '../services/firebase';
+const admin = require('firebase-admin');
+const db = admin.firestore();
+const mydoc = db.collection("SharedPrompt").documentData;
 
 interface SharedPromptWriteProperties {
     engine: string;
@@ -17,8 +19,8 @@ interface SharedPromptExample {
 }
 
 export default class SharedPrompt {
-    static create (properties: SharedPromptWriteProperties): Promise<firebase.firestore.DocumentData> {
-        const db = firebase.firestore();
+    static create (properties: SharedPromptWriteProperties): Promise<typeof mydoc> {
+        const mydb = db.collection('SharedPrompts');
         return db.collection('SharedPrompts').add(properties);
     }
 }

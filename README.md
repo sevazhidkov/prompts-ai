@@ -73,3 +73,4 @@ Sorted by the date of a first contribution. Feel free to add yourselves while ma
 
 - [Seva Zhidkov](https://github.com/sevazhidkov)
 - [Ilya Penyaev](http://github.com/penyaev)
+- [Eugene Chung](https://github.com/ycechungAI)

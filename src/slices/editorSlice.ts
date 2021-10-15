@@ -646,7 +646,7 @@ const fetchBasicOutputAsync = (): AppThunk => (dispatch, getState) => {
     dispatch(setBasicLoading(true));
     GptAPI.generateCompletions(completionParams.prompt, completionParams).then(response => {
         console.log(response.data);
-        return { ...response.data };
+        return  Object.assign({}, response.data as any );
     }).then(response => {
         const choiceResult = response.choices[0] as ChoiceResult;
         dispatch(loadBasicOutput(choiceResult.text));
@@ -688,7 +688,7 @@ const fetchExamplesOutputsAsync = (): AppThunk => (dispatch, getState) => {
 
     GptAPI.generateCompletions(examplePrompts, completionParams).then(response => {
         console.log(response.data);
-        return { ...response.data };
+        return  Object.assign({}, response.data as any );
     }).then(response => {
         response.choices.map((exampleResult: ChoiceResult, ind: number) => {
              const exampleId = exampleIds[ind];
@@ -720,7 +720,7 @@ const fetchVariationsAsync = (): AppThunk => (dispatch, getState) => {
 
     GptAPI.generateCompletions(completionParams.prompt, completionParams, workspace.maxVariations).then(response => {
         console.log(response.data);
-        return { ...response.data };
+        return  Object.assign({}, response.data as any );
     }).then(response => {
         dispatch(updateVariationsLoadingStatus(false));
         response.choices.map((variationResult: ChoiceResult) => (
@@ -777,7 +777,7 @@ const sendMessageInConversationAsync = (conversationId: string): AppThunk => (di
     const prompt = updatedConversation.initialPrompt + updatedConversation.parts.map(p => p.text).join('');
     GptAPI.generateCompletions(prompt, completionParams).then(response => {
         console.log(response.data);
-        return { ...response.data };
+        return  Object.assign({}, response.data as any );
     }).then(response => {
         dispatch(updateConversationLoadingStatus({conversationId: conversationId, status: false}));
         dispatch(addMessageInConversation({conversationId: conversationId, source: ConversationPartSource.gpt,

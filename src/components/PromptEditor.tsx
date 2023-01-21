@@ -110,61 +110,6 @@ export function PromptEditor() {
         spacing={3}
       >
         <Grid item xs={12} sm={3} md={3}>
-          {/*<Box mb={1}>
-                        <Card>
-                            <CardContent>
-                                <Box>
-                                    <Grid container>
-                                        <Grid item><Button
-                                            onClick={() => dispatch(ActionCreators.undo())}
-                                        >
-                                            Undo
-                                        </Button></Grid>
-                                        <Grid item>
-                                            <Button
-                                                aria-label="Undo last change"
-                                                onClick={() => dispatch(ActionCreators.redo())}
-                                            >
-                                                Redo
-                                            </Button>
-                                        </Grid>
-                                        <Grid item>
-                                            <Button
-                                                aria-label="Save as a file"
-                                                onClick={handleSaveAndDownload}
-                                            >
-                                                Save
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                                <hr/>
-                                <Box mt={2}>
-                                    <Grid container>
-                                        <Grid item
-                                              className={styles.fullWidth}>
-                                            <TextField type="password"
-                                                       variant="outlined"
-                                                       label="API Key"
-                                                       size={'small'}
-                                                       value={apiKey}
-                                                       onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                                           dispatch(editApiKey(event.currentTarget.value));
-                                                       }}
-                                                       inputProps={{
-                                                           autoComplete: 'new-password',
-                                                           form: {
-                                                               autoComplete: 'off',
-                                                           },
-                                                       }}
-                                                       className={styles.fullWidth}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Box>*/}
           <Box mb={1}>
             <Card>
               <CardContent>

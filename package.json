@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
+    "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.10.0",
     "@reduxjs/toolkit": "^1.2.5",
@@ -23,7 +23,7 @@
     "lodash": "^4.17.19",
     "material-ui-chip-input": "^2.0.0-beta.2",
     "rc-slider": "9.2.4",
-    "react": "^16.13.1",
+    "react": "^17.0.0",
     "react-dom": "^16.13.1",
     "react-files": "^2.4.8",
     "react-hotkeys-hook": "^2.2.1",

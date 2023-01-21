@@ -40,7 +40,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier": "prettier src/**/*.{ts,tsx} -w"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.158",
-    "@types/redux-state-sync": "^3.1.1"
+    "@types/redux-state-sync": "^3.1.1",
+    "prettier": "^2.8.3"
   }
 }

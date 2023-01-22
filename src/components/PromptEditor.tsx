@@ -34,6 +34,7 @@ import {
 import { makeStyles } from "@material-ui/styles";
 import ModeTabs from "./ModeTabs";
 import WorkspaceForm from "./WorkspaceForm";
+import FeedbackForm from "./FeedbackForm";
 
 const useStyles = makeStyles({
   fullWidth: {
@@ -110,6 +111,13 @@ export function PromptEditor() {
         spacing={3}
       >
         <Grid item xs={12} sm={3} md={3}>
+          <Box mb={1}>
+            <Card>
+              <CardContent>
+                <FeedbackForm />
+              </CardContent>
+            </Card>
+          </Box>
           <Box mb={1}>
             <Card>
               <CardContent>
